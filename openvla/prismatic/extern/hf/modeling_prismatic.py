@@ -774,6 +774,43 @@ class OpenVLAForActionPredictionWithValueHead(PrismaticForConditionalGeneration)
 
         return hiddens
 
+    def get_diagnostic_hidden_states(self,
+            input_ids: torch.LongTensor,
+            attention_mask: torch.Tensor,
+            pixel_values: torch.FloatTensor,
+            layer_indices: list[int],
+    ) -> dict[int, torch.Tensor]:
+        """Act2Answer Phase 1 diagnostics: capture the pre-action-token hidden state at
+        arbitrary network depths. Does not modify model weights -- this is a read-only
+        second forward pass, same pattern as get_hidden()/get_value() above.
+
+        The captured position is the last prompt token (the space token `29871` that
+        immediately precedes the first generated action token) -- i.e. the model's
+        multimodal/instruction representation right before it starts decoding an action,
+        matching the convention already used by get_hidden()/get_value()/predict_action_batch's
+        value-head computation (see the `vh_mode == "a0"` branches above).
+
+        layer_indices index into `outputs.hidden_states` (length num_layers + 1: index 0 is
+        the embedding output, index num_layers is the final transformer layer).
+        """
+        outputs = super().forward(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            pixel_values=pixel_values,
+            output_hidden_states=True,
+            return_dict=True,
+        )
+
+        # check the last token is ` ` (same invariant as get_hidden/get_value)
+        assert torch.all(input_ids[:, -1] == 29871)
+
+        num_layers = len(outputs.hidden_states) - 1
+        return {
+            idx: outputs.hidden_states[idx][:, -1]  # [B, hidden_dim]
+            for idx in layer_indices
+            if 0 <= idx <= num_layers
+        }
+
     def predict_action_batch(
             self,
             input_ids: torch.LongTensor,

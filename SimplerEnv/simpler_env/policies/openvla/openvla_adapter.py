@@ -44,3 +44,12 @@ class OpenVLAInference:
     def get_action(self, obs, deterministic=True):
         _values, token_ids, _logprobs = self._p.get_action(obs, deterministic)
         return self._decode(token_ids)
+
+    def get_action_and_diagnostics(self, obs, deterministic=True):
+        """Act2Answer Phase 1 diagnostics: same action as get_action(), plus pre-action
+        hidden states from a second (cheap, single-forward-pass) call -- get_action() itself
+        is unchanged. Returns (action, hidden_dict) where hidden_dict maps
+        {0.25/0.5/0.75/1.0: [B, hidden_dim] tensor}."""
+        action = self.get_action(obs, deterministic)
+        hidden = self._p.get_diagnostic_hidden(obs)
+        return action, hidden

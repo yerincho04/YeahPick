@@ -22,11 +22,22 @@ unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY all_proxy 2>/dev/n
 export NO_PROXY=127.0.0.1,localhost no_proxy=127.0.0.1,localhost
 export PYTHONNOUSERSITE=1 TOKENIZERS_PARALLELISM=false
 
+# ManiSkill prompts "(y|n)" on stdin before downloading a missing task asset (e.g.
+# bridge_v2_real2sim for Act2AnswerV4-v1). That prompt has no stdin under sbatch/srun and
+# crashes the job with EOFError, so auto-confirm it here for all eval scripts.
+export MS_SKIP_ASSET_DOWNLOAD_PROMPT=1
+
 # conda (so `conda activate <env-name>` works inside scripts)
 # Where conda envs are created/activated (this node uses a non-default location).
 export CONDA_ENVS_DIR="${CONDA_ENVS_DIR:-/home/jovyan/.mlspace/envs}"
 
-source "${CONDA_ROOT:-/opt/conda}/etc/profile.d/conda.sh" 2>/dev/null || true
+if [ -f "${CONDA_ROOT:-/opt/conda}/etc/profile.d/conda.sh" ]; then
+  source "${CONDA_ROOT:-/opt/conda}/etc/profile.d/conda.sh"
+elif ! type conda >/dev/null 2>&1 && [ -x "${CONDA_ROOT:-}/_conda" ]; then
+  # Relocatable/standalone conda installs (as used by this workspace) expose only
+  # `_conda`; initialize the shell function inside each eval-script subprocess.
+  eval "$("${CONDA_ROOT}/_conda" shell.posix hook)"
+fi
 
 # Standard PYTHONPATH for in-process evals (SimplerEnv + ManiSkill; openvla adds $REPO_ROOT/openvla).
 export A2A_PYTHONPATH="$REPO_ROOT/SimplerEnv:$REPO_ROOT/ManiSkill"

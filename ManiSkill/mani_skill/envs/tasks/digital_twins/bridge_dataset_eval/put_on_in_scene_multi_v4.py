@@ -371,6 +371,7 @@ class Act2AnswerV4(_PickCubeBase):
         do_swap: str = "False",
         cube_pose: Optional[Sequence[float]] = None,
         initial_qpos: Optional[Sequence[float]] = None,
+        instruction_condition: str = "knowledge",
         # --- NEW knobs for visual matching ---
         model_json: Optional[str] = None,
         rgb_overlay_paths: Optional[Dict[str, str]] = None,
@@ -384,6 +385,12 @@ class Act2AnswerV4(_PickCubeBase):
         self.initial_qpos = initial_qpos
         self.dataset_dir = CARROT_DATASET_DIR / assets
         self.do_swap = bool(do_swap)
+        if instruction_condition not in {
+            "knowledge", "explicit_object", "explicit_spatial", "spatial",
+            "tile_object", "visual_description",
+        }:
+            raise ValueError(f"Unknown instruction_condition={instruction_condition!r}")
+        self.instruction_condition = instruction_condition
 
         # ids mapping
         self._pair_ids_raw: Optional[List[int]] = (
@@ -706,6 +713,12 @@ class Act2AnswerV4(_PickCubeBase):
 
         self._answers = []
         self._questions = []
+        self._semantic_answers = []
+        self._semantic_answer_ids = []
+        self._distractor_ids = []
+        self._relation_types = []
+        self._template_families = []
+        self._knowledge_categories = []
         for i in range(b):
             pair_idx = int(self._pair_ids[i].item())
             p = self.pairs_meta[pair_idx]
@@ -718,7 +731,42 @@ class Act2AnswerV4(_PickCubeBase):
             else:
                 self._answers.append("right" if bool(self._swap_lr[i]) else "left")
 
-            self._questions.append(str(p.get("question", "")))
+            semantic_answer = str(p.get("semantic_answer", "")).strip()
+            if not semantic_answer:
+                # Backward-compatible fallback for older assets: use the label associated
+                # with the original correct side when labels are available.
+                semantic_answer = str(
+                    p.get("left_label" if str(p.get("answer", "")).lower() == "left" else "right_label", "")
+                ).strip()
+            if self.instruction_condition == "knowledge":
+                instruction = str(p.get("knowledge_instruction", p.get("question", "")))
+            elif self.instruction_condition == "explicit_object":
+                if not semantic_answer:
+                    raise ValueError(
+                        f"Pair {pair_idx} lacks semantic_answer required by explicit_object"
+                    )
+                instruction = f"Place the cube on the {semantic_answer}."
+            elif self.instruction_condition == "tile_object":
+                if not semantic_answer:
+                    raise ValueError(f"Pair {pair_idx} lacks semantic_answer required by tile_object")
+                instruction = f"Place the cube on the tile showing the {semantic_answer}."
+            elif self.instruction_condition == "visual_description":
+                description = str(p.get("visual_description", "")).strip()
+                if not description:
+                    raise ValueError(
+                        f"Pair {pair_idx} lacks curated visual_description required by visual_description"
+                    )
+                instruction = f"Place the cube on the tile showing the {description}."
+            else:  # explicit_spatial or the Part-A alias, spatial
+                instruction = f"Place the cube on the {ans} tile."
+
+            self._questions.append(instruction)
+            self._semantic_answers.append(semantic_answer)
+            self._semantic_answer_ids.append(str(p.get("semantic_answer_id", semantic_answer)))
+            self._distractor_ids.append(str(p.get("distractor_id", "")))
+            self._relation_types.append(str(p.get("relation_type", "unknown")))
+            self._template_families.append(str(p.get("template_family", "unknown")))
+            self._knowledge_categories.append(str(p.get("knowledge_category", "unknown")))
 
         self.init_x_cube = self.cube_pose[0]
         self.init_y_cube = self.cube_pose[1]
@@ -968,6 +1016,16 @@ class Act2AnswerV4(_PickCubeBase):
         release_recorded = self.episode_stats["release_recorded"]
 
         # ------------------------
+        # Act2Answer diagnostics (Phase 1): raw per-step state for the offline
+        # failure-decomposition pipeline in Act2Answer/diagnostics/. Purely additive --
+        # nothing above/below this reads these keys, so behavior is unchanged when the
+        # diagnostics pipeline is not consuming them.
+        # ------------------------
+        diag_left_target_pos = torch.zeros((b, 3), device=device, dtype=torch.float32)
+        diag_right_target_pos = torch.zeros((b, 3), device=device, dtype=torch.float32)
+        diag_answer_side_is_left = torch.zeros((b,), dtype=torch.bool, device=device)
+
+        # ------------------------
         # per-env loop (b is small; safe and clear)
         # ------------------------
         for i in range(b):
@@ -996,6 +1054,13 @@ class Act2AnswerV4(_PickCubeBase):
 
             success[i] = on_left if ans == "left" else on_right
             is_answered[i] = on_left or on_right
+
+            # Act2Answer diagnostics: raw target positions + correct side, independent of
+            # which one is "target"/"wrong" for the soft metrics below (those are already
+            # ans-relative; the diagnostics pipeline needs both sides explicitly).
+            diag_left_target_pos[i] = self.objs_board[left_name].pose.p[i]
+            diag_right_target_pos[i] = self.objs_board[right_name].pose.p[i]
+            diag_answer_side_is_left[i] = (ans == "left")
 
             # existing cube soft metrics (your originals)
             cube_y = float(cube_p[i][1])
@@ -1137,6 +1202,16 @@ class Act2AnswerV4(_PickCubeBase):
         self.episode_stats["release_near_target"] = release_near_target
         self.episode_stats["release_recorded"] = release_recorded
 
+        # Act2Answer diagnostics (Phase 1, additive -- see comment above the per-env loop)
+        self.episode_stats["diag_cube_pos"] = cube_p
+        self.episode_stats["diag_eef_pos"] = tcp_p
+        self.episode_stats["diag_left_target_pos"] = diag_left_target_pos
+        self.episode_stats["diag_right_target_pos"] = diag_right_target_pos
+        self.episode_stats["diag_gripper_state"] = is_grasped
+        self.episode_stats["diag_pair_id"] = self._pair_ids
+        self.episode_stats["diag_swap"] = self._swap_lr
+        self.episode_stats["diag_answer_side_is_left"] = diag_answer_side_is_left
+
         # ------------------------
         # NEW: derived boolean soft success signals (per-step updated, but meaningful at episode end)
         # ------------------------
@@ -1201,3 +1276,21 @@ class Act2AnswerV4(_PickCubeBase):
             idx = int(pair_meta.get("index", pair_pos))
             ids.append(idx)
         return ids
+
+    def get_semantic_answers(self) -> List[str]:
+        return self._semantic_answers
+
+    def get_semantic_answer_ids(self) -> List[str]:
+        return self._semantic_answer_ids
+
+    def get_distractor_ids(self) -> List[str]:
+        return self._distractor_ids
+
+    def get_relation_types(self) -> List[str]:
+        return self._relation_types
+
+    def get_template_families(self) -> List[str]:
+        return self._template_families
+
+    def get_knowledge_categories(self) -> List[str]:
+        return self._knowledge_categories

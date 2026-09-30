@@ -115,7 +115,12 @@ class Args:
     do_swap: bool = True
 
     rgb_overlay_paths: dict[str, str] = field(
-        default_factory=lambda: {"3rd_view_camera": "./bridge_real_eval_1.png"}
+        # Resolved from this file's own location (SimplerEnv/simpler_env/run.py), not cwd --
+        # the old "./bridge_real_eval_1.png" only resolved when invoked from inside
+        # SimplerEnv/, but eval.py/sbatch scripts invoke simpler_env.eval from the repo root.
+        default_factory=lambda: {
+            "3rd_view_camera": str(Path(__file__).resolve().parent.parent / "bridge_real_eval_1.png")
+        }
     )
 
     shard_index: Optional[int] = None
@@ -132,6 +137,14 @@ class Args:
     archive_path: Optional[str] = None
     asset_path: str = "."
     output_dir: Optional[str] = None
+
+    enable_diagnostics: bool = False
+    """Phase 1 diagnostics: log per-episode state/actions and hidden states. See
+    Act2Answer/diagnostics/. Off by default; preserves baseline eval behavior exactly."""
+    capture_diagnostic_hidden: bool = True
+
+    instruction_condition: str = "knowledge"
+    """Matched instruction condition: knowledge, explicit_object, or explicit_spatial."""
 
 
 def resolve_eval_ids(args: Args) -> None:
@@ -271,15 +284,33 @@ class Runner:
     @torch.no_grad()
     def _get_action(self, obs, deterministic=False):
         total_batch = obs["image"].shape[0]
+        use_diag = self.args.enable_diagnostics and self.args.capture_diagnostic_hidden and hasattr(
+            self.policy, "get_action_and_diagnostics"
+        )
 
         actions = []
+        hidden_batches = []
 
         for i in range(0, total_batch, self.args.buffer_inferbatch):
             obs_batch = {
                 k: v[i : i + self.args.buffer_inferbatch] for k, v in obs.items()
             }
-            action = self.policy.get_action(obs_batch, deterministic)
+            if use_diag:
+                action, hidden = self.policy.get_action_and_diagnostics(obs_batch, deterministic)
+                hidden_batches.append(hidden)
+            else:
+                action = self.policy.get_action(obs_batch, deterministic)
             actions.append(action)
+
+        # Act2Answer Phase 1 diagnostics: per-step pre-action hidden states, one dict
+        # {layer_frac: [total_batch, hidden_dim]} merged across inference minibatches, or
+        # None when diagnostics are disabled / the policy doesn't support them.
+        self._last_diag_hidden = None
+        if use_diag and hidden_batches:
+            fracs = hidden_batches[0].keys()
+            self._last_diag_hidden = {
+                frac: torch.cat([h[frac] for h in hidden_batches], dim=0) for frac in fracs
+            }
 
         return torch.cat(actions, dim=0).to(self.device)
 
@@ -295,22 +326,37 @@ class Runner:
                 "instruction": "",
                 "action": [],  # a_t: [0, T-1]
                 "info": [],  # info after executing a_t: [1, T]
+                "hidden": [],  # Act2Answer diagnostics: {layer_frac: [hidden_dim]} per step, [0, T-1]
+                "truncated": [],
+                "initial_state": {},
+                "metadata": {},
             }
             for idx in range(self.args.num_envs)
         ]
 
         obs_img, instruction, info = self.env.reset(obj_set)
+        episode_metadata = self.env.get_episode_metadata()
         print("instruction[:3]:", instruction[:3])
 
         # data dump: instruction
         for idx in range(self.args.num_envs):
             datas[idx]["instruction"] = instruction[idx]
+            datas[idx]["metadata"] = episode_metadata[idx]
+            datas[idx]["initial_state"] = {
+                key: info[key][idx].tolist()
+                for key in (
+                    "diag_cube_pos", "diag_eef_pos", "diag_left_target_pos",
+                    "diag_right_target_pos", "diag_gripper_state",
+                )
+                if key in info
+            }
 
-        for _ in range(self.args.episode_len):
+        for policy_step in range(self.args.episode_len):
             obs = dict(image=obs_img, task_description=instruction, proprio=info['proprio'], pi_0=info.get('pi_0'))
             action = self._get_action(obs, deterministic=True)
+            diag_hidden = self._last_diag_hidden
 
-            obs_img_new, _, _, env_info = self.env.step(action)
+            obs_img_new, _, truncated, env_info = self.env.step(action)
 
             # info
             print(
@@ -320,7 +366,10 @@ class Runner:
                     if k != "episode" and k != 'proprio'
                 }
             )
-            if "episode" in env_info.keys():
+            # ManiSkill reports truncation from elapsed step 80 onward, while this legacy
+            # benchmark intentionally continues to policy step 79 (sim elapsed step 90).
+            # Aggregate exactly once, at that well-defined final policy state.
+            if policy_step == self.args.episode_len - 1 and "episode" in env_info:
                 for k, v in env_info["episode"].items():
                     env_infos[f"{k}"] += v
 
@@ -333,6 +382,9 @@ class Runner:
                 datas[i]["image"].append(log_image)
                 datas[i]["action"].append(log_action)
                 datas[i]["info"].append(log_info)
+                datas[i]["truncated"].append(bool(truncated[i].item()))
+                if diag_hidden is not None:
+                    datas[i]["hidden"].append({frac: t[i].cpu() for frac, t in diag_hidden.items()})
 
             # update obs_img
             obs_img = obs_img_new
@@ -362,11 +414,39 @@ class Runner:
                 images[_k] = _overlay_instruction(images[_k], instruction[i])
 
             success = int(infos[-1]["success"])
+            question_id = datas[i]["metadata"]["question_id"]
+            # An idempotent rerun can change the binary outcome. Remove only an older
+            # success-suffix variant for this exact question before writing its video,
+            # otherwise both ``-s_0`` and ``-s_1`` misleadingly remain in the shard.
+            for stale_video in exp_dir.glob(f"video_q{question_id:03d}-s_*.mp4"):
+                stale_video.unlink()
             images_to_video(
-                images, str(exp_dir), f"video_{i}-s_{success}", fps=10, verbose=False
+                images, str(exp_dir), f"video_q{question_id:03d}-s_{success}", fps=10, verbose=False
             )
 
+        # Act2Answer Phase 1 diagnostics: one JSONL record + hidden-state .pt per episode.
+        # No-op (and no import cost) unless --enable-diagnostics was passed.
+        if self.args.enable_diagnostics:
+            import sys
+
+            sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+            from diagnostics.episode_logger import write_episode_record
+
+            for i in range(self.args.num_envs):
+                write_episode_record(
+                    run_dir=Path(self.save_dir),
+                    obj_set=obj_set,
+                    asset=self.args.assets,
+                    env_idx=i,
+                    instruction=instruction[i],
+                    data=datas[i],
+                    seed=self.args.seed,
+                    condition=self.args.instruction_condition,
+                )
+
         # infos
+        if not env_infos and "success" in env_info:
+            env_infos["success"] = [bool(v) for v in env_info["success"].tolist()]
         env_stats = {k: np.mean(v) for k, v in env_infos.items()}
         env_stats_ret = env_stats.copy()
 

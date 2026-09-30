@@ -194,6 +194,20 @@ class OpenVLAPolicy:
 
         return hs
 
+    def get_diagnostic_hidden(self, x: dict, layer_fracs=(0.25, 0.5, 0.75, 1.0)) -> dict:
+        """Act2Answer Phase 1 diagnostics: pre-action hidden states at ~25/50/75/100%
+        network depth. See OpenVLAForActionPredictionWithValueHead.get_diagnostic_hidden_states
+        for exactly which token position is captured. Returns {layer_frac: [B, hidden_dim]}."""
+        num_layers = self.vla.config.text_config.num_hidden_layers
+        layer_indices = {frac: min(round(frac * num_layers), num_layers) for frac in layer_fracs}
+
+        features = self._preprocess_obs(x)
+        by_index = self.vla.get_diagnostic_hidden_states(
+            **features, layer_indices=sorted(set(layer_indices.values()))
+        )
+
+        return {frac: by_index[idx] for frac, idx in layer_indices.items()}
+
     def evaluate_actions(self, x: dict, action: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         features = self._preprocess_obs(x, action)
 

@@ -143,7 +143,12 @@ def build_runner_args(ns: argparse.Namespace, config: VLAConfig) -> Args:
     args = Args()
     args.env_id = "Act2AnswerV4-v1"
     args.seed = ns.seed
-    args.name = ns.name or f"{config.prefix}-{ns.assets}-{'swap' if ns.do_swap else 'noswap'}"
+    condition_suffix = f"-{ns.instruction_condition}" if ns.instruction_condition != "knowledge" else "-knowledge"
+    shard_suffix = f"-q{ids[0]:03d}-{ids[-1]:03d}"
+    args.name = ns.name or (
+        f"{config.prefix}-{ns.assets}{condition_suffix}-"
+        f"{'swap' if ns.do_swap else 'noswap'}{shard_suffix}-seed{ns.seed}"
+    )
     args.obj_set = ns.obj_set
     args.episode_len = ns.episode_len
     args.vla_kind = config.vla_kind
@@ -167,6 +172,9 @@ def build_runner_args(ns: argparse.Namespace, config: VLAConfig) -> Args:
     args.num_envs = len(ids)
     args.init_grasp_steps = ns.init_grasp_steps
     args.hold_cube_steps = ns.hold_cube_steps
+    args.enable_diagnostics = bool(ns.enable_diagnostics)
+    args.capture_diagnostic_hidden = not ns.disable_diagnostic_hidden_states
+    args.instruction_condition = ns.instruction_condition
     return args
 
 
@@ -193,6 +201,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--render-info", action="store_true")
     parser.add_argument("--init-grasp-steps", type=int, default=10)
     parser.add_argument("--hold-cube-steps", type=int, default=15)
+    parser.add_argument(
+        "--instruction-condition",
+        choices=(
+            "knowledge", "explicit_object", "explicit_spatial", "spatial",
+            "tile_object", "visual_description",
+        ),
+        default="knowledge",
+        help="Matched go/no-go instruction condition; scene construction is unchanged.",
+    )
+    parser.add_argument(
+        "--enable-diagnostics",
+        action="store_true",
+        help="Phase 1 diagnostics: write per-episode JSONL + hidden-state .pt files "
+             "under $A2A_OUTPUT_DIR/<name>/diagnostics/. No effect on baseline outputs.",
+    )
+    parser.add_argument(
+        "--disable-diagnostic-hidden-states",
+        action="store_true",
+        help="Keep trajectory diagnostics but skip OpenVLA hidden-state capture.",
+    )
     ns = parser.parse_args()
 
     config = VLA_CONFIGS[ns.vla]

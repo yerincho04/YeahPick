@@ -39,6 +39,7 @@ class SimplerWrapper:
             initial_qpos = self.args.initial_qpos,
             ids = self.args.ids,
             do_swap = self.args.do_swap,
+            instruction_condition = self.args.instruction_condition,
             rgb_overlay_paths = self.args.rgb_overlay_paths,
         )
 
@@ -157,6 +158,31 @@ class SimplerWrapper:
 
 
         return obs_image, instruction, info
+
+    def get_episode_metadata(self):
+        """Return non-tensor Act2Answer metadata for diagnostic logging."""
+        env = self.env.unwrapped
+        return [
+            {
+                "question_id": int(question_id),
+                "condition": self.args.instruction_condition,
+                "semantic_answer": semantic_answer,
+                "knowledge_category": category,
+                "seed": int(self.args.seed),
+                "semantic_answer_id": semantic_answer_id,
+                "distractor_id": distractor_id,
+                "relation_type": relation_type,
+                "template_family": template_family,
+            }
+            for (
+                question_id, semantic_answer, semantic_answer_id, distractor_id,
+                relation_type, template_family, category,
+            ) in zip(
+                env.get_ids(), env.get_semantic_answers(), env.get_semantic_answer_ids(),
+                env.get_distractor_ids(), env.get_relation_types(), env.get_template_families(),
+                env.get_knowledge_categories(),
+            )
+        ]
 
     def step(self, raw_action):
         # if raw_action.dtype == torch.float32 or raw_action.dtype == torch.float64:

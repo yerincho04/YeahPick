@@ -9,7 +9,15 @@ EVAL_GPU=${EVAL_GPU:-3}
 BUFFER_INFERBATCH=${BUFFER_INFERBATCH:-$COUNT}
 VLA_PATH=${VLA_PATH:-gen-robot/openvla-7b-rlvla-sft_16k}
 UNNORM=${UNNORM:-sft}
-LOG=${A2A_LOG_DIR}/openvla_${ASSETS}_eval.log
+SEED=${SEED:-0}
+INSTRUCTION_CONDITION=${INSTRUCTION_CONDITION:-knowledge}
+END_ID=$((START_ID + COUNT - 1))
+LOG=${A2A_LOG_DIR}/openvla_${ASSETS}_${INSTRUCTION_CONDITION}_q${START_ID}-${END_ID}_seed${SEED}_eval.log
+
+diag_extra=()
+[ "${ENABLE_DIAGNOSTICS:-0}" = "1" ] && diag_extra=(--enable-diagnostics)
+hidden_extra=()
+[ "$INSTRUCTION_CONDITION" != "knowledge" ] && hidden_extra=(--disable-diagnostic-hidden-states)
 
 conda activate "${CONDA_ENVS_DIR}/openvla_rl4vla"
 export PYTHONPATH="${REPO_ROOT}/SimplerEnv:${REPO_ROOT}/ManiSkill:${REPO_ROOT}/openvla:${PYTHONPATH:-}"
@@ -17,15 +25,22 @@ export PYTHONPATH="${REPO_ROOT}/SimplerEnv:${REPO_ROOT}/ManiSkill:${REPO_ROOT}/o
 : > "$LOG"
 exec > >(tee -a "$LOG") 2>&1
 
-echo "START_OPENVLA_EVAL $(date -u) assets=$ASSETS count=$COUNT gpu=$EVAL_GPU vla=$VLA_PATH unnorm=$UNNORM"
+echo "START_OPENVLA_EVAL $(date -u) assets=$ASSETS count=$COUNT gpu=$EVAL_GPU vla=$VLA_PATH unnorm=$UNNORM condition=$INSTRUCTION_CONDITION seed=$SEED"
 for swap_arg in noswap swap; do
   extra=()
   [ "$swap_arg" = swap ] && extra=(--do-swap)
   echo "RUN_OPENVLA ${swap_arg} $(date -u)"
-  CUDA_VISIBLE_DEVICES=$EVAL_GPU XLA_PYTHON_CLIENT_PREALLOCATE=false \
-    python3 -u -m simpler_env.eval \
+  cuda_env=(env CUDA_VISIBLE_DEVICES="$EVAL_GPU" XLA_PYTHON_CLIENT_PREALLOCATE=false)
+  if [ -n "${SLURM_JOB_ID:-}" ]; then
+    # Slurm already exposes exactly the allocated GPU. Overwriting its physical device
+    # mapping with "0" can hide the GPU on heterogeneous nodes.
+    cuda_env=(env XLA_PYTHON_CLIENT_PREALLOCATE=false)
+  fi
+  "${cuda_env[@]}" python3 -u -m simpler_env.eval \
       --vla openvla --start-id "$START_ID" --count "$COUNT" --assets "$ASSETS" \
       --obj-set "${OBJ_SET:-test}" --buffer-inferbatch "$BUFFER_INFERBATCH" \
-      --vla-path "$VLA_PATH" --vla-unnorm-key "$UNNORM" "${extra[@]}"
+      --vla-path "$VLA_PATH" --vla-unnorm-key "$UNNORM" \
+      --instruction-condition "$INSTRUCTION_CONDITION" --seed "$SEED" \
+      "${extra[@]}" "${diag_extra[@]}" "${hidden_extra[@]}"
 done
 echo "DONE_OPENVLA_EVAL $(date -u)"
