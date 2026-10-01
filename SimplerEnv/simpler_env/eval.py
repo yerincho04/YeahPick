@@ -205,7 +205,7 @@ def parse_args() -> argparse.Namespace:
         "--instruction-condition",
         choices=(
             "knowledge", "explicit_object", "explicit_spatial", "spatial",
-            "tile_object", "visual_description",
+            "tile_object", "visual_description", "neutral",
         ),
         default="knowledge",
         help="Matched go/no-go instruction condition; scene construction is unchanged.",

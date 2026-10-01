@@ -17,7 +17,8 @@ LOG=${A2A_LOG_DIR}/openvla_${ASSETS}_${INSTRUCTION_CONDITION}_q${START_ID}-${END
 diag_extra=()
 [ "${ENABLE_DIAGNOSTICS:-0}" = "1" ] && diag_extra=(--enable-diagnostics)
 hidden_extra=()
-[ "$INSTRUCTION_CONDITION" != "knowledge" ] && hidden_extra=(--disable-diagnostic-hidden-states)
+# Hidden states are captured for the probe conditions only (knowledge + the neutral control).
+case "$INSTRUCTION_CONDITION" in knowledge|neutral) ;; *) hidden_extra=(--disable-diagnostic-hidden-states) ;; esac
 
 conda activate "${CONDA_ENVS_DIR}/openvla_rl4vla"
 export PYTHONPATH="${REPO_ROOT}/SimplerEnv:${REPO_ROOT}/ManiSkill:${REPO_ROOT}/openvla:${PYTHONPATH:-}"

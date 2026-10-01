@@ -387,7 +387,7 @@ class Act2AnswerV4(_PickCubeBase):
         self.do_swap = bool(do_swap)
         if instruction_condition not in {
             "knowledge", "explicit_object", "explicit_spatial", "spatial",
-            "tile_object", "visual_description",
+            "tile_object", "visual_description", "neutral",
         }:
             raise ValueError(f"Unknown instruction_condition={instruction_condition!r}")
         self.instruction_condition = instruction_condition
@@ -757,6 +757,9 @@ class Act2AnswerV4(_PickCubeBase):
                         f"Pair {pair_idx} lacks curated visual_description required by visual_description"
                     )
                 instruction = f"Place the cube on the tile showing the {description}."
+            elif self.instruction_condition == "neutral":
+                # Information-free control: same scene, no knowledge, object, or side cue.
+                instruction = "Place the cube on one of the tiles."
             else:  # explicit_spatial or the Part-A alias, spatial
                 instruction = f"Place the cube on the {ans} tile."
 

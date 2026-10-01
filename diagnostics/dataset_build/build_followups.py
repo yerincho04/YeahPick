@@ -90,8 +90,16 @@ def normalized_words(text: str) -> set[str]:
     return set(re.findall(r"[a-z0-9]+", text.lower()))
 
 
-def build_repeated() -> None:
-    asset = CARROT / "semantic_repeated_v1"
+# v1 offsets (1..5) let the two tile images alone reveal the answer for 45/50 questions
+# (each unordered image pair occurs with only one answer). v2 uses offsets {+-1, +-2, 5}:
+# every image pair then occurs once with each image as the answer, so the scene alone
+# carries no information about which of the two tiles is K.
+REPEATED_OFFSETS = {"semantic_repeated_v1": (1, 2, 3, 4, 5), "semantic_repeated_v2": (1, 9, 2, 8, 5)}
+
+
+def build_repeated(asset_name: str = "semantic_repeated_v1") -> None:
+    offsets = REPEATED_OFFSETS[asset_name]
+    asset = CARROT / asset_name
     asset.mkdir(parents=True, exist_ok=True)
     shapes = asset / "shapes"
     model_db = {}
@@ -107,7 +115,7 @@ def build_repeated() -> None:
     for concept_i, concept in enumerate(CONCEPTS):
         for question_i, (question, template_family, relation_type) in enumerate(concept["questions"]):
             qid = concept_i * 5 + question_i
-            distractor = CONCEPTS[(concept_i + question_i + 1) % len(CONCEPTS)]
+            distractor = CONCEPTS[(concept_i + offsets[question_i]) % len(CONCEPTS)]
             answer_side = "Left" if qid % 2 == 0 else "Right"
             correct_model = f"repeat_{concept['id']}"
             distractor_model = f"repeat_{distractor['id']}"
@@ -152,6 +160,10 @@ def build_repeated() -> None:
     answer_counts = Counter(p["semantic_answer_id"] for p in pairs)
     distractor_counts = Counter(p["distractor_id"] for p in pairs)
     side_counts = Counter(p["noswap_correct_side"] for p in pairs)
+    image_pair_answers = {}
+    for p in pairs:
+        image_pair_answers.setdefault(frozenset((p["semantic_answer_id"], p["distractor_id"])), set()).add(p["semantic_answer_id"])
+    image_pairs_revealing_answer = sum(len(v) == 1 for v in image_pair_answers.values())
     audit = {
         "question_count": len(pairs),
         "concept_count": len(CONCEPTS),
@@ -161,6 +173,8 @@ def build_repeated() -> None:
         "distractor_frequency": dict(sorted(distractor_counts.items())),
         "noswap_side_frequency": dict(sorted(side_counts.items())),
         "template_family_frequency": dict(sorted(template_counts.items())),
+        "image_pairs": len(image_pair_answers),
+        "image_pairs_revealing_answer": image_pairs_revealing_answer,
         "checks_passed": not duplicate_questions and not answer_leaks
             and set(answer_counts.values()) == {5} and set(distractor_counts.values()) == {5}
             and side_counts == {"left": 25, "right": 25},
@@ -171,26 +185,27 @@ def build_repeated() -> None:
     (asset / "pairs.json").write_text(json.dumps(pairs, indent=2) + "\n")
     (asset / "model_db.json").write_text(json.dumps(model_db, indent=2) + "\n")
     OUT.mkdir(parents=True, exist_ok=True)
-    write_csv(OUT / "semantic_repeated_questions.csv", pairs)
-    (OUT / "semantic_repeated_questions.json").write_text(json.dumps(pairs, indent=2) + "\n")
-    (OUT / "semantic_repeated_audit.json").write_text(json.dumps(audit, indent=2) + "\n")
+    write_csv(OUT / f"{asset_name}_questions.csv", pairs)
+    (OUT / f"{asset_name}_questions.json").write_text(json.dumps(pairs, indent=2) + "\n")
+    (OUT / f"{asset_name}_audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     inventory = [{
         "semantic_answer_id": c["id"], "label": c["label"],
         "asset_path": f"shapes/repeat_{c['id']}/textured.glb",
         "proposed_questions": 5,
         "distractors_used": sorted({p["distractor_id"] for p in pairs if p["semantic_answer_id"] == c["id"]}),
     } for c in CONCEPTS]
-    (OUT / "semantic_repeated_inventory.json").write_text(json.dumps(inventory, indent=2) + "\n")
-    write_csv(OUT / "semantic_repeated_inventory.csv", [
+    (OUT / f"{asset_name}_inventory.json").write_text(json.dumps(inventory, indent=2) + "\n")
+    write_csv(OUT / f"{asset_name}_inventory.csv", [
         {**row, "distractors_used": ", ".join(row["distractors_used"])} for row in inventory
     ])
 
     md = [
-        "# semantic_repeated_v1 question audit", "",
+        f"# {asset_name} question audit", "",
         f"- Questions: {len(pairs)}", f"- Answer concepts: {len(CONCEPTS)}",
         "- Answer frequency: 5 each", "- Distractor frequency: 5 each",
         "- Noswap sides: 25 left / 25 right", "- Duplicate questions: 0",
-        "- Answer-word leakage: 0", "", 
+        "- Answer-word leakage: 0",
+        f"- Image pairs that reveal the answer on their own: {image_pairs_revealing_answer}/{len(image_pair_answers)}", "",
         "| ID | Question | Answer | Distractor | Relation | Answer asset | Distractor asset |",
         "|---:|---|---|---|---|---|---|",
     ]
@@ -200,10 +215,15 @@ def build_repeated() -> None:
             f"{p['distractor_label']} | {p['relation_type']} | `{p['left'] if p['answer']=='Left' else p['right']}` | "
             f"`{p['right'] if p['answer']=='Left' else p['left']}` |"
         )
-    (OUT / "semantic_repeated_audit.md").write_text("\n".join(md) + "\n")
+    (OUT / f"{asset_name}_audit.md").write_text("\n".join(md) + "\n")
 
 
 if __name__ == "__main__":
-    build_grounding_control()
-    build_repeated()
-    print("Built grounding_control_v1 and semantic_repeated_v1 with passing audits.")
+    import sys
+    targets = sys.argv[1:] or ["grounding_control_v1", "semantic_repeated_v1"]
+    for target in targets:
+        if target == "grounding_control_v1":
+            build_grounding_control()  # needs semantic_pilot_v1 (build_dataset.py) first
+        else:
+            build_repeated(target)
+        print(f"Built {target} with a passing audit.")

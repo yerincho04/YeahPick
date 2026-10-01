@@ -27,12 +27,12 @@ module load cuda/12.1
 echo "SLURM_JOB_ID=$SLURM_JOB_ID CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
 nvidia-smi --query-gpu=index,name,memory.total --format=csv,noheader
 
-CONDITIONS=(knowledge explicit_object explicit_spatial)
+read -r -a CONDITIONS <<< "${CONDITIONS:-knowledge explicit_object explicit_spatial}"
 ASSETS=${ASSETS:?Set ASSETS=<asset folder name under ManiSkill/mani_skill/assets/carrot/>}
 SHARD=${SHARD:-5}   # questions per job; keep small enough for one GPU (5 fits a 24GB card)
 N=$(python3 -c "import json;print(len(json.load(open('ManiSkill/mani_skill/assets/carrot/$ASSETS/pairs.json'))))")
 SHARDS=$(( (N + SHARD - 1) / SHARD ))
-task=${SLURM_ARRAY_TASK_ID:?Run as an array with indices 0..3*ceil(N/SHARD)-1 (see README)}
+task=${SLURM_ARRAY_TASK_ID:?Run as an array with indices 0..(number of CONDITIONS)*ceil(N/SHARD)-1 (see README)}
 condition=${CONDITIONS[$((task / SHARDS))]}
 START_ID=$(( task % SHARDS * SHARD ))
 COUNT=$(( N - START_ID < SHARD ? N - START_ID : SHARD ))
