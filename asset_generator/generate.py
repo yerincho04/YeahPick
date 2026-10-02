@@ -52,7 +52,8 @@ def make_tile(image_path: Path) -> bytes:
         process=False,
     )
     top.visual = trimesh.visual.texture.TextureVisuals(
-        uv=np.array([[1, 0], [0, 0], [0, 1], [1, 1]], dtype=np.float32),
+        # Increasing tile X must move left-to-right across the source image.
+        uv=np.array([[0, 0], [1, 0], [1, 1], [0, 1]], dtype=np.float32),
         image=texture,
     )
 
