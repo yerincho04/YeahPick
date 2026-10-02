@@ -3,6 +3,33 @@ import numpy as np
 import torch
 from mani_skill.envs.sapien_env import BaseEnv
 
+
+def _ensure_act2answer_registered(env_id: str) -> None:
+    """Register the local task when ManiSkill's import side effect was skipped."""
+    if env_id != "Act2AnswerV4-v1":
+        return
+
+    from functools import partial
+    from gymnasium.envs.registration import registry
+    from mani_skill.envs.tasks.digital_twins.bridge_dataset_eval.put_on_in_scene_multi_v4 import Act2AnswerV4
+    from mani_skill.utils.registration import REGISTERED_ENVS, make, make_vec, register
+
+    if env_id not in REGISTERED_ENVS:
+        register(
+            env_id,
+            Act2AnswerV4,
+            max_episode_steps=80,
+            asset_download_ids=["bridge_v2_real2sim"],
+        )
+    if env_id not in registry:
+        gym.register(
+            env_id,
+            entry_point=partial(make, env_id=env_id),
+            vector_entry_point=partial(make_vec, env_id=env_id),
+            max_episode_steps=80,
+            disable_env_checker=True,
+        )
+
 class SimplerWrapper:
     def __init__(self, all_args, unnorm_state=None, extra_seed=0):
         self.args = all_args
@@ -43,6 +70,7 @@ class SimplerWrapper:
             rgb_overlay_paths = self.args.rgb_overlay_paths,
         )
 
+        _ensure_act2answer_registered(self.args.env_id)
         self.env: BaseEnv = gym.make(**env_config)
         self.env.reset(seed=[self.args.seed for i in range(self.args.num_envs)])
 

@@ -25,7 +25,14 @@ fi
 conda activate "$ENV_PATH"
 export PYTHONNOUSERSITE=1
 
-retry pip4 install --upgrade pip wheel setuptools ninja packaging
+# flash-attn downloads a prebuilt wheel and moves it into pip's wheel cache.
+# Keep pip's temporary build files and cache on the same filesystem.
+export TMPDIR="${CONDA_ENVS_DIR}/.pip-tmp"
+export PIP_CACHE_DIR="${CONDA_ENVS_DIR}/.pip-cache"
+mkdir -p "$TMPDIR" "$PIP_CACHE_DIR"
+
+retry pip4 install --upgrade pip wheel setuptools==80.9.0 ninja packaging
+retry pip4 install numpy==1.26.4 psutil
 retry pip4 install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu121
 retry pip4 install flash-attn==2.7.4.post1 --no-build-isolation
 retry pip4 install -r "$REPO_ROOT/requirements/openvla.txt"

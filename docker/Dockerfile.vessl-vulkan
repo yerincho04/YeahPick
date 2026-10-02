@@ -1,0 +1,7 @@
+# Build on the same image used by the current VESSL Workspace.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# NVIDIA Container Runtime reads this when the new container is created.
+# CUDA inference needs compute; SAPIEN Vulkan rendering needs graphics.
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
