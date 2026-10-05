@@ -22,16 +22,17 @@ from tile_asset import TILE_BBOX, TILE_DENSITY, TILE_SCALES, build_tile
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "ManiSkill/mani_skill/assets/carrot"
 SIZE, RADIUS, SEED = 512, 26, 20261005
-INK = (30, 55, 85)
+COLORS = {"red": (210, 45, 45), "blue": (40, 85, 205)}
+CORRECT_RED = [True, True, False, False, True, False, False, True, False, True]
 CORRECT_A = [True, False, True, False, False, True, False, True, False, True]
 WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven"}
 
 
-def draw(points):
+def draw(points, color):
     im = Image.new("RGB", (SIZE, SIZE), "white")
     pen = ImageDraw.Draw(im)
     for x, y in points:
-        pen.ellipse((x-RADIUS, y-RADIUS, x+RADIUS, y+RADIUS), fill=INK)
+        pen.ellipse((x-RADIUS, y-RADIUS, x+RADIUS, y+RADIUS), fill=COLORS[color])
     return im
 
 
@@ -68,7 +69,7 @@ def symmetry_points(i):
 def main():
     report = {}
     for category in ("counting", "symmetry"):
-        asset = category + "_pilot_v1"
+        asset = category + "_color_v2"
         dest = ASSETS / asset
         (dest / "images").mkdir(parents=True, exist_ok=True)
         pairs, manifest, db, geometry, review = [], [], {}, [], []
@@ -87,11 +88,13 @@ def main():
                 good_label, bad_label = "vertically symmetric pattern", "vertically asymmetric pattern"
             points = (good, bad) if CORRECT_A[i] else (bad, good)
             labels = (good_label, bad_label) if CORRECT_A[i] else (bad_label, good_label)
+            good_color, bad_color = ("red", "blue") if CORRECT_RED[i] else ("blue", "red")
+            colors = (good_color, bad_color) if CORRECT_A[i] else (bad_color, good_color)
             names = [f"{qid}_{side}" for side in ("A", "B")]
             ims = []
-            for name, coords in zip(names, points):
+            for name, coords, color in zip(names, points, colors):
                 validate_points(coords)
-                im = draw(coords)
+                im = draw(coords, color)
                 binary = np.any(np.asarray(im) != 255, axis=2)
                 assert label(binary)[1] == len(coords), (name, "circle count")
                 is_symmetric = np.array_equal(binary, binary[:, ::-1])
@@ -106,7 +109,7 @@ def main():
                 assert np.array_equal(np.asarray(texture.convert("RGB")), np.asarray(im))
                 db[name] = dict(name=name, sign=name, bbox=TILE_BBOX,
                                 scales=TILE_SCALES, density=TILE_DENSITY)
-                geometry.append(dict(tile=name, centers=coords, radius=RADIUS,
+                geometry.append(dict(tile=name, centers=coords, radius=RADIUS, color=color,
                                      circle_count=len(coords), vertically_symmetric=is_symmetric,
                                      png_sha256=hashlib.sha256((dest/"images"/f"{name}.png").read_bytes()).hexdigest()))
                 ims.append(im)
@@ -115,17 +118,24 @@ def main():
                               left=names[0], right=names[1], question=question,
                               knowledge_instruction=question,
                               answer="Left" if CORRECT_A[i] else "Right",
-                              semantic_answer=good_label,
+                              semantic_answer=f"tile with {good_color} circles",
                               semantic_answer_id=names[0 if CORRECT_A[i] else 1],
                               distractor_id=names[1 if CORRECT_A[i] else 0],
-                              left_label=labels[0], right_label=labels[1],
+                              left_label=f"{colors[0]} {labels[0]}", right_label=f"{colors[1]} {labels[1]}",
+                              correct_color=good_color, left_color=colors[0], right_color=colors[1],
                               knowledge_category=category,
-                              dataset_provenance="original_synthetic_pilot_v1"))
+                              dataset_provenance="original_synthetic_color_pilot_v2"))
             manifest.append(dict(id=qid, category=category, image_a=f"images/{names[0]}.png",
                                  image_b=f"images/{names[1]}.png", question=question,
-                                 correct_image=correct, count_a=len(points[0]), count_b=len(points[1])))
+                                 correct_image=correct, count_a=len(points[0]), count_b=len(points[1]),
+                                 color_a=colors[0], color_b=colors[1],
+                                 explicit_object=f"Place the cube on the tile with {good_color} circles.",
+                                 explicit_spatial=f"Place the cube on the {'left' if CORRECT_A[i] else 'right'} tile."))
             review.append((qid, ims, correct, question))
         assert sum(p["answer"] == "Left" for p in pairs) == 5
+        assert sum(p["correct_color"] == "red" for p in pairs) == 5
+        # With odd five-item side groups, joint color/side balance is 2/3.
+        assert 2 <= sum(p["correct_color"] == "red" and p["answer"] == "Left" for p in pairs) <= 3
         assert len({g["png_sha256"] for g in geometry}) == 20, "Duplicate images"
         for pair in pairs:
             assert pair["semantic_answer_id"] == pair["left" if pair["answer"] == "Left" else "right"]
