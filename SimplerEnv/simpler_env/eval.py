@@ -225,7 +225,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--capture-attention",
         action="store_true",
-        help="Capture four OpenVLA layer maps every five policy steps and write a 2x2 video and CSV.",
+        help="Capture four OpenVLA layer maps every policy step and write a 2x2 video and CSV.",
     )
     ns = parser.parse_args()
 

@@ -10,6 +10,14 @@ source "$REPO_ROOT/scripts/env.sh"
 conda activate "${CONDA_ENVS_DIR}/openvla_rl4vla"
 export PYTHONPATH="${REPO_ROOT}/SimplerEnv:${REPO_ROOT}/ManiSkill:${REPO_ROOT}/openvla:${REPO_ROOT}:${PYTHONPATH:-}"
 
+# VESSL's NVIDIA ICD may point at GLX, which cannot create a Vulkan instance in
+# this headless workspace. Use the EGL ICD that worked for the existing evals.
+if [[ -z "${VK_ICD_FILENAMES:-}" && -f /etc/vulkan/icd.d/nvidia_icd.json ]]; then
+  sed 's/libGLX_nvidia.so.0/libEGL_nvidia.so.0/' \
+    /etc/vulkan/icd.d/nvidia_icd.json > /tmp/nvidia_egl_icd.json
+  export VK_ICD_FILENAMES=/tmp/nvidia_egl_icd.json
+fi
+
 ASSETS="${ASSETS:-public_info_v1}"
 START_ID="${START_ID:-0}"
 SEED="${SEED:-0}"

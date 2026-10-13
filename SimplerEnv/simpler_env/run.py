@@ -144,7 +144,7 @@ class Args:
     capture_diagnostic_hidden: bool = True
 
     capture_attention: bool = False
-    """Sample OpenVLA pre-action image attention every five policy steps."""
+    """Capture OpenVLA pre-action image attention at every policy step."""
 
     instruction_condition: str = "knowledge"
     """Matched instruction condition: knowledge, explicit_object, or explicit_spatial."""
@@ -364,7 +364,7 @@ class Runner:
             action = self._get_action(obs, deterministic=True)
             diag_hidden = self._last_diag_hidden
 
-            if self.args.capture_attention and policy_step % 5 == 0:
+            if self.args.capture_attention:
                 for i in range(self.args.num_envs):
                     single_obs = {
                         "image": obs_img[i:i + 1],

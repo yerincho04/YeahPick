@@ -35,7 +35,8 @@ def _overlay(image: np.ndarray, grid: np.ndarray, label: str, strategy: str) -> 
     # Per-frame normalization is for visibility only; CSV stores unnormalized mass.
     heat = np.uint8(np.clip(heat / max(float(heat.max()), 1e-12), 0, 1) * 255)
     color = cv2.cvtColor(cv2.applyColorMap(heat, cv2.COLORMAP_JET), cv2.COLOR_BGR2RGB)
-    alpha = (heat.astype(np.float32) / 255.0 * 0.65)[..., None]
+    # Keep low-attention patches visibly blue rather than showing bare RGB.
+    alpha = (0.30 + heat.astype(np.float32) / 255.0 * 0.35)[..., None]
     base[y0:y0 + height, x0:x0 + width] = (cropped * (1 - alpha) + color * alpha).astype(np.uint8)
     cv2.rectangle(base, (0, 0), (340, 38), (0, 0, 0), -1)
     cv2.putText(base, label, (10, 27), cv2.FONT_HERSHEY_SIMPLEX,
