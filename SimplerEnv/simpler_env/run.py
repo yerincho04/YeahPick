@@ -143,6 +143,9 @@ class Args:
     Act2Answer/diagnostics/. Off by default; preserves baseline eval behavior exactly."""
     capture_diagnostic_hidden: bool = True
 
+    capture_attention: bool = False
+    """Sample OpenVLA pre-action image attention every five policy steps."""
+
     instruction_condition: str = "knowledge"
     """Matched instruction condition: knowledge, explicit_object, or explicit_spatial."""
 
@@ -317,6 +320,10 @@ class Runner:
     @torch.no_grad()
     def render(self, epoch: int, obj_set: str) -> dict:
         self.policy.prep_rollout()
+        if self.args.capture_attention:
+            if self.args.vla_kind != "openvla" or self.args.instruction_condition != "explicit_object" or self.args.do_swap:
+                raise ValueError("Attention capture requires OpenVLA, explicit_object, and noswap")
+            from diagnostics.attention_video import write_attention_outputs
 
         # init logger
         env_infos = defaultdict(lambda: [])
@@ -327,6 +334,7 @@ class Runner:
                 "action": [],  # a_t: [0, T-1]
                 "info": [],  # info after executing a_t: [1, T]
                 "hidden": [],  # Act2Answer diagnostics: {layer_frac: [hidden_dim]} per step, [0, T-1]
+                "attention_samples": [],
                 "truncated": [],
                 "initial_state": {},
                 "metadata": {},
@@ -355,6 +363,19 @@ class Runner:
             obs = dict(image=obs_img, task_description=instruction, proprio=info['proprio'], pi_0=info.get('pi_0'))
             action = self._get_action(obs, deterministic=True)
             diag_hidden = self._last_diag_hidden
+
+            if self.args.capture_attention and policy_step % 5 == 0:
+                for i in range(self.args.num_envs):
+                    single_obs = {
+                        "image": obs_img[i:i + 1],
+                        "task_description": [instruction[i]],
+                    }
+                    maps = self.policy.get_image_attention(single_obs)
+                    datas[i]["attention_samples"].append({
+                        "step": policy_step,
+                        "maps": maps,
+                        "masks": self.env.attention_masks[i],
+                    })
 
             obs_img_new, _, truncated, env_info = self.env.step(action)
 
@@ -423,6 +444,19 @@ class Runner:
             images_to_video(
                 images, str(exp_dir), f"video_q{question_id:03d}-s_{success}", fps=10, verbose=False
             )
+            if self.args.capture_attention:
+                attention_dir = Path(self.save_dir) / "attention"
+                for stale_video in attention_dir.glob(f"attention_q{question_id:03d}-s_*.mp4"):
+                    stale_video.unlink()
+                write_attention_outputs(
+                    images=images,
+                    samples=datas[i]["attention_samples"],
+                    video_path=attention_dir / f"attention_q{question_id:03d}-s_{success}.mp4",
+                    scores_path=attention_dir / f"attention_q{question_id:03d}.csv",
+                    question_id=question_id,
+                    seed=self.args.seed,
+                    image_strategy=self.policy.image_processor.image_resize_strategy,
+                )
 
         # Act2Answer Phase 1 diagnostics: one JSONL record + hidden-state .pt per episode.
         # No-op (and no import cost) unless --enable-diagnostics was passed.

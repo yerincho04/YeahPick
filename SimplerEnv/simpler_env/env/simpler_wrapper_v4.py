@@ -185,7 +185,28 @@ class SimplerWrapper:
         info["pi_0"] = self._compute_eef_pos(None)
 
 
+        if self.args.capture_attention:
+            self._capture_attention_masks(obs)
         return obs_image, instruction, info
+
+    def _capture_attention_masks(self, obs):
+        """Board segmentation from the camera frame supplied to the policy."""
+        env = self.env.unwrapped
+        seg = obs["sensor_data"]["3rd_view_camera"]["segmentation"][..., 0]
+        masks = []
+        for i in range(self.num_envs):
+            answer = env._answers[i]
+            correct_name = (env._current_left_names if answer == "left" else env._current_right_names)[i]
+            wrong_name = (env._current_right_names if answer == "left" else env._current_left_names)[i]
+            correct_objs = env.objs_board[correct_name]._objs
+            wrong_objs = env.objs_board[wrong_name]._objs
+            correct_id = correct_objs[min(i, len(correct_objs) - 1)].per_scene_id
+            wrong_id = wrong_objs[min(i, len(wrong_objs) - 1)].per_scene_id
+            masks.append({
+                "correct": (seg[i] == correct_id).cpu().numpy(),
+                "wrong": (seg[i] == wrong_id).cpu().numpy(),
+            })
+        self.attention_masks = masks
 
     def get_episode_metadata(self):
         """Return non-tensor Act2Answer metadata for diagnostic logging."""
@@ -227,6 +248,8 @@ class SimplerWrapper:
 
         obs, _reward, _terminated, truncated, info = self.env.step(action)
         obs_image = obs["sensor_data"]["3rd_view_camera"]["rgb"].to(torch.uint8)
+        if self.args.capture_attention:
+            self._capture_attention_masks(obs)
         truncated = truncated.reshape(-1, 1)  # [B, 1]
 
         # calculate reward

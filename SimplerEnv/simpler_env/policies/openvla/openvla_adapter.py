@@ -53,3 +53,10 @@ class OpenVLAInference:
         action = self.get_action(obs, deterministic)
         hidden = self._p.get_diagnostic_hidden(obs)
         return action, hidden
+
+    def get_image_attention(self, obs):
+        return self._p.get_image_attention(obs)
+
+    @property
+    def image_processor(self):
+        return self._p.image_processor
