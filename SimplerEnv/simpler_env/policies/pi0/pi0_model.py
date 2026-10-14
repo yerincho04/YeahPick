@@ -64,24 +64,21 @@ class PI0Policy:
         # print(f"Tasks: {tasks}")
         # print(f"eef_pos: {obs['eef_pos'].shape}")
         # for i in range(batch_size):
-        element = {
-            "observation.images.top": images,
-            "observation.state": obs['eef_pos'],
-            "task": tasks
-        }
-            # if proprios is not None:
-            #     # BridgeSimplerAdapter expects obs["observation.state"] to be passed to preprocess_proprio
-            #     # preprocess_proprio expects the dict containing "agent"
-            #     element["observation.state"] = proprios[i]
-            
-        # LeRobotPolicyWrapper.select_action returns env_actions (numpy)
-        
+        # Upstream INT-ACT adapts one observation at a time, and lerobot's PI0Policy keeps one shared
+        # action queue (n_action_steps=4). With several envs that queue would hand env 0's actions to
+        # env 1, so each env gets a fresh chunk and runs its first action (receding horizon).
+        eef = obs["eef_pos"].cpu().numpy() if torch.is_tensor(obs["eef_pos"]) else np.asarray(obs["eef_pos"])
+        per_env = []
+        for i in range(batch_size):
+            self.wrapper.model.reset()
+            element = {"observation.images.top": images[i],
+                       "observation.state": {"agent": {"eef_pos": eef[i]}},
+                       "task": tasks[i]}
+            per_env.append(np.asarray(self.wrapper.select_action(element)).reshape(-1)[:7])
+        actions = np.stack(per_env)  # [B, 7]
         if return_raw:
-            actions, raw_actions = self.wrapper.select_action(element, return_raw=return_raw)
-        else:
-            actions = self.wrapper.select_action(element, return_raw=return_raw)
+            raw_actions = actions
 
-        
         # Ensure actions is [B, D] if T=1
         if actions.ndim == 3 and actions.shape[1] == 1:
             actions = actions.squeeze(1)

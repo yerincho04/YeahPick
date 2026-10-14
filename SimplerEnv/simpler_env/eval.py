@@ -146,7 +146,7 @@ def build_runner_args(ns: argparse.Namespace, config: VLAConfig) -> Args:
     condition_suffix = f"-{ns.instruction_condition}" if ns.instruction_condition != "knowledge" else "-knowledge"
     shard_suffix = f"-q{ids[0]:03d}-{ids[-1]:03d}"
     args.name = ns.name or (
-        f"{config.prefix}-{ns.assets}{condition_suffix}-"
+        f"{ns.run_prefix or config.prefix}-{ns.assets}{condition_suffix}-"
         f"{'swap' if ns.do_swap else 'noswap'}{shard_suffix}-seed{ns.seed}"
     )
     args.obj_set = ns.obj_set
@@ -198,6 +198,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--archive-path", default=None)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--name", default=None)
+    parser.add_argument("--run-prefix", default=None,
+                        help="prefix for output dir names (default: the --vla name), e.g. openvla-base")
     parser.add_argument("--render-info", action="store_true")
     parser.add_argument("--init-grasp-steps", type=int, default=10)
     parser.add_argument("--hold-cube-steps", type=int, default=15)
@@ -205,7 +207,7 @@ def parse_args() -> argparse.Namespace:
         "--instruction-condition",
         choices=(
             "knowledge", "explicit_object", "explicit_spatial", "spatial",
-            "tile_object", "visual_description", "neutral",
+            "tile_object", "visual_description", "neutral", "paper_style",
         ),
         default="knowledge",
         help="Matched go/no-go instruction condition; scene construction is unchanged.",

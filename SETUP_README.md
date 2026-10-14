@@ -28,7 +28,7 @@ All scripts source `scripts/env.sh`. Important variables:
 | `CONDA_ENVS_DIR` | `/home/jovyan/.mlspace/envs` | conda env location |
 | `A2A_LOG_DIR` | `$REPO_ROOT/logs` | eval/setup logs |
 | `A2A_OUTPUT_DIR` | `$REPO_ROOT/outputs` | videos, config YAML, stats YAML |
-| `PI0_DEPS_ROOT` | `$A2A_EXTERNAL_DIR/RL4VLA` | pi0/RL4VLA checkout |
+| `PI0_DEPS_ROOT` | `$A2A_EXTERNAL_DIR/pi0_deps` | pi0 code (INT-ACT + its lerobot fork), built by clone_external_repos.sh |
 | `XIAOMI_REPO` | `$A2A_EXTERNAL_DIR/Xiaomi-Robotics-0` | Xiaomi server repo |
 | `INTERNVLA_REPO` | `$A2A_EXTERNAL_DIR/InternVLA-M1` | InternVLA server repo |
 | `MOLMOACT_REPO` | `$A2A_EXTERNAL_DIR/molmoact2` | MolmoAct2 server repo |

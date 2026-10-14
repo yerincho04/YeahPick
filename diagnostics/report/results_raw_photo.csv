@@ -1,0 +1,361 @@
+idx,type,task,instruction,swap,left,right,answer_side,success,robot_went
+0,state,Explicit object,Place the cube on the tile showing the open door.,0,door_open_0,door_closed_0,left,1,right
+1,state,Explicit object,Place the cube on the tile showing the open door.,0,door_closed_1,door_open_1,right,0,left
+2,state,Explicit object,Place the cube on the tile showing the open door.,0,door_open_2,door_closed_2,left,0,right
+3,state,Explicit object,Place the cube on the tile showing the open door.,0,door_closed_3,door_open_3,right,1,right
+4,state,Explicit object,Place the cube on the tile showing the open door.,0,door_open_4,door_closed_4,left,1,left
+5,state,Explicit object,Place the cube on the tile showing the closed door.,0,door_open_0,door_closed_0,right,0,right
+6,state,Explicit object,Place the cube on the tile showing the closed door.,0,door_closed_1,door_open_1,left,1,left
+7,state,Explicit object,Place the cube on the tile showing the closed door.,0,door_open_2,door_closed_2,right,1,right
+8,state,Explicit object,Place the cube on the tile showing the closed door.,0,door_closed_3,door_open_3,left,1,right
+9,state,Explicit object,Place the cube on the tile showing the closed door.,0,door_open_4,door_closed_4,right,1,right
+10,state,Explicit object,Place the cube on the tile showing the clean toilet.,0,toilet_clean_0,toilet_dirty_0,left,1,left
+11,state,Explicit object,Place the cube on the tile showing the clean toilet.,0,toilet_dirty_1,toilet_clean_1,right,1,right
+12,state,Explicit object,Place the cube on the tile showing the clean toilet.,0,toilet_clean_2,toilet_dirty_2,left,1,left
+13,state,Explicit object,Place the cube on the tile showing the clean toilet.,0,toilet_dirty_3,toilet_clean_3,right,0,left
+14,state,Explicit object,Place the cube on the tile showing the clean toilet.,0,toilet_clean_4,toilet_dirty_4,left,1,left
+15,state,Explicit object,Place the cube on the tile showing the dirty toilet.,0,toilet_clean_0,toilet_dirty_0,right,0,left
+16,state,Explicit object,Place the cube on the tile showing the dirty toilet.,0,toilet_dirty_1,toilet_clean_1,left,0,right
+17,state,Explicit object,Place the cube on the tile showing the dirty toilet.,0,toilet_clean_2,toilet_dirty_2,right,0,left
+18,state,Explicit object,Place the cube on the tile showing the dirty toilet.,0,toilet_dirty_3,toilet_clean_3,left,1,left
+19,state,Explicit object,Place the cube on the tile showing the dirty toilet.,0,toilet_clean_4,toilet_dirty_4,right,0,left
+20,state,Explicit object,Place the cube on the tile showing the empty plate.,0,plate_empty_0,plate_full_0,left,0,right
+21,state,Explicit object,Place the cube on the tile showing the empty plate.,0,plate_full_1,plate_empty_1,right,1,right
+22,state,Explicit object,Place the cube on the tile showing the empty plate.,0,plate_empty_2,plate_full_2,left,1,left
+23,state,Explicit object,Place the cube on the tile showing the empty plate.,0,plate_full_3,plate_empty_3,right,0,left
+24,state,Explicit object,Place the cube on the tile showing the empty plate.,0,plate_empty_4,plate_full_4,left,0,right
+25,state,Explicit object,Place the cube on the tile showing the full plate.,0,plate_empty_0,plate_full_0,right,1,right
+26,state,Explicit object,Place the cube on the tile showing the full plate.,0,plate_full_1,plate_empty_1,left,0,right
+27,state,Explicit object,Place the cube on the tile showing the full plate.,0,plate_empty_2,plate_full_2,right,0,left
+28,state,Explicit object,Place the cube on the tile showing the full plate.,0,plate_full_3,plate_empty_3,left,0,right
+29,state,Explicit object,Place the cube on the tile showing the full plate.,0,plate_empty_4,plate_full_4,right,1,right
+0,state,Explicit object,Place the cube on the tile showing the open door.,1,door_closed_0,door_open_0,right,1,right
+1,state,Explicit object,Place the cube on the tile showing the open door.,1,door_open_1,door_closed_1,left,1,left
+2,state,Explicit object,Place the cube on the tile showing the open door.,1,door_closed_2,door_open_2,right,0,left
+3,state,Explicit object,Place the cube on the tile showing the open door.,1,door_open_3,door_closed_3,left,0,right
+4,state,Explicit object,Place the cube on the tile showing the open door.,1,door_closed_4,door_open_4,right,0,left
+5,state,Explicit object,Place the cube on the tile showing the closed door.,1,door_closed_0,door_open_0,left,1,left
+6,state,Explicit object,Place the cube on the tile showing the closed door.,1,door_open_1,door_closed_1,right,0,left
+7,state,Explicit object,Place the cube on the tile showing the closed door.,1,door_closed_2,door_open_2,left,1,left
+8,state,Explicit object,Place the cube on the tile showing the closed door.,1,door_open_3,door_closed_3,right,0,right
+9,state,Explicit object,Place the cube on the tile showing the closed door.,1,door_closed_4,door_open_4,left,0,right
+10,state,Explicit object,Place the cube on the tile showing the clean toilet.,1,toilet_dirty_0,toilet_clean_0,right,0,left
+11,state,Explicit object,Place the cube on the tile showing the clean toilet.,1,toilet_clean_1,toilet_dirty_1,left,1,left
+12,state,Explicit object,Place the cube on the tile showing the clean toilet.,1,toilet_dirty_2,toilet_clean_2,right,0,left
+13,state,Explicit object,Place the cube on the tile showing the clean toilet.,1,toilet_clean_3,toilet_dirty_3,left,1,left
+14,state,Explicit object,Place the cube on the tile showing the clean toilet.,1,toilet_dirty_4,toilet_clean_4,right,1,right
+15,state,Explicit object,Place the cube on the tile showing the dirty toilet.,1,toilet_dirty_0,toilet_clean_0,left,1,left
+16,state,Explicit object,Place the cube on the tile showing the dirty toilet.,1,toilet_clean_1,toilet_dirty_1,right,0,left
+17,state,Explicit object,Place the cube on the tile showing the dirty toilet.,1,toilet_dirty_2,toilet_clean_2,left,1,right
+18,state,Explicit object,Place the cube on the tile showing the dirty toilet.,1,toilet_clean_3,toilet_dirty_3,right,0,left
+19,state,Explicit object,Place the cube on the tile showing the dirty toilet.,1,toilet_dirty_4,toilet_clean_4,left,1,left
+20,state,Explicit object,Place the cube on the tile showing the empty plate.,1,plate_full_0,plate_empty_0,right,0,left
+21,state,Explicit object,Place the cube on the tile showing the empty plate.,1,plate_empty_1,plate_full_1,left,1,left
+22,state,Explicit object,Place the cube on the tile showing the empty plate.,1,plate_full_2,plate_empty_2,right,1,right
+23,state,Explicit object,Place the cube on the tile showing the empty plate.,1,plate_empty_3,plate_full_3,left,1,left
+24,state,Explicit object,Place the cube on the tile showing the empty plate.,1,plate_full_4,plate_empty_4,right,0,left
+25,state,Explicit object,Place the cube on the tile showing the full plate.,1,plate_full_0,plate_empty_0,left,1,left
+26,state,Explicit object,Place the cube on the tile showing the full plate.,1,plate_empty_1,plate_full_1,right,0,right
+27,state,Explicit object,Place the cube on the tile showing the full plate.,1,plate_full_2,plate_empty_2,left,0,right
+28,state,Explicit object,Place the cube on the tile showing the full plate.,1,plate_empty_3,plate_full_3,right,0,left
+29,state,Explicit object,Place the cube on the tile showing the full plate.,1,plate_full_4,plate_empty_4,left,1,right
+0,state,Explicit spatial,Place the cube on the left tile.,0,door_open_0,door_closed_0,left,1,right
+1,state,Explicit spatial,Place the cube on the right tile.,0,door_closed_1,door_open_1,right,0,right
+2,state,Explicit spatial,Place the cube on the left tile.,0,door_open_2,door_closed_2,left,1,left
+3,state,Explicit spatial,Place the cube on the right tile.,0,door_closed_3,door_open_3,right,0,right
+4,state,Explicit spatial,Place the cube on the left tile.,0,door_open_4,door_closed_4,left,1,left
+5,state,Explicit spatial,Place the cube on the right tile.,0,door_open_0,door_closed_0,right,1,right
+6,state,Explicit spatial,Place the cube on the left tile.,0,door_closed_1,door_open_1,left,1,right
+7,state,Explicit spatial,Place the cube on the right tile.,0,door_open_2,door_closed_2,right,1,left
+8,state,Explicit spatial,Place the cube on the left tile.,0,door_closed_3,door_open_3,left,1,right
+9,state,Explicit spatial,Place the cube on the right tile.,0,door_open_4,door_closed_4,right,1,right
+10,state,Explicit spatial,Place the cube on the left tile.,0,toilet_clean_0,toilet_dirty_0,left,1,right
+11,state,Explicit spatial,Place the cube on the right tile.,0,toilet_dirty_1,toilet_clean_1,right,1,right
+12,state,Explicit spatial,Place the cube on the left tile.,0,toilet_clean_2,toilet_dirty_2,left,1,left
+13,state,Explicit spatial,Place the cube on the right tile.,0,toilet_dirty_3,toilet_clean_3,right,1,right
+14,state,Explicit spatial,Place the cube on the left tile.,0,toilet_clean_4,toilet_dirty_4,left,1,left
+15,state,Explicit spatial,Place the cube on the right tile.,0,toilet_clean_0,toilet_dirty_0,right,0,right
+16,state,Explicit spatial,Place the cube on the left tile.,0,toilet_dirty_1,toilet_clean_1,left,0,right
+17,state,Explicit spatial,Place the cube on the right tile.,0,toilet_clean_2,toilet_dirty_2,right,1,right
+18,state,Explicit spatial,Place the cube on the left tile.,0,toilet_dirty_3,toilet_clean_3,left,1,right
+19,state,Explicit spatial,Place the cube on the right tile.,0,toilet_clean_4,toilet_dirty_4,right,1,right
+20,state,Explicit spatial,Place the cube on the left tile.,0,plate_empty_0,plate_full_0,left,1,left
+21,state,Explicit spatial,Place the cube on the right tile.,0,plate_full_1,plate_empty_1,right,1,right
+22,state,Explicit spatial,Place the cube on the left tile.,0,plate_empty_2,plate_full_2,left,1,left
+23,state,Explicit spatial,Place the cube on the right tile.,0,plate_full_3,plate_empty_3,right,1,right
+24,state,Explicit spatial,Place the cube on the left tile.,0,plate_empty_4,plate_full_4,left,1,left
+25,state,Explicit spatial,Place the cube on the right tile.,0,plate_empty_0,plate_full_0,right,1,left
+26,state,Explicit spatial,Place the cube on the left tile.,0,plate_full_1,plate_empty_1,left,1,left
+27,state,Explicit spatial,Place the cube on the right tile.,0,plate_empty_2,plate_full_2,right,1,right
+28,state,Explicit spatial,Place the cube on the left tile.,0,plate_full_3,plate_empty_3,left,1,left
+29,state,Explicit spatial,Place the cube on the right tile.,0,plate_empty_4,plate_full_4,right,1,right
+0,state,Explicit spatial,Place the cube on the right tile.,1,door_closed_0,door_open_0,right,1,right
+1,state,Explicit spatial,Place the cube on the left tile.,1,door_open_1,door_closed_1,left,1,right
+2,state,Explicit spatial,Place the cube on the right tile.,1,door_closed_2,door_open_2,right,1,right
+3,state,Explicit spatial,Place the cube on the left tile.,1,door_open_3,door_closed_3,left,1,right
+4,state,Explicit spatial,Place the cube on the right tile.,1,door_closed_4,door_open_4,right,1,right
+5,state,Explicit spatial,Place the cube on the left tile.,1,door_closed_0,door_open_0,left,1,left
+6,state,Explicit spatial,Place the cube on the right tile.,1,door_open_1,door_closed_1,right,1,right
+7,state,Explicit spatial,Place the cube on the left tile.,1,door_closed_2,door_open_2,left,1,left
+8,state,Explicit spatial,Place the cube on the right tile.,1,door_open_3,door_closed_3,right,1,right
+9,state,Explicit spatial,Place the cube on the left tile.,1,door_closed_4,door_open_4,left,1,left
+10,state,Explicit spatial,Place the cube on the right tile.,1,toilet_dirty_0,toilet_clean_0,right,0,left
+11,state,Explicit spatial,Place the cube on the left tile.,1,toilet_clean_1,toilet_dirty_1,left,1,left
+12,state,Explicit spatial,Place the cube on the right tile.,1,toilet_dirty_2,toilet_clean_2,right,1,right
+13,state,Explicit spatial,Place the cube on the left tile.,1,toilet_clean_3,toilet_dirty_3,left,1,left
+14,state,Explicit spatial,Place the cube on the right tile.,1,toilet_dirty_4,toilet_clean_4,right,1,right
+15,state,Explicit spatial,Place the cube on the left tile.,1,toilet_dirty_0,toilet_clean_0,left,1,left
+16,state,Explicit spatial,Place the cube on the right tile.,1,toilet_clean_1,toilet_dirty_1,right,1,right
+17,state,Explicit spatial,Place the cube on the left tile.,1,toilet_dirty_2,toilet_clean_2,left,1,right
+18,state,Explicit spatial,Place the cube on the right tile.,1,toilet_clean_3,toilet_dirty_3,right,1,right
+19,state,Explicit spatial,Place the cube on the left tile.,1,toilet_dirty_4,toilet_clean_4,left,1,left
+20,state,Explicit spatial,Place the cube on the right tile.,1,plate_full_0,plate_empty_0,right,0,right
+21,state,Explicit spatial,Place the cube on the left tile.,1,plate_empty_1,plate_full_1,left,1,left
+22,state,Explicit spatial,Place the cube on the right tile.,1,plate_full_2,plate_empty_2,right,1,right
+23,state,Explicit spatial,Place the cube on the left tile.,1,plate_empty_3,plate_full_3,left,1,left
+24,state,Explicit spatial,Place the cube on the right tile.,1,plate_full_4,plate_empty_4,right,0,right
+25,state,Explicit spatial,Place the cube on the left tile.,1,plate_full_0,plate_empty_0,left,1,left
+26,state,Explicit spatial,Place the cube on the right tile.,1,plate_empty_1,plate_full_1,right,1,right
+27,state,Explicit spatial,Place the cube on the left tile.,1,plate_full_2,plate_empty_2,left,0,left
+28,state,Explicit spatial,Place the cube on the right tile.,1,plate_empty_3,plate_full_3,right,1,right
+29,state,Explicit spatial,Place the cube on the left tile.,1,plate_full_4,plate_empty_4,left,1,left
+0,state,Semantic reasoning,Place the cube on the answer to this question: Which door could a person walk straight through without touching it?,0,door_open_0,door_closed_0,left,1,left
+1,state,Semantic reasoning,Place the cube on the answer to this question: Which door lets a breeze into the room?,0,door_closed_1,door_open_1,right,0,left
+2,state,Semantic reasoning,Place the cube on the answer to this question: Which door shows the space on the other side?,0,door_open_2,door_closed_2,left,1,right
+3,state,Semantic reasoning,Place the cube on the answer to this question: Which door could a cat stroll through right now?,0,door_closed_3,door_open_3,right,1,right
+4,state,Semantic reasoning,Place the cube on the answer to this question: Which door does not need to be pushed before entering?,0,door_open_4,door_closed_4,left,1,left
+5,state,Semantic reasoning,Place the cube on the answer to this question: Which door keeps the room private?,0,door_open_0,door_closed_0,right,1,right
+6,state,Semantic reasoning,Place the cube on the answer to this question: Which door stops a dog from leaving the room?,0,door_closed_1,door_open_1,left,0,right
+7,state,Semantic reasoning,Place the cube on the answer to this question: Which door must be pushed or pulled before you can pass?,0,door_open_2,door_closed_2,right,1,right
+8,state,Semantic reasoning,Place the cube on the answer to this question: Which door blocks the view of the other side?,0,door_closed_3,door_open_3,left,0,right
+9,state,Semantic reasoning,Place the cube on the answer to this question: Which door keeps cold air outside?,0,door_open_4,door_closed_4,right,0,left
+10,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has just been scrubbed?,0,toilet_clean_0,toilet_dirty_0,left,1,left
+11,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would a guest be happy to use?,0,toilet_dirty_1,toilet_clean_1,right,0,left
+12,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would pass a hygiene inspection?,0,toilet_clean_2,toilet_dirty_2,left,1,left
+13,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has no stains?,0,toilet_dirty_3,toilet_clean_3,right,0,left
+14,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet looks freshly disinfected?,0,toilet_clean_4,toilet_dirty_4,left,0,left
+15,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet needs scrubbing?,0,toilet_clean_0,toilet_dirty_0,right,1,right
+16,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would fail a hygiene inspection?,0,toilet_dirty_1,toilet_clean_1,left,1,left
+17,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has been neglected for weeks?,0,toilet_clean_2,toilet_dirty_2,right,0,left
+18,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would a guest refuse to use?,0,toilet_dirty_3,toilet_clean_3,left,1,left
+19,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet carries more germs?,0,toilet_clean_4,toilet_dirty_4,right,0,left
+20,state,Semantic reasoning,Place the cube on the answer to this question: Which plate is ready to be washed after the meal?,0,plate_empty_0,plate_full_0,left,0,right
+21,state,Semantic reasoning,Place the cube on the answer to this question: Which plate has nothing left to eat on it?,0,plate_full_1,plate_empty_1,right,1,right
+22,state,Semantic reasoning,Place the cube on the answer to this question: Which plate belongs to someone who finished dinner?,0,plate_empty_2,plate_full_2,left,1,left
+23,state,Semantic reasoning,Place the cube on the answer to this question: Which plate could have new food served onto it right away?,0,plate_full_3,plate_empty_3,right,1,right
+24,state,Semantic reasoning,Place the cube on the answer to this question: Which plate would be lighter to carry?,0,plate_empty_4,plate_full_4,left,0,right
+25,state,Semantic reasoning,Place the cube on the answer to this question: Which plate belongs to someone who is about to start eating?,0,plate_empty_0,plate_full_0,right,1,right
+26,state,Semantic reasoning,Place the cube on the answer to this question: Which plate has a meal on it?,0,plate_full_1,plate_empty_1,left,0,right
+27,state,Semantic reasoning,Place the cube on the answer to this question: Which plate would be heavier to carry?,0,plate_empty_2,plate_full_2,right,0,left
+28,state,Semantic reasoning,Place the cube on the answer to this question: Which plate was just served by the waiter?,0,plate_full_3,plate_empty_3,left,0,left
+29,state,Semantic reasoning,Place the cube on the answer to this question: Which plate still has food that could be eaten?,0,plate_empty_4,plate_full_4,right,1,right
+0,state,Semantic reasoning,Place the cube on the answer to this question: Which door could a person walk straight through without touching it?,1,door_closed_0,door_open_0,right,0,left
+1,state,Semantic reasoning,Place the cube on the answer to this question: Which door lets a breeze into the room?,1,door_open_1,door_closed_1,left,1,right
+2,state,Semantic reasoning,Place the cube on the answer to this question: Which door shows the space on the other side?,1,door_closed_2,door_open_2,right,0,left
+3,state,Semantic reasoning,Place the cube on the answer to this question: Which door could a cat stroll through right now?,1,door_open_3,door_closed_3,left,0,right
+4,state,Semantic reasoning,Place the cube on the answer to this question: Which door does not need to be pushed before entering?,1,door_closed_4,door_open_4,right,0,left
+5,state,Semantic reasoning,Place the cube on the answer to this question: Which door keeps the room private?,1,door_closed_0,door_open_0,left,0,right
+6,state,Semantic reasoning,Place the cube on the answer to this question: Which door stops a dog from leaving the room?,1,door_open_1,door_closed_1,right,0,right
+7,state,Semantic reasoning,Place the cube on the answer to this question: Which door must be pushed or pulled before you can pass?,1,door_closed_2,door_open_2,left,1,left
+8,state,Semantic reasoning,Place the cube on the answer to this question: Which door blocks the view of the other side?,1,door_open_3,door_closed_3,right,1,right
+9,state,Semantic reasoning,Place the cube on the answer to this question: Which door keeps cold air outside?,1,door_closed_4,door_open_4,left,1,left
+10,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has just been scrubbed?,1,toilet_dirty_0,toilet_clean_0,right,0,left
+11,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would a guest be happy to use?,1,toilet_clean_1,toilet_dirty_1,left,1,left
+12,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would pass a hygiene inspection?,1,toilet_dirty_2,toilet_clean_2,right,0,left
+13,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has no stains?,1,toilet_clean_3,toilet_dirty_3,left,1,left
+14,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet looks freshly disinfected?,1,toilet_dirty_4,toilet_clean_4,right,0,left
+15,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet needs scrubbing?,1,toilet_dirty_0,toilet_clean_0,left,1,left
+16,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would fail a hygiene inspection?,1,toilet_clean_1,toilet_dirty_1,right,0,left
+17,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet has been neglected for weeks?,1,toilet_dirty_2,toilet_clean_2,left,1,left
+18,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet would a guest refuse to use?,1,toilet_clean_3,toilet_dirty_3,right,0,left
+19,state,Semantic reasoning,Place the cube on the answer to this question: Which toilet carries more germs?,1,toilet_dirty_4,toilet_clean_4,left,0,right
+20,state,Semantic reasoning,Place the cube on the answer to this question: Which plate is ready to be washed after the meal?,1,plate_full_0,plate_empty_0,right,0,left
+21,state,Semantic reasoning,Place the cube on the answer to this question: Which plate has nothing left to eat on it?,1,plate_empty_1,plate_full_1,left,1,left
+22,state,Semantic reasoning,Place the cube on the answer to this question: Which plate belongs to someone who finished dinner?,1,plate_full_2,plate_empty_2,right,0,left
+23,state,Semantic reasoning,Place the cube on the answer to this question: Which plate could have new food served onto it right away?,1,plate_empty_3,plate_full_3,left,1,left
+24,state,Semantic reasoning,Place the cube on the answer to this question: Which plate would be lighter to carry?,1,plate_full_4,plate_empty_4,right,0,left
+25,state,Semantic reasoning,Place the cube on the answer to this question: Which plate belongs to someone who is about to start eating?,1,plate_full_0,plate_empty_0,left,1,left
+26,state,Semantic reasoning,Place the cube on the answer to this question: Which plate has a meal on it?,1,plate_empty_1,plate_full_1,right,0,left
+27,state,Semantic reasoning,Place the cube on the answer to this question: Which plate would be heavier to carry?,1,plate_full_2,plate_empty_2,left,1,left
+28,state,Semantic reasoning,Place the cube on the answer to this question: Which plate was just served by the waiter?,1,plate_empty_3,plate_full_3,right,0,left
+29,state,Semantic reasoning,Place the cube on the answer to this question: Which plate still has food that could be eaten?,1,plate_full_4,plate_empty_4,left,1,left
+0,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,0,bench_wooden_0,bench_metal_0,left,1,left
+1,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,0,bench_metal_1,bench_wooden_1,right,0,left
+2,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,0,bench_wooden_2,bench_metal_2,left,0,left
+3,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,0,bench_metal_3,bench_wooden_3,right,0,left
+4,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,0,bench_wooden_4,bench_metal_4,left,0,right
+5,attribute,Explicit object,Place the cube on the tile showing the metal bench.,0,bench_wooden_0,bench_metal_0,right,0,left
+6,attribute,Explicit object,Place the cube on the tile showing the metal bench.,0,bench_metal_1,bench_wooden_1,left,0,right
+7,attribute,Explicit object,Place the cube on the tile showing the metal bench.,0,bench_wooden_2,bench_metal_2,right,1,right
+8,attribute,Explicit object,Place the cube on the tile showing the metal bench.,0,bench_metal_3,bench_wooden_3,left,1,left
+9,attribute,Explicit object,Place the cube on the tile showing the metal bench.,0,bench_wooden_4,bench_metal_4,right,0,left
+10,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,0,bottle_glass_0,bottle_plastic_0,left,1,left
+11,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,0,bottle_plastic_1,bottle_glass_1,right,1,right
+12,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,0,bottle_glass_2,bottle_plastic_2,left,1,left
+13,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,0,bottle_plastic_3,bottle_glass_3,right,1,right
+14,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,0,bottle_glass_4,bottle_plastic_4,left,0,right
+15,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,0,bottle_glass_0,bottle_plastic_0,right,0,left
+16,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,0,bottle_plastic_1,bottle_glass_1,left,0,right
+17,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,0,bottle_glass_2,bottle_plastic_2,right,0,left
+18,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,0,bottle_plastic_3,bottle_glass_3,left,1,left
+19,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,0,bottle_glass_4,bottle_plastic_4,right,1,right
+0,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,1,bench_metal_0,bench_wooden_0,right,0,left
+1,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,1,bench_wooden_1,bench_metal_1,left,1,left
+2,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,1,bench_metal_2,bench_wooden_2,right,1,right
+3,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,1,bench_wooden_3,bench_metal_3,left,0,right
+4,attribute,Explicit object,Place the cube on the tile showing the wooden bench.,1,bench_metal_4,bench_wooden_4,right,0,left
+5,attribute,Explicit object,Place the cube on the tile showing the metal bench.,1,bench_metal_0,bench_wooden_0,left,1,left
+6,attribute,Explicit object,Place the cube on the tile showing the metal bench.,1,bench_wooden_1,bench_metal_1,right,0,left
+7,attribute,Explicit object,Place the cube on the tile showing the metal bench.,1,bench_metal_2,bench_wooden_2,left,0,right
+8,attribute,Explicit object,Place the cube on the tile showing the metal bench.,1,bench_wooden_3,bench_metal_3,right,0,left
+9,attribute,Explicit object,Place the cube on the tile showing the metal bench.,1,bench_metal_4,bench_wooden_4,left,1,left
+10,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,1,bottle_plastic_0,bottle_glass_0,right,1,right
+11,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,1,bottle_glass_1,bottle_plastic_1,left,1,left
+12,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,1,bottle_plastic_2,bottle_glass_2,right,1,right
+13,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,1,bottle_glass_3,bottle_plastic_3,left,0,right
+14,attribute,Explicit object,Place the cube on the tile showing the glass bottle.,1,bottle_plastic_4,bottle_glass_4,right,1,right
+15,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,1,bottle_plastic_0,bottle_glass_0,left,0,right
+16,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,1,bottle_glass_1,bottle_plastic_1,right,0,left
+17,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,1,bottle_plastic_2,bottle_glass_2,left,0,right
+18,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,1,bottle_glass_3,bottle_plastic_3,right,0,right
+19,attribute,Explicit object,Place the cube on the tile showing the plastic bottle.,1,bottle_plastic_4,bottle_glass_4,left,0,right
+0,attribute,Explicit spatial,Place the cube on the left tile.,0,bench_wooden_0,bench_metal_0,left,1,left
+1,attribute,Explicit spatial,Place the cube on the right tile.,0,bench_metal_1,bench_wooden_1,right,1,right
+2,attribute,Explicit spatial,Place the cube on the left tile.,0,bench_wooden_2,bench_metal_2,left,1,right
+3,attribute,Explicit spatial,Place the cube on the right tile.,0,bench_metal_3,bench_wooden_3,right,1,right
+4,attribute,Explicit spatial,Place the cube on the left tile.,0,bench_wooden_4,bench_metal_4,left,1,left
+5,attribute,Explicit spatial,Place the cube on the right tile.,0,bench_wooden_0,bench_metal_0,right,1,right
+6,attribute,Explicit spatial,Place the cube on the left tile.,0,bench_metal_1,bench_wooden_1,left,1,left
+7,attribute,Explicit spatial,Place the cube on the right tile.,0,bench_wooden_2,bench_metal_2,right,1,right
+8,attribute,Explicit spatial,Place the cube on the left tile.,0,bench_metal_3,bench_wooden_3,left,1,uncertain
+9,attribute,Explicit spatial,Place the cube on the right tile.,0,bench_wooden_4,bench_metal_4,right,0,uncertain
+10,attribute,Explicit spatial,Place the cube on the left tile.,0,bottle_glass_0,bottle_plastic_0,left,1,left
+11,attribute,Explicit spatial,Place the cube on the right tile.,0,bottle_plastic_1,bottle_glass_1,right,1,uncertain
+12,attribute,Explicit spatial,Place the cube on the left tile.,0,bottle_glass_2,bottle_plastic_2,left,1,left
+13,attribute,Explicit spatial,Place the cube on the right tile.,0,bottle_plastic_3,bottle_glass_3,right,1,right
+14,attribute,Explicit spatial,Place the cube on the left tile.,0,bottle_glass_4,bottle_plastic_4,left,1,left
+15,attribute,Explicit spatial,Place the cube on the right tile.,0,bottle_glass_0,bottle_plastic_0,right,1,left
+16,attribute,Explicit spatial,Place the cube on the left tile.,0,bottle_plastic_1,bottle_glass_1,left,1,left
+17,attribute,Explicit spatial,Place the cube on the right tile.,0,bottle_glass_2,bottle_plastic_2,right,1,right
+18,attribute,Explicit spatial,Place the cube on the left tile.,0,bottle_plastic_3,bottle_glass_3,left,1,left
+19,attribute,Explicit spatial,Place the cube on the right tile.,0,bottle_glass_4,bottle_plastic_4,right,1,right
+0,attribute,Explicit spatial,Place the cube on the right tile.,1,bench_metal_0,bench_wooden_0,right,1,right
+1,attribute,Explicit spatial,Place the cube on the left tile.,1,bench_wooden_1,bench_metal_1,left,1,right
+2,attribute,Explicit spatial,Place the cube on the right tile.,1,bench_metal_2,bench_wooden_2,right,1,right
+3,attribute,Explicit spatial,Place the cube on the left tile.,1,bench_wooden_3,bench_metal_3,left,1,left
+4,attribute,Explicit spatial,Place the cube on the right tile.,1,bench_metal_4,bench_wooden_4,right,1,right
+5,attribute,Explicit spatial,Place the cube on the left tile.,1,bench_metal_0,bench_wooden_0,left,0,left
+6,attribute,Explicit spatial,Place the cube on the right tile.,1,bench_wooden_1,bench_metal_1,right,1,right
+7,attribute,Explicit spatial,Place the cube on the left tile.,1,bench_metal_2,bench_wooden_2,left,0,right
+8,attribute,Explicit spatial,Place the cube on the right tile.,1,bench_wooden_3,bench_metal_3,right,1,right
+9,attribute,Explicit spatial,Place the cube on the left tile.,1,bench_metal_4,bench_wooden_4,left,1,left
+10,attribute,Explicit spatial,Place the cube on the right tile.,1,bottle_plastic_0,bottle_glass_0,right,1,right
+11,attribute,Explicit spatial,Place the cube on the left tile.,1,bottle_glass_1,bottle_plastic_1,left,1,right
+12,attribute,Explicit spatial,Place the cube on the right tile.,1,bottle_plastic_2,bottle_glass_2,right,1,right
+13,attribute,Explicit spatial,Place the cube on the left tile.,1,bottle_glass_3,bottle_plastic_3,left,1,left
+14,attribute,Explicit spatial,Place the cube on the right tile.,1,bottle_plastic_4,bottle_glass_4,right,1,right
+15,attribute,Explicit spatial,Place the cube on the left tile.,1,bottle_plastic_0,bottle_glass_0,left,0,right
+16,attribute,Explicit spatial,Place the cube on the right tile.,1,bottle_glass_1,bottle_plastic_1,right,1,right
+17,attribute,Explicit spatial,Place the cube on the left tile.,1,bottle_plastic_2,bottle_glass_2,left,1,left
+18,attribute,Explicit spatial,Place the cube on the right tile.,1,bottle_glass_3,bottle_plastic_3,right,1,right
+19,attribute,Explicit spatial,Place the cube on the left tile.,1,bottle_plastic_4,bottle_glass_4,left,1,right
+0,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench was made from a tree?,0,bench_wooden_0,bench_metal_0,left,1,left
+1,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could be damaged by termites?,0,bench_metal_1,bench_wooden_1,right,0,left
+2,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could be sanded and varnished?,0,bench_wooden_2,bench_metal_2,left,1,left
+3,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would burn in a campfire?,0,bench_metal_3,bench_wooden_3,right,0,left
+4,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench shows natural grain and knots?,0,bench_wooden_4,bench_metal_4,left,1,left
+5,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could rust in the rain?,0,bench_wooden_0,bench_metal_0,right,1,right
+6,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would a magnet stick to?,0,bench_metal_1,bench_wooden_1,left,1,left
+7,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench gets very hot in the summer sun?,0,bench_wooden_2,bench_metal_2,right,0,left
+8,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench was put together by welding?,0,bench_metal_3,bench_wooden_3,left,0,left
+9,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would ring when struck with a spoon?,0,bench_wooden_4,bench_metal_4,right,0,left
+10,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle would shatter if dropped on a tile floor?,0,bottle_glass_0,bottle_plastic_0,left,1,left
+11,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is made from melted sand?,0,bottle_plastic_1,bottle_glass_1,right,0,left
+12,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could cut your hand if it broke?,0,bottle_glass_2,bottle_plastic_2,left,1,left
+13,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is heavier and more fragile?,0,bottle_plastic_3,bottle_glass_3,right,0,left
+14,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is traditionally used for fine wine?,0,bottle_glass_4,bottle_plastic_4,left,1,left
+15,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could be squeezed in your hand?,0,bottle_glass_0,bottle_plastic_0,right,1,left
+16,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle would bounce if dropped?,0,bottle_plastic_1,bottle_glass_1,left,1,left
+17,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is made from petroleum?,0,bottle_glass_2,bottle_plastic_2,right,0,left
+18,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is light and shatterproof for hiking?,0,bottle_plastic_3,bottle_glass_3,left,1,left
+19,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could melt near a flame?,0,bottle_glass_4,bottle_plastic_4,right,0,left
+0,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench was made from a tree?,1,bench_metal_0,bench_wooden_0,right,0,left
+1,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could be damaged by termites?,1,bench_wooden_1,bench_metal_1,left,1,left
+2,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could be sanded and varnished?,1,bench_metal_2,bench_wooden_2,right,0,left
+3,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would burn in a campfire?,1,bench_wooden_3,bench_metal_3,left,1,left
+4,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench shows natural grain and knots?,1,bench_metal_4,bench_wooden_4,right,0,left
+5,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench could rust in the rain?,1,bench_metal_0,bench_wooden_0,left,1,left
+6,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would a magnet stick to?,1,bench_wooden_1,bench_metal_1,right,1,right
+7,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench gets very hot in the summer sun?,1,bench_metal_2,bench_wooden_2,left,1,left
+8,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench was put together by welding?,1,bench_wooden_3,bench_metal_3,right,0,left
+9,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bench would ring when struck with a spoon?,1,bench_metal_4,bench_wooden_4,left,1,left
+10,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle would shatter if dropped on a tile floor?,1,bottle_plastic_0,bottle_glass_0,right,0,left
+11,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is made from melted sand?,1,bottle_glass_1,bottle_plastic_1,left,1,left
+12,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could cut your hand if it broke?,1,bottle_plastic_2,bottle_glass_2,right,0,left
+13,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is heavier and more fragile?,1,bottle_glass_3,bottle_plastic_3,left,1,left
+14,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is traditionally used for fine wine?,1,bottle_plastic_4,bottle_glass_4,right,0,left
+15,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could be squeezed in your hand?,1,bottle_plastic_0,bottle_glass_0,left,0,left
+16,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle would bounce if dropped?,1,bottle_glass_1,bottle_plastic_1,right,1,right
+17,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is made from petroleum?,1,bottle_plastic_2,bottle_glass_2,left,0,left
+18,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle is light and shatterproof for hiking?,1,bottle_glass_3,bottle_plastic_3,right,0,left
+19,attribute,Semantic reasoning,Place the cube on the answer to this question: Which bottle could melt near a flame?,1,bottle_plastic_4,bottle_glass_4,left,0,right
+0,emotion,Explicit object,Place the cube on the tile showing the surprised person.,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,left,1,left
+1,emotion,Explicit object,Place the cube on the tile showing the surprised person.,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,right,0,left
+2,emotion,Explicit object,Place the cube on the tile showing the surprised person.,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,left,1,left
+3,emotion,Explicit object,Place the cube on the tile showing the surprised person.,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,right,0,right
+4,emotion,Explicit object,Place the cube on the tile showing the surprised person.,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,left,1,right
+5,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,right,0,uncertain
+6,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,left,1,left
+7,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,right,0,left
+8,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,left,1,right
+9,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,right,0,right
+0,emotion,Explicit object,Place the cube on the tile showing the surprised person.,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,right,1,right
+1,emotion,Explicit object,Place the cube on the tile showing the surprised person.,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,left,1,left
+2,emotion,Explicit object,Place the cube on the tile showing the surprised person.,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,right,1,right
+3,emotion,Explicit object,Place the cube on the tile showing the surprised person.,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,left,1,left
+4,emotion,Explicit object,Place the cube on the tile showing the surprised person.,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,right,0,left
+5,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,left,0,right
+6,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,right,0,left
+7,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,left,0,uncertain
+8,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,right,1,right
+9,emotion,Explicit object,Place the cube on the tile showing the sleepy person.,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,left,1,left
+0,emotion,Explicit spatial,Place the cube on the left tile.,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,left,1,left
+1,emotion,Explicit spatial,Place the cube on the right tile.,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,right,1,right
+2,emotion,Explicit spatial,Place the cube on the left tile.,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,left,1,right
+3,emotion,Explicit spatial,Place the cube on the right tile.,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,right,1,right
+4,emotion,Explicit spatial,Place the cube on the left tile.,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,left,1,right
+5,emotion,Explicit spatial,Place the cube on the right tile.,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,right,1,right
+6,emotion,Explicit spatial,Place the cube on the left tile.,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,left,1,left
+7,emotion,Explicit spatial,Place the cube on the right tile.,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,right,1,right
+8,emotion,Explicit spatial,Place the cube on the left tile.,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,left,1,right
+9,emotion,Explicit spatial,Place the cube on the right tile.,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,right,1,right
+0,emotion,Explicit spatial,Place the cube on the right tile.,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,right,1,right
+1,emotion,Explicit spatial,Place the cube on the left tile.,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,left,1,right
+2,emotion,Explicit spatial,Place the cube on the right tile.,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,right,1,right
+3,emotion,Explicit spatial,Place the cube on the left tile.,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,left,1,left
+4,emotion,Explicit spatial,Place the cube on the right tile.,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,right,1,right
+5,emotion,Explicit spatial,Place the cube on the left tile.,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,left,1,left
+6,emotion,Explicit spatial,Place the cube on the right tile.,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,right,1,right
+7,emotion,Explicit spatial,Place the cube on the left tile.,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,left,1,left
+8,emotion,Explicit spatial,Place the cube on the right tile.,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,right,1,right
+9,emotion,Explicit spatial,Place the cube on the left tile.,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,left,1,left
+0,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just saw something unexpected?,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,left,1,left
+1,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person walked into a party nobody told them about?,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,right,1,uncertain
+2,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just watched a magic trick?,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,left,0,left
+3,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person cannot believe their eyes?,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,right,1,right
+4,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just heard shocking news?,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,left,0,right
+5,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person stayed up all night?,0,surprised_sleepy_surprised_0,surprised_sleepy_sleepy_0,right,0,left
+6,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person needs a nap?,0,surprised_sleepy_sleepy_1,surprised_sleepy_surprised_1,left,0,right
+7,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person is about to doze off?,0,surprised_sleepy_surprised_2,surprised_sleepy_sleepy_2,right,0,left
+8,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person got very little rest last night?,0,surprised_sleepy_sleepy_3,surprised_sleepy_surprised_3,left,1,left
+9,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person can barely keep their eyes open?,0,surprised_sleepy_surprised_4,surprised_sleepy_sleepy_4,right,0,left
+0,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just saw something unexpected?,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,right,0,left
+1,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person walked into a party nobody told them about?,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,left,1,left
+2,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just watched a magic trick?,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,right,1,right
+3,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person cannot believe their eyes?,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,left,0,right
+4,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person just heard shocking news?,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,right,0,left
+5,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person stayed up all night?,1,surprised_sleepy_sleepy_0,surprised_sleepy_surprised_0,left,1,left
+6,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person needs a nap?,1,surprised_sleepy_surprised_1,surprised_sleepy_sleepy_1,right,0,left
+7,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person is about to doze off?,1,surprised_sleepy_sleepy_2,surprised_sleepy_surprised_2,left,0,right
+8,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person got very little rest last night?,1,surprised_sleepy_surprised_3,surprised_sleepy_sleepy_3,right,1,right
+9,emotion,Semantic reasoning,Place the cube on the answer to this question: Which person can barely keep their eyes open?,1,surprised_sleepy_sleepy_4,surprised_sleepy_surprised_4,left,1,left

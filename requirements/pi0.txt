@@ -1,0 +1,30 @@
+# Curated direct dependencies for pi0 / RL4VLA in-process eval.
+# CUDA torch is installed explicitly by scripts/setup/setup_pi0_env.sh.
+
+-r eval_client.txt
+transformers==4.48.3  # lerobot pi0 code; 5.x needs a newer torch
+accelerate
+huggingface-hub
+safetensors
+sentencepiece
+einops
+datasets==3.3.2
+# draccus pinned below
+jsonlines
+jaxtyping
+beartype
+flax
+optax
+orbax-checkpoint
+# imported by INT-ACT's lerobot fork (pi0 branch)
+draccus==0.10.0
+deepdiff
+diffusers==0.32.2
+omegaconf
+termcolor
+wandb
+zarr
+h5py
+typing_extensions
+pytest
+scikit-learn  # diagnostics probes

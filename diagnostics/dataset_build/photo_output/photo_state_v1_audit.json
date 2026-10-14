@@ -1,0 +1,69 @@
+{
+  "asset": "photo_state_v1",
+  "questions": 30,
+  "answer_frequency": {
+    "open_door": 5,
+    "closed_door": 5,
+    "clean_toilet": 5,
+    "dirty_toilet": 5,
+    "empty_plate": 5,
+    "full_plate": 5
+  },
+  "side_frequency": {
+    "Left": 15,
+    "Right": 15
+  },
+  "answer_word_leak_question_ids": [],
+  "photo_pairs": 15,
+  "photo_pairs_revealing_answer": 0,
+  "photos": [
+    {
+      "asset": "photo_state_v1",
+      "label": "open door",
+      "candidates_passing": 29,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "closed door",
+      "candidates_passing": 15,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "wet road",
+      "candidates_passing": 37,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "dry road",
+      "candidates_passing": 4,
+      "kept": 4
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "clean toilet",
+      "candidates_passing": 20,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "dirty toilet",
+      "candidates_passing": 12,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "empty plate",
+      "candidates_passing": 8,
+      "kept": 5
+    },
+    {
+      "asset": "photo_state_v1",
+      "label": "full plate",
+      "candidates_passing": 14,
+      "kept": 5
+    }
+  ]
+}

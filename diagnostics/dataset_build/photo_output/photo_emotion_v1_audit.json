@@ -1,0 +1,53 @@
+{
+  "asset": "photo_emotion_v1",
+  "questions": 10,
+  "answer_frequency": {
+    "surprised_person": 5,
+    "sleepy_person": 5
+  },
+  "side_frequency": {
+    "Left": 5,
+    "Right": 5
+  },
+  "answer_word_leak_question_ids": [],
+  "photo_pairs": 5,
+  "photo_pairs_revealing_answer": 0,
+  "photos": [
+    {
+      "asset": "photo_emotion_v1",
+      "label": "happy person",
+      "candidates_passing": 128,
+      "kept": 5
+    },
+    {
+      "asset": "photo_emotion_v1",
+      "label": "sad person",
+      "candidates_passing": 2,
+      "kept": 2
+    },
+    {
+      "asset": "photo_emotion_v1",
+      "label": "angry person",
+      "candidates_passing": 2,
+      "kept": 2
+    },
+    {
+      "asset": "photo_emotion_v1",
+      "label": "calm person",
+      "candidates_passing": 0,
+      "kept": 0
+    },
+    {
+      "asset": "photo_emotion_v1",
+      "label": "surprised person",
+      "candidates_passing": 26,
+      "kept": 5
+    },
+    {
+      "asset": "photo_emotion_v1",
+      "label": "sleepy person",
+      "candidates_passing": 5,
+      "kept": 5
+    }
+  ]
+}

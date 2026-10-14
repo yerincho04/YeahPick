@@ -25,7 +25,7 @@ fi
 conda activate "$ENV_PATH"
 export PYTHONNOUSERSITE=1
 
-retry pip4 install --upgrade pip wheel setuptools ninja packaging
+retry pip4 install --upgrade pip wheel "setuptools<70" ninja packaging
 retry pip4 install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu121
 retry pip4 install flash-attn==2.7.4.post1 --no-build-isolation
 retry pip4 install -r "$REPO_ROOT/requirements/openvla.txt"

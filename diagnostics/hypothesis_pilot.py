@@ -63,15 +63,47 @@ def fmt(k: int, n: int) -> str:
     return f"{k}/{n} = {100 * k / n:.0f}% [{100 * lo:.0f}-{100 * hi:.0f}]" if n else "n/a"
 
 
-def load_records(root: Path, asset: str) -> list[dict]:
+CARROT = Path(__file__).resolve().parents[1] / "ManiSkill" / "mani_skill" / "assets" / "carrot"
+
+
+def load_records(root: Path, asset: str, model: str = "openvla") -> list[dict]:
+    # Photo assets record which two photos a question shows ("image_key"); attach it if present.
+    pairs_path = CARROT / asset / "pairs.json"
+    image_keys = ({int(p["index"]): p["image_key"] for p in json.loads(pairs_path.read_text()) if "image_key" in p}
+                  if pairs_path.exists() else {})
     by_key = {}
-    for path in sorted(root.glob(f"openvla-{asset}-*/diagnostics/episode_log.jsonl")):
+    for path in sorted(root.glob(f"{model}-{asset}-*/diagnostics/episode_log.jsonl")):
         for line in path.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
                 r["_dir"] = path.parent
+                if int(r["question_id"]) in image_keys:
+                    r["image_key"] = image_keys[int(r["question_id"])]
                 by_key[(r["condition"], int(r["question_id"]), r["layout"])] = r
     return list(by_key.values())
+
+
+def image_pair_folds(records: list[dict], seed: int, n_folds: int = 5) -> dict[int, int]:
+    """Question id -> fold, keeping every question that shows the same two images in one fold.
+    With per-formulation folds a held-out question's image layout appears in training with the
+    OPPOSITE answer (symmetric design), so a probe that memorises the scene is pushed below
+    chance. Grouping by image pair removes that, so the scene alone sits at chance."""
+    groups = defaultdict(set)
+    for r in records:
+        # photo assets: questions showing the same two photos; drawn assets: same two tile images
+        key = r.get("image_key") or frozenset((r["semantic_answer_id"], r["distractor_id"]))
+        groups[key].add(int(r["question_id"]))
+    keys = sorted(groups, key=lambda k: k if isinstance(k, str) else ",".join(sorted(k)))
+    answers = {r["semantic_answer_id"] for r in records}
+    for attempt in range(1000):
+        order = np.random.default_rng(seed + attempt).permutation(len(keys))
+        fold = {q: i % n_folds for i, k in enumerate(order) for q in groups[keys[k]]}
+        # every answer must keep at least one training formulation in every fold
+        ok = all({r["semantic_answer_id"] for r in records if fold[int(r["question_id"])] != f} == answers
+                 for f in range(n_folds))
+        if ok:
+            return fold
+    raise ValueError("could not build image-pair folds covering all answers")
 
 
 def formulation_folds(records: list[dict], seed: int, n_folds: int = 5) -> dict[int, int]:
@@ -130,7 +162,12 @@ def probe_condition(records: list[dict], folds: dict[int, int], timestep: int, s
             k10[te] = proba.argmax(1) == y_k[te]
             rows = np.arange(te.sum())
             # K2: is the true answer scored above the distractor tile that is also in the scene?
-            k2[te] = proba[rows, pair[te, 0]] > proba[rows, pair[te, 1]]
+            # Exact ties (an uninformative probe scoring both tiles equally, e.g. neutral scenes that
+            # occur with both answers) are broken by a seeded coin flip, so they count as chance (50%),
+            # not as wrong for both answers.
+            diff = proba[rows, pair[te, 0]] - proba[rows, pair[te, 1]]
+            coin = np.random.default_rng(seed + int(f)).random(len(diff)) < 0.5
+            k2[te] = np.where(np.isclose(diff, 0.0), coin, diff > 0)
             g[te] = g_clf.predict(X[frac][te]) == y_g[te]
         out["layers"][frac] = {"k10": k10, "k2": k2, "g": g}
     return out
@@ -140,14 +177,18 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--asset", default="semantic_repeated_v2")
     ap.add_argument("--outputs-root", default="outputs")
+    ap.add_argument("--model", default="openvla", help="output-dir prefix of the run (the --run-prefix / --vla name)")
     ap.add_argument("--out-dir", default="outputs/hypothesis_pilot")
     ap.add_argument("--timestep", type=int, default=0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--fold-by", choices=("formulation", "image_pair"), default="formulation",
+                    help="formulation: 1 unseen formulation per answer per fold (pre-registered); "
+                         "image_pair: questions sharing the two images stay together (robustness check)")
     args = ap.parse_args()
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    records = load_records(Path(args.outputs_root), args.asset)
+    records = load_records(Path(args.outputs_root), args.asset, args.model)
     by_cond = defaultdict(list)
     for r in records:
         r["intent_side"], _ = classify_intent(r)
@@ -191,9 +232,10 @@ def main() -> None:
                          f"p={exact_mcnemar(only_a, only_b):.4f}")
 
     # ---- B. probes ----
-    folds = formulation_folds(by_cond.get("knowledge") or records, args.seed)
+    fold_fn = image_pair_folds if args.fold_by == "image_pair" else formulation_folds
+    folds = fold_fn(by_cond.get("knowledge") or records, args.seed)
     probes = {c: probe_condition(by_cond[c], folds, args.timestep, args.seed) for c in PROBE_CONDITIONS if by_cond.get(c)}
-    lines += ["", "## B. Layer-wise probes (5-fold, unseen question formulations)", "",
+    lines += ["", f"## B. Layer-wise probes (5-fold, unseen question formulations, folds by {args.fold_by})", "",
               "Chance: K10 10%, K2 50%, G 50%. Neutral = same scenes, information-free instruction "
               "(how much the scene alone gives the probe).", "",
               "| Layer | K10 knowledge | K2 knowledge | K2 neutral | K2 paired p | G knowledge | G neutral | G paired p |",
@@ -244,7 +286,38 @@ def main() -> None:
         lines.append(f"| {LAYER_LABELS.get(frac, frac)} | " + " | ".join(
             str(stages[s]) for s in ("K wrong", "G wrong", "intent wrong", "placement fail", "success"))
             + f" | {fmt(g_wrong_k_ok, k_ok)} | {fmt(a_wrong_g_ok, g_ok)} |")
-    lines += ["", "Decision rule: see diagnostics/HYPOTHESIS_PILOT.md (fixed before the run)."]
+    # ---- automatic verdict (pre-registered rule, HYPOTHESIS_PILOT.md) ----
+    alpha = 0.0125
+    def intent_rate(c):
+        rs = by_cond.get(c, [])
+        return sum(r["intent_correct"] for r in rs), len(rs)
+    kk, kn_n = intent_rate("knowledge")
+    sk, sn = intent_rate("explicit_spatial")
+    lo, hi = wilson(kk, kn_n) if kn_n else (float("nan"), float("nan"))
+    c3 = bool(kn_n and sn and lo <= 0.5 <= hi and sk / sn >= 0.8)
+    layer_checks = []
+    for row in rows_json:
+        n = row["n"]
+        c1 = (row["k2_knowledge"] >= 0.65 and row.get("k2_paired_p", 1.0) < alpha
+              and row["k2_knowledge"] > row.get("k2_neutral", 1.0))
+        glo, ghi = wilson(round(row["g_knowledge"] * n), n)
+        c2 = glo <= 0.5 <= ghi
+        layer_checks.append({"layer": row["layer"], "c1_k_present": bool(c1), "c2_g_lost": bool(c2)})
+    go = c3 and any(l["c1_k_present"] and l["c2_g_lost"] for l in layer_checks)
+    inconclusive = bool(sn and sk / sn < 0.8)
+    verdict = "INCONCLUSIVE (motor floor: explicit_spatial intent < 80%)" if inconclusive else ("GO" if go else "NO-GO")
+    lines += ["", "## Verdict (pre-registered rule, computed automatically)", "",
+              f"- Criterion 3 (behaviour): knowledge intent {fmt(kk, kn_n)}, explicit_spatial intent {fmt(sk, sn)} -> "
+              f"{'met' if c3 else 'not met'}"]
+    for l in layer_checks:
+        lines.append(f"- Layer {l['layer']}: criterion 1 (K present) {'met' if l['c1_k_present'] else 'not met'}, "
+                     f"criterion 2 (G lost) {'met' if l['c2_g_lost'] else 'not met'}")
+    lines += [f"- **Verdict: {verdict}**", "",
+              "Decision rule: see diagnostics/HYPOTHESIS_PILOT.md (fixed before the run)."]
+    (out_dir / "summary.json").write_text(json.dumps({
+        "asset": args.asset, "fold_by": args.fold_by, "verdict": verdict,
+        "knowledge_intent": [kk, kn_n], "explicit_spatial_intent": [sk, sn],
+        "criterion3_behaviour": c3, "layers": layer_checks, "probe_layers": rows_json}, indent=2) + "\n")
 
     (out_dir / "report.md").write_text("\n".join(lines) + "\n")
     (out_dir / "probe_layers.json").write_text(json.dumps(rows_json, indent=2) + "\n")

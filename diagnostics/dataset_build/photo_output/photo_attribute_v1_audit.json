@@ -1,0 +1,55 @@
+{
+  "asset": "photo_attribute_v1",
+  "questions": 20,
+  "answer_frequency": {
+    "wooden_bench": 5,
+    "metal_bench": 5,
+    "glass_bottle": 5,
+    "plastic_bottle": 5
+  },
+  "side_frequency": {
+    "Left": 10,
+    "Right": 10
+  },
+  "answer_word_leak_question_ids": [],
+  "photo_pairs": 10,
+  "photo_pairs_revealing_answer": 0,
+  "photos": [
+    {
+      "asset": "photo_attribute_v1",
+      "label": "wooden bench",
+      "candidates_passing": 65,
+      "kept": 5
+    },
+    {
+      "asset": "photo_attribute_v1",
+      "label": "metal bench",
+      "candidates_passing": 24,
+      "kept": 5
+    },
+    {
+      "asset": "photo_attribute_v1",
+      "label": "glass bottle",
+      "candidates_passing": 11,
+      "kept": 5
+    },
+    {
+      "asset": "photo_attribute_v1",
+      "label": "plastic bottle",
+      "candidates_passing": 9,
+      "kept": 5
+    },
+    {
+      "asset": "photo_attribute_v1",
+      "label": "leather chair",
+      "candidates_passing": 6,
+      "kept": 5
+    },
+    {
+      "asset": "photo_attribute_v1",
+      "label": "fabric chair",
+      "candidates_passing": 1,
+      "kept": 1
+    }
+  ]
+}

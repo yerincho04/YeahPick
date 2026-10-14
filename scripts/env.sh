@@ -6,7 +6,8 @@ export REPO_ROOT
 
 # External repos are not vendored. By default they live next to this repo.
 export A2A_EXTERNAL_DIR="${A2A_EXTERNAL_DIR:-$(dirname "$REPO_ROOT")}"
-export PI0_DEPS_ROOT="${PI0_DEPS_ROOT:-$A2A_EXTERNAL_DIR/RL4VLA}"
+# pi0 imports agent/, experiments/, src/ (INT-ACT) and lerobot/ (INT-ACT's fork); clone_external_repos.sh builds this folder
+export PI0_DEPS_ROOT="${PI0_DEPS_ROOT:-$A2A_EXTERNAL_DIR/pi0_deps}"
 export INTERNVLA_REPO="${INTERNVLA_REPO:-$A2A_EXTERNAL_DIR/InternVLA-M1}"
 export XIAOMI_REPO="${XIAOMI_REPO:-$A2A_EXTERNAL_DIR/Xiaomi-Robotics-0}"
 export MOLMOACT_REPO="${MOLMOACT_REPO:-$A2A_EXTERNAL_DIR/molmoact2}"
