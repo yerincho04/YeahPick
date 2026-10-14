@@ -190,10 +190,24 @@ class SimplerWrapper:
         return obs_image, instruction, info
 
     def _capture_attention_masks(self, obs):
-        """Board segmentation from the camera frame supplied to the policy."""
+        """Capture the policy frame's masks and geometry before the next action."""
         env = self.env.unwrapped
         seg = obs["sensor_data"]["3rd_view_camera"]["segmentation"][..., 0]
         masks = []
+        geometry = []
+        camera_params = obs["sensor_param"]["3rd_view_camera"]
+        rgb = obs["sensor_data"]["3rd_view_camera"]["rgb"]
+
+        def values(tensor, index):
+            return tensor[index].detach().cpu().numpy().tolist()
+
+        def entity(actor, index, size=None):
+            return {
+                "position": values(actor.pose.p, index),
+                "quaternion_wxyz": values(actor.pose.q, index),
+                "size_xyz": size,
+            }
+
         for i in range(self.num_envs):
             answer = env._answers[i]
             correct_name = (env._current_left_names if answer == "left" else env._current_right_names)[i]
@@ -206,7 +220,30 @@ class SimplerWrapper:
                 "correct": (seg[i] == correct_id).cpu().numpy(),
                 "wrong": (seg[i] == wrong_id).cpu().numpy(),
             })
+            left_name = env._current_left_names[i]
+            right_name = env._current_right_names[i]
+            geometry.append({
+                "camera": {
+                    "intrinsic_cv": values(camera_params["intrinsic_cv"], i),
+                    "extrinsic_cv": values(camera_params["extrinsic_cv"], i),
+                    "width": int(rgb.shape[2]), "height": int(rgb.shape[1]),
+                },
+                "answer_side": answer,
+                "left": {"name": left_name, **entity(
+                    env.objs_board[left_name], i,
+                    env.model_bbox_sizes[left_name].detach().cpu().numpy().tolist())},
+                "right": {"name": right_name, **entity(
+                    env.objs_board[right_name], i,
+                    env.model_bbox_sizes[right_name].detach().cpu().numpy().tolist())},
+                "cube": {"name": "cube_white", **entity(
+                    env.cubes[env._white_key], i, [0.03, 0.03, 0.03])},
+                "robot_links": [
+                    {"name": link.name, **entity(link, i)}
+                    for link in env.agent.robot.get_links()
+                ],
+            })
         self.attention_masks = masks
+        self.attention_geometry = geometry
 
     def get_episode_metadata(self):
         """Return non-tensor Act2Answer metadata for diagnostic logging."""

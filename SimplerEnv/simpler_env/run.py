@@ -321,8 +321,10 @@ class Runner:
     def render(self, epoch: int, obj_set: str) -> dict:
         self.policy.prep_rollout()
         if self.args.capture_attention:
-            if self.args.vla_kind != "openvla" or self.args.instruction_condition != "explicit_object" or self.args.do_swap:
-                raise ValueError("Attention capture requires OpenVLA, explicit_object, and noswap")
+            if (self.args.vla_kind != "openvla"
+                    or self.args.instruction_condition not in ("explicit_object", "explicit_spatial")
+                    or self.args.do_swap):
+                raise ValueError("Attention capture requires OpenVLA, explicit_object or explicit_spatial, and noswap")
             from diagnostics.attention_video import write_attention_outputs
 
         # init logger
@@ -375,6 +377,7 @@ class Runner:
                         "step": policy_step,
                         "maps": maps,
                         "masks": self.env.attention_masks[i],
+                        "geometry": self.env.attention_geometry[i],
                     })
 
             obs_img_new, _, truncated, env_info = self.env.step(action)
@@ -453,6 +456,10 @@ class Runner:
                     samples=datas[i]["attention_samples"],
                     video_path=attention_dir / f"attention_q{question_id:03d}-s_{success}.mp4",
                     scores_path=attention_dir / f"attention_q{question_id:03d}.csv",
+                    raw_path=attention_dir / f"attention_raw_q{question_id:03d}.csv",
+                    geometry_path=attention_dir / f"attention_geometry_q{question_id:03d}.csv",
+                    regions_path=attention_dir / f"attention_regions_q{question_id:03d}.csv",
+                    preview_path=attention_dir / f"attention_regions_q{question_id:03d}_step040.png",
                     question_id=question_id,
                     seed=self.args.seed,
                     image_strategy=self.policy.image_processor.image_resize_strategy,
