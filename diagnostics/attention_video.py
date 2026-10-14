@@ -108,10 +108,18 @@ def _region_grid(geometry: dict, shape: tuple[int, int], strategy: str):
         distances.append(_polygon_distance(centers, polygon))
 
     cube_corners = _project(_box_corners(geometry["cube"]), camera)
-    if not np.isfinite(cube_corners).all():
-        raise RuntimeError("Cube cannot be projected into the policy camera")
-    cube_polygon = cv2.convexHull(cube_corners.astype(np.float32)).reshape(-1, 2)
-    arm_distance = _polygon_distance(centers, cube_polygon)
+    visible_cube_corners = cube_corners[np.isfinite(cube_corners).all(axis=1)]
+    cube_polygon = None
+    arm_distance = np.full(len(centers), np.inf, dtype=np.float32)
+    if len(visible_cube_corners) >= 3:
+        cube_polygon = cv2.convexHull(visible_cube_corners.astype(np.float32)).reshape(-1, 2)
+        arm_distance = _polygon_distance(centers, cube_polygon)
+    else:
+        # The cube can leave the camera view during a rollout. Keep any visible
+        # corner as a small anchor; if none remain, use the gripper links below.
+        for pixel in visible_cube_corners:
+            arm_distance = np.minimum(arm_distance,
+                                      np.maximum(0, np.linalg.norm(centers - pixel, axis=1) - 12))
     arm_points = []
     gripper_link_names = {"ee_gripper_link", "left_finger_link", "right_finger_link"}
     for link in geometry["robot_links"]:
@@ -149,7 +157,8 @@ def _write_region_preview(image: np.ndarray, zones: np.ndarray, geometry: dict,
     _, tiles, cube, arm = _region_grid(geometry, zones.shape, strategy)
     for polygon, color in zip(tiles, palette[[0, 2]]):
         cv2.polylines(base, [np.rint(polygon).astype(np.int32)], True, color.tolist(), 2)
-    cv2.polylines(base, [np.rint(cube).astype(np.int32)], True, palette[1].tolist(), 2)
+    if cube is not None:
+        cv2.polylines(base, [np.rint(cube).astype(np.int32)], True, palette[1].tolist(), 2)
     if len(arm) > 1:
         cv2.polylines(base, [np.rint(arm).astype(np.int32)], False, palette[1].tolist(), 2)
     cv2.rectangle(base, (0, 0), (w, 34), (0, 0, 0), -1)
