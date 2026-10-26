@@ -387,7 +387,7 @@ class Act2AnswerV4(_PickCubeBase):
         self.do_swap = bool(do_swap)
         if instruction_condition not in {
             "knowledge", "explicit_object", "explicit_spatial", "spatial",
-            "tile_object", "visual_description", "neutral",
+            "tile_object", "visual_description", "explicit_object_detailed", "neutral",
         }:
             raise ValueError(f"Unknown instruction_condition={instruction_condition!r}")
         self.instruction_condition = instruction_condition
@@ -750,7 +750,7 @@ class Act2AnswerV4(_PickCubeBase):
                 if not semantic_answer:
                     raise ValueError(f"Pair {pair_idx} lacks semantic_answer required by tile_object")
                 instruction = f"Place the cube on the tile showing the {semantic_answer}."
-            elif self.instruction_condition == "visual_description":
+            elif self.instruction_condition in {"visual_description", "explicit_object_detailed"}:
                 description = str(p.get("visual_description", "")).strip()
                 if not description:
                     raise ValueError(
