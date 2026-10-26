@@ -143,6 +143,12 @@ class Args:
     Act2Answer/diagnostics/. Off by default; preserves baseline eval behavior exactly."""
     capture_diagnostic_hidden: bool = True
 
+    static_qa: bool = False
+    """Instead of acting, ask the policy Left/Right about the first camera image of each env and stop."""
+
+    capture_attention: bool = False
+    """Capture OpenVLA pre-action image attention at every policy step."""
+
     instruction_condition: str = "knowledge"
     """Matched instruction condition: knowledge, explicit_object, or explicit_spatial."""
 
@@ -315,8 +321,40 @@ class Runner:
         return torch.cat(actions, dim=0).to(self.device)
 
     @torch.no_grad()
+    def _static_qa(self, obs_img, instruction, episode_metadata) -> dict:
+        """Ask the policy which tile is meant, from the exact first image the robot policy would get."""
+        import imageio.v2 as imageio
+        if not hasattr(self.policy, "static_answer"):
+            raise ValueError(f"static Q&A is not implemented for vla_kind={self.args.vla_kind}")
+        out_dir = Path(self.save_dir) / "static_qa"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        answers = self.env.env.unwrapped._answers
+        rows = []
+        for i in range(self.args.num_envs):
+            qid = int(episode_metadata[i]["question_id"])
+            img = obs_img[i].to(torch.uint8).cpu()
+            imageio.imwrite(out_dir / f"frame_q{qid:03d}.png", img.numpy())
+            res = self.policy.static_answer(img, instruction[i])
+            rows.append({**episode_metadata[i], "assets": self.args.assets, "layout": "swap" if self.args.do_swap else "noswap",
+                         "instruction": instruction[i], "correct_side": answers[i],
+                         "logit_correct": int(res["logit_choice"] == answers[i]),
+                         "generated_correct": int(res["generated_choice"] == answers[i]), **res})
+            print(f"STATIC_QA q{qid:03d} correct={answers[i]} logit={res['logit_choice']} gen={res['raw']!r}", flush=True)
+        with open(out_dir / "static_qa.jsonl", "w") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        n = len(rows)
+        return {"logit_accuracy": sum(r["logit_correct"] for r in rows) / n,
+                "generated_accuracy": sum(r["generated_correct"] for r in rows) / n}
+
+    @torch.no_grad()
     def render(self, epoch: int, obj_set: str) -> dict:
         self.policy.prep_rollout()
+        if self.args.capture_attention:
+            # any instruction condition and layout; the policy must implement get_image_attention
+            if not hasattr(self.policy, "get_image_attention"):
+                raise ValueError(f"Attention capture is not implemented for vla_kind={self.args.vla_kind}")
+            from diagnostics.attention_video import write_attention_outputs
 
         # init logger
         env_infos = defaultdict(lambda: [])
@@ -327,6 +365,7 @@ class Runner:
                 "action": [],  # a_t: [0, T-1]
                 "info": [],  # info after executing a_t: [1, T]
                 "hidden": [],  # Act2Answer diagnostics: {layer_frac: [hidden_dim]} per step, [0, T-1]
+                "attention_samples": [],
                 "truncated": [],
                 "initial_state": {},
                 "metadata": {},
@@ -337,6 +376,8 @@ class Runner:
         obs_img, instruction, info = self.env.reset(obj_set)
         episode_metadata = self.env.get_episode_metadata()
         print("instruction[:3]:", instruction[:3])
+        if self.args.static_qa:
+            return self._static_qa(obs_img, instruction, episode_metadata)
 
         # data dump: instruction
         for idx in range(self.args.num_envs):
@@ -355,6 +396,20 @@ class Runner:
             obs = dict(image=obs_img, task_description=instruction, proprio=info['proprio'], pi_0=info.get('pi_0'))
             action = self._get_action(obs, deterministic=True)
             diag_hidden = self._last_diag_hidden
+
+            if self.args.capture_attention:
+                for i in range(self.args.num_envs):
+                    single_obs = {
+                        "image": obs_img[i:i + 1],
+                        "task_description": [instruction[i]],
+                    }
+                    maps = self.policy.get_image_attention(single_obs)
+                    datas[i]["attention_samples"].append({
+                        "step": policy_step,
+                        "maps": maps,
+                        "masks": self.env.attention_masks[i],
+                        "geometry": self.env.attention_geometry[i],
+                    })
 
             obs_img_new, _, truncated, env_info = self.env.step(action)
 
@@ -423,6 +478,24 @@ class Runner:
             images_to_video(
                 images, str(exp_dir), f"video_q{question_id:03d}-s_{success}", fps=10, verbose=False
             )
+            if self.args.capture_attention:
+                attention_dir = Path(self.save_dir) / "attention"
+                for stale_video in attention_dir.glob(f"attention_q{question_id:03d}-s_*.mp4"):
+                    stale_video.unlink()
+                write_attention_outputs(
+                    images=images,
+                    samples=datas[i]["attention_samples"],
+                    video_path=attention_dir / f"attention_q{question_id:03d}-s_{success}.mp4",
+                    scores_path=attention_dir / f"attention_q{question_id:03d}.csv",
+                    raw_path=attention_dir / f"attention_raw_q{question_id:03d}.csv",
+                    geometry_path=attention_dir / f"attention_geometry_q{question_id:03d}.csv",
+                    regions_path=attention_dir / f"attention_regions_q{question_id:03d}.csv",
+                    preview_path=attention_dir / f"attention_regions_q{question_id:03d}_step040.png",
+                    question_id=question_id,
+                    seed=self.args.seed,
+                    image_strategy=getattr(self.policy, "attention_image_strategy", None)
+                    or self.policy.image_processor.image_resize_strategy,
+                )
 
         # Act2Answer Phase 1 diagnostics: one JSONL record + hidden-state .pt per episode.
         # No-op (and no import cost) unless --enable-diagnostics was passed.

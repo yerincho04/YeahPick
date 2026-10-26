@@ -2,7 +2,8 @@
 # One evaluation wrapper for every in-process model: runs noswap + swap for one asset slice and one
 # instruction condition, with episode diagnostics. Model-specific settings live in the case block.
 #   VLA=magma ASSETS=photo_state_v1 START_ID=0 COUNT=5 INSTRUCTION_CONDITION=knowledge bash scripts/eval_vla.sh
-# Optional: VLA_PATH (checkpoint), UNNORM (OpenVLA un-normalisation key), RUN_PREFIX (output dir prefix).
+# Optional: VLA_PATH (checkpoint), UNNORM (OpenVLA un-normalisation key), RUN_PREFIX (output dir prefix),
+# CAPTURE_ATTENTION=1 (attention maps; slower).
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]:-$0}")/env.sh"
 
@@ -34,6 +35,10 @@ extra_args=(--instruction-condition "$INSTRUCTION_CONDITION" --seed "$SEED" --ru
 [ -n "${VLA_PATH:-}" ] && extra_args+=(--vla-path "$VLA_PATH")
 [ -n "${UNNORM:-}" ] && extra_args+=(--vla-unnorm-key "$UNNORM")
 [ "${ENABLE_DIAGNOSTICS:-1}" = "1" ] && extra_args+=(--enable-diagnostics)
+# CAPTURE_ATTENTION=1: per-step image attention maps, videos and CSVs under <run>/attention/
+[ "${CAPTURE_ATTENTION:-0}" = "1" ] && extra_args+=(--capture-attention)
+# STATIC_QA=1: answer Left/Right about the first camera image instead of acting (outputs under <run>/static_qa/)
+[ "${STATIC_QA:-0}" = "1" ] && extra_args+=(--static-qa --disable-diagnostic-hidden-states)
 # hidden states only for the knowledge condition (and only where the policy supports capture)
 [ "$INSTRUCTION_CONDITION" != "knowledge" ] && extra_args+=(--disable-diagnostic-hidden-states)
 

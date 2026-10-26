@@ -38,7 +38,7 @@ class OpenVLAPolicy:
         # self.action_tokenizer = ActionTokenizer(self.processor.tokenizer)
         self.vla = OpenVLAForActionPredictionWithValueHead.from_pretrained(
             self.args.vla_path,
-            attn_implementation="flash_attention_2",  # [Optional] Requires `flash_attn`
+            attn_implementation="eager" if self.args.capture_attention else "flash_attention_2",
             torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True,
             trust_remote_code=True,
@@ -208,6 +208,48 @@ class OpenVLAPolicy:
 
         return {frac: by_index[idx] for frac, idx in layer_indices.items()}
 
+    @torch.no_grad()
+    def get_image_attention(self, x: dict, layer_fracs=(0.25, 0.5, 0.75, 1.0)) -> dict:
+        """Mean-head attention from the pre-action token to image patches, batch size one."""
+        if x["image"].shape[0] != 1:
+            raise ValueError("Capture attention one environment at a time to limit GPU memory")
+        features = self._preprocess_obs(x)
+        base = self.vla.get_base_model() if hasattr(self.vla, "get_base_model") else self.vla
+        layers = base.language_model.model.layers
+        n_layers = len(layers)
+        selected = {frac: max(0, min(n_layers - 1, round(frac * n_layers) - 1)) for frac in layer_fracs}
+        captured = {}
+        originals = {}
+
+        def capture_forward(layer_idx, original):
+            def wrapped(*args, **kwargs):
+                kwargs["output_attentions"] = True
+                result = original(*args, **kwargs)
+                weights = result[1]
+                if weights is None:
+                    raise RuntimeError("Eager OpenVLA attention did not return weights")
+                patch_count = weights.shape[-1] - features["input_ids"].shape[-1]
+                side = int(round(patch_count ** 0.5))
+                if side * side != patch_count:
+                    raise RuntimeError(f"Cannot map {patch_count} image patches to a square grid")
+                captured[layer_idx] = weights[0, :, -1, 1:1 + patch_count].float().mean(0).reshape(side, side).cpu().numpy()
+                return (result[0], None, *result[2:])
+            return wrapped
+
+        try:
+            for layer_idx in set(selected.values()):
+                attn = layers[layer_idx].self_attn
+                originals[layer_idx] = attn.forward
+                attn.forward = capture_forward(layer_idx, attn.forward)
+            self.vla(**features, output_attentions=False, output_hidden_states=False,
+                     use_cache=False, return_dict=True)
+        finally:
+            for layer_idx, original in originals.items():
+                layers[layer_idx].self_attn.forward = original
+        if len(captured) != len(set(selected.values())):
+            raise RuntimeError("Some selected OpenVLA layers produced no attention")
+        return {frac: {"layer": idx + 1, "grid": captured[idx]} for frac, idx in selected.items()}
+
     def evaluate_actions(self, x: dict, action: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         features = self._preprocess_obs(x, action)
 
@@ -247,7 +289,7 @@ class OpenVLAPolicy:
 
         self.vla = OpenVLAForActionPredictionWithValueHead.from_pretrained(
             self.args.vla_path,
-            attn_implementation="flash_attention_2",  # [Optional] Requires `flash_attn`
+            attn_implementation="eager" if self.args.capture_attention else "flash_attention_2",
             torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True,
             trust_remote_code=True,

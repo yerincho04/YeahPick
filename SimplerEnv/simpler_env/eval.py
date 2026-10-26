@@ -174,6 +174,8 @@ def build_runner_args(ns: argparse.Namespace, config: VLAConfig) -> Args:
     args.hold_cube_steps = ns.hold_cube_steps
     args.enable_diagnostics = bool(ns.enable_diagnostics)
     args.capture_diagnostic_hidden = not ns.disable_diagnostic_hidden_states
+    args.capture_attention = bool(ns.capture_attention)
+    args.static_qa = bool(ns.static_qa)
     args.instruction_condition = ns.instruction_condition
     return args
 
@@ -222,6 +224,16 @@ def parse_args() -> argparse.Namespace:
         "--disable-diagnostic-hidden-states",
         action="store_true",
         help="Keep trajectory diagnostics but skip OpenVLA hidden-state capture.",
+    )
+    parser.add_argument(
+        "--static-qa",
+        action="store_true",
+        help="Ask the policy Left/Right about the first camera image instead of acting (no rollout).",
+    )
+    parser.add_argument(
+        "--capture-attention",
+        action="store_true",
+        help="Capture four OpenVLA layer maps every policy step and write a 2x2 video and CSV.",
     )
     ns = parser.parse_args()
 

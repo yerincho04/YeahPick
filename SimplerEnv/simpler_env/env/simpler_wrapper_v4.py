@@ -3,6 +3,33 @@ import numpy as np
 import torch
 from mani_skill.envs.sapien_env import BaseEnv
 
+
+def _ensure_act2answer_registered(env_id: str) -> None:
+    """Register the local task when ManiSkill's import side effect was skipped."""
+    if env_id != "Act2AnswerV4-v1":
+        return
+
+    from functools import partial
+    from gymnasium.envs.registration import registry
+    from mani_skill.envs.tasks.digital_twins.bridge_dataset_eval.put_on_in_scene_multi_v4 import Act2AnswerV4
+    from mani_skill.utils.registration import REGISTERED_ENVS, make, make_vec, register
+
+    if env_id not in REGISTERED_ENVS:
+        register(
+            env_id,
+            Act2AnswerV4,
+            max_episode_steps=80,
+            asset_download_ids=["bridge_v2_real2sim"],
+        )
+    if env_id not in registry:
+        gym.register(
+            env_id,
+            entry_point=partial(make, env_id=env_id),
+            vector_entry_point=partial(make_vec, env_id=env_id),
+            max_episode_steps=80,
+            disable_env_checker=True,
+        )
+
 class SimplerWrapper:
     def __init__(self, all_args, unnorm_state=None, extra_seed=0):
         self.args = all_args
@@ -43,6 +70,7 @@ class SimplerWrapper:
             rgb_overlay_paths = self.args.rgb_overlay_paths,
         )
 
+        _ensure_act2answer_registered(self.args.env_id)
         self.env: BaseEnv = gym.make(**env_config)
         self.env.reset(seed=[self.args.seed for i in range(self.args.num_envs)])
 
@@ -157,7 +185,65 @@ class SimplerWrapper:
         info["pi_0"] = self._compute_eef_pos(None)
 
 
+        if self.args.capture_attention:
+            self._capture_attention_masks(obs)
         return obs_image, instruction, info
+
+    def _capture_attention_masks(self, obs):
+        """Capture the policy frame's masks and geometry before the next action."""
+        env = self.env.unwrapped
+        seg = obs["sensor_data"]["3rd_view_camera"]["segmentation"][..., 0]
+        masks = []
+        geometry = []
+        camera_params = obs["sensor_param"]["3rd_view_camera"]
+        rgb = obs["sensor_data"]["3rd_view_camera"]["rgb"]
+
+        def values(tensor, index):
+            return tensor[index].detach().cpu().numpy().tolist()
+
+        def entity(actor, index, size=None):
+            return {
+                "position": values(actor.pose.p, index),
+                "quaternion_wxyz": values(actor.pose.q, index),
+                "size_xyz": size,
+            }
+
+        for i in range(self.num_envs):
+            answer = env._answers[i]
+            correct_name = (env._current_left_names if answer == "left" else env._current_right_names)[i]
+            wrong_name = (env._current_right_names if answer == "left" else env._current_left_names)[i]
+            correct_objs = env.objs_board[correct_name]._objs
+            wrong_objs = env.objs_board[wrong_name]._objs
+            correct_id = correct_objs[min(i, len(correct_objs) - 1)].per_scene_id
+            wrong_id = wrong_objs[min(i, len(wrong_objs) - 1)].per_scene_id
+            masks.append({
+                "correct": (seg[i] == correct_id).cpu().numpy(),
+                "wrong": (seg[i] == wrong_id).cpu().numpy(),
+            })
+            left_name = env._current_left_names[i]
+            right_name = env._current_right_names[i]
+            geometry.append({
+                "camera": {
+                    "intrinsic_cv": values(camera_params["intrinsic_cv"], i),
+                    "extrinsic_cv": values(camera_params["extrinsic_cv"], i),
+                    "width": int(rgb.shape[2]), "height": int(rgb.shape[1]),
+                },
+                "answer_side": answer,
+                "left": {"name": left_name, **entity(
+                    env.objs_board[left_name], i,
+                    env.model_bbox_sizes[left_name].detach().cpu().numpy().tolist())},
+                "right": {"name": right_name, **entity(
+                    env.objs_board[right_name], i,
+                    env.model_bbox_sizes[right_name].detach().cpu().numpy().tolist())},
+                "cube": {"name": "cube_white", **entity(
+                    env.cubes[env._white_key], i, [0.03, 0.03, 0.03])},
+                "robot_links": [
+                    {"name": link.name, **entity(link, i)}
+                    for link in env.agent.robot.get_links()
+                ],
+            })
+        self.attention_masks = masks
+        self.attention_geometry = geometry
 
     def get_episode_metadata(self):
         """Return non-tensor Act2Answer metadata for diagnostic logging."""
@@ -199,6 +285,8 @@ class SimplerWrapper:
 
         obs, _reward, _terminated, truncated, info = self.env.step(action)
         obs_image = obs["sensor_data"]["3rd_view_camera"]["rgb"].to(torch.uint8)
+        if self.args.capture_attention:
+            self._capture_attention_masks(obs)
         truncated = truncated.reshape(-1, 1)  # [B, 1]
 
         # calculate reward

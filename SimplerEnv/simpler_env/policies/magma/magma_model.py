@@ -168,7 +168,8 @@ class MagmaInference:
             model_name,
             device_map=f"cuda:{device_id}",
             low_cpu_mem_usage=True,
-            attn_implementation="flash_attention_2",  # [Optional] Requires `flash_attn`
+            # flash attention cannot return attention weights; sdpa falls back to eager when asked to
+            attn_implementation="sdpa" if getattr(all_args, "capture_attention", False) else "flash_attention_2",
             torch_dtype=torch.bfloat16,
             trust_remote_code=True,
         )
@@ -193,21 +194,25 @@ class MagmaInference:
     def reset(self, task_description):
         self.task_description = task_description
 
-    def get_action(self, x: dict, deterministic=True):
-        images: torch.Tensor = x["image"]
-        task_descriptions: list[str] = x["task_description"]
+    # Magma squashes the camera frame to 256x256 (then one 512x512 crop), i.e. no cropping
+    attention_image_strategy = "resize-naive"
+
+    def _build_inputs(self, images: torch.Tensor, task_descriptions: list[str], user_texts: list[str] | None = None):
+        # user_texts replaces the robot prompt (used by static Q&A); the image and system prompt stay the same
+        if user_texts is None:
+            user_texts = [f"What action should the robot take to {prompt}?" for prompt in task_descriptions]
         convs = [
             [
                 {
                     "role": "user",
-                    "content": f"<image>\nWhat action should the robot take to {prompt}?",
+                    "content": f"<image>\n{text}",
                 },
                 {
                     "role": "system",
                     "content": "You are agent that can see, talk and act.",
                 },
             ]
-            for prompt in task_descriptions
+            for text in user_texts
         ]
 
         prompts = self.processor.tokenizer.apply_chat_template(
@@ -229,6 +234,12 @@ class MagmaInference:
         # (step_one does the equivalent unsqueeze(0) for the single-image case).
         inputs["pixel_values"] = inputs["pixel_values"].unsqueeze(1)
         inputs["image_sizes"] = inputs["image_sizes"].unsqueeze(1)
+        return inputs
+
+    def get_action(self, x: dict, deterministic=True):
+        images: torch.Tensor = x["image"]
+        task_descriptions: list[str] = x["task_description"]
+        inputs = self._build_inputs(images, task_descriptions)
 
         self.vla.generation_config.pad_token_id = self.processor.tokenizer.pad_token_id
         with torch.inference_mode():
@@ -466,6 +477,60 @@ class MagmaInference:
             print(f"MAGMA vision-tower LayerScale remap: loaded {len(remap)} vision weights", flush=True)
         except Exception as e:
             print(f"MAGMA vision-tower remap FAILED ({e}); vision may be untrained", flush=True)
+
+    STATIC_QA_TEMPLATE = ('A robot must follow this instruction: "{instruction}" '
+                          "There are two image tiles on the table, one on the left and one on the right. "
+                          "Which tile should the robot place the cube on? Answer with exactly one word: Left or Right.")
+
+    @torch.no_grad()
+    def static_answer(self, image: torch.Tensor, instruction: str) -> dict:
+        """Answer Left/Right about one camera image (no action). Same image preprocessing, chat
+        template and system prompt as get_action; only the user text differs. Returns the
+        log-probabilities of the two answers at the first answer token and a greedy text answer."""
+        text = self.STATIC_QA_TEMPLATE.format(instruction=instruction.rstrip())
+        inputs = self._build_inputs(image[None], [instruction], user_texts=[text])
+        logits = self.vla(**inputs, use_cache=False, return_dict=True).logits[0, -1].float().log_softmax(-1)
+        tok = self.processor.tokenizer
+
+        def score(words):
+            ids = {tok.encode(w, add_special_tokens=False)[0] for w in words}
+            return max(float(logits[i]) for i in ids)
+
+        lp_left = score(["Left", "left", "LEFT", " Left", " left"])
+        lp_right = score(["Right", "right", "RIGHT", " Right", " right"])
+        self.vla.generation_config.pad_token_id = tok.pad_token_id
+        out = self.vla.generate(**inputs, do_sample=False, num_beams=1, max_new_tokens=6, use_cache=True)
+        raw = tok.decode(out[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True).strip()
+        word = raw.lower().strip(" .!\"'")
+        parsed = "left" if word.startswith("left") else "right" if word.startswith("right") else "invalid"
+        return {"prompt": text, "lp_left": lp_left, "lp_right": lp_right,
+                "logit_choice": "left" if lp_left > lp_right else "right", "raw": raw, "generated_choice": parsed}
+
+    @torch.no_grad()
+    def get_image_attention(self, x: dict, layer_fracs=(0.25, 0.5, 0.75, 1.0)) -> dict:
+        """Mean-head attention from the last prompt token (the one that emits the first action
+        token) to the image patches, at 25/50/75/100% LLM depth. Batch size one. Same return
+        format as OpenVLAPolicy.get_image_attention: {frac: {"layer": n, "grid": rows x cols}}."""
+        if x["image"].shape[0] != 1:
+            raise ValueError("Capture attention one environment at a time to limit GPU memory")
+        inputs = self._build_inputs(x["image"], x["task_description"])
+        out = self.vla(**inputs, output_attentions=True, use_cache=False, return_dict=True)
+        attentions = out.attentions
+        n_layers = len(attentions)
+        input_ids = inputs["input_ids"][0]
+        image_pos = int((input_ids == self.vla.config.image_token_index).nonzero()[0])
+        n_image = attentions[0].shape[-1] - (input_ids.shape[0] - 1)
+        # each feature row ends with one row-separator token: rows * (cols + 1) tokens
+        rows = int(round((-1 + (1 + 4 * n_image) ** 0.5) / 2))
+        if rows * (rows + 1) != n_image:
+            raise RuntimeError(f"Cannot map {n_image} Magma image tokens to a square grid with row separators")
+        result = {}
+        for frac in layer_fracs:
+            idx = max(0, min(n_layers - 1, round(frac * n_layers) - 1))
+            w = attentions[idx][0, :, -1, image_pos:image_pos + n_image].float().mean(0)
+            grid = w.reshape(rows, rows + 1)[:, :rows]  # drop the separator column
+            result[frac] = {"layer": idx + 1, "grid": grid.cpu().numpy()}
+        return result
 
     def prep_rollout(self):
         self.vla.eval()
