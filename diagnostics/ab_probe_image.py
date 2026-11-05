@@ -35,14 +35,17 @@ CARROT = Path(__file__).resolve().parents[1] / "ManiSkill" / "mani_skill" / "ass
 NEUTRAL = "Place the cube on one of the two tiles."
 TEXT = ('A robot must follow this instruction: "{instruction}" There are two image tiles on the table, one on the left '
         "and one on the right. Which tile should the robot place the cube on? Answer with one word: left or right.")
+# --image-source pairs: the two tile images side by side (diagnostics/build_side_by_side.py), no table or robot
+TEXT_PAIRS = ('A robot must follow this instruction: "{instruction}" The picture shows two images side by side, one on the '
+              "left and one on the right. Which image should the robot place the cube on? Answer with one word: left or right.")
 RUN_RE = re.compile(r"^magma-sqa-(?P<asset>.+)-(?P<cond>knowledge|explicit_object|explicit_spatial)-(?P<layout>noswap|swap)-q")
 CAT_OF = {"photo_state": "state", "photo_attribute": "attribute", "photo_emotion": "emotion", "public_info": "public_info",
           "time_clock": "time_clock", "counting": "counting", "symmetry": "symmetry", "celebrity": "celebrity",
           "living_world": "living_world", "traffic": "traffic"}
 
 
-def items(outputs=Path("outputs"), condition="knowledge"):
-    """Frames + the robot runs' instruction for this condition (static-Q&A runs store both)."""
+def items(outputs=Path("outputs"), condition="knowledge", source="robot"):
+    """Images + the robot runs' instruction for this condition (static-Q&A runs store the frames and instructions)."""
     its = []
     for f in sorted(outputs.glob(f"magma-sqa-*-{condition}-*/static_qa/static_qa.jsonl")):
         m = RUN_RE.match(f.parts[-3])
@@ -50,9 +53,15 @@ def items(outputs=Path("outputs"), condition="knowledge"):
         for line in f.read_text().splitlines():
             r = json.loads(line)
             q = int(r["question_id"])
+            frame = str(f.parent / f"frame_q{q:03d}.png")
+            if source == "pairs":
+                frame = str(outputs / "side_by_side" / m["asset"] / f"q{q:03d}_{m['layout']}.png")
+                answer_left = pairs[q]["answer"].lower() == "left"  # noswap layout; swap mirrors it
+                expected = "left" if answer_left == (m["layout"] == "noswap") else "right"
+                assert expected == r["correct_side"], (m["asset"], q, m["layout"], expected, r["correct_side"])
             its.append({"asset": m["asset"], "category": next(v for k, v in CAT_OF.items() if k in m["asset"]),
                         "layout": m["layout"], "question_id": q, "instruction": r["instruction"],
-                        "correct_side": r["correct_side"], "frame": str(f.parent / f"frame_q{q:03d}.png"),
+                        "correct_side": r["correct_side"], "frame": frame,
                         "group": "|".join(sorted((pairs[q]["left"], pairs[q]["right"])))})
     return its
 
@@ -125,12 +134,15 @@ def main():
     ap.add_argument("--name", required=True)
     ap.add_argument("--out-dir", default="outputs/ab_probe")
     ap.add_argument("--condition", default="knowledge", choices=("knowledge", "explicit_object", "explicit_spatial"))
+    ap.add_argument("--image-source", default="robot", choices=("robot", "pairs"),
+                    help="robot: first camera frame; pairs: the two tile images side by side")
     args = ap.parse_args()
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     kind, _, ref = args.model.partition(":")
     m = {"prismatic": Prismatic, "openvla": OpenVLA, "magma": Magma}[kind](*([ref] if ref else []))
-    its = items(condition=args.condition)
+    its = items(condition=args.condition, source=args.image_source)
+    template = TEXT_PAIRS if args.image_source == "pairs" else TEXT
     assert its, f"no static-Q&A frames for {args.condition}"
     y = np.array([0 if it["correct_side"] == "left" else 1 for it in its])
     groups = np.unique([it["group"] for it in its], return_inverse=True)[1]
@@ -141,7 +153,7 @@ def main():
         for it in its:
             img = Image.open(it["frame"]).convert("RGB")
             for cond in X:
-                o = m.forward(img, TEXT.format(instruction=NEUTRAL if cond == "no_question" else it["instruction"]))
+                o = m.forward(img, template.format(instruction=NEUTRAL if cond == "no_question" else it["instruction"]))
                 X[cond].append(torch.stack([h[0, -1] for h in o.hidden_states]).float().cpu().numpy())
                 if cond == "question":
                     p = o.logits[0, -1].float().softmax(-1)
@@ -151,7 +163,7 @@ def main():
     choice = np.array(choice)
     np.savez_compressed(out / f"{args.name}_image_hidden.npz", question=X["question"].astype(np.float16),
                         no_question=X["no_question"].astype(np.float16), y=y, groups=groups)
-    res = {"model": args.model, "condition": args.condition, "n_items": len(its), "n_groups": int(groups.max() + 1),
+    res = {"model": args.model, "condition": args.condition, "image_source": args.image_source, "n_items": len(its), "n_groups": int(groups.max() + 1),
            **run_probes(X["question"], X["no_question"], y, groups)}
     res["answer_accuracy"] = float((choice == y).mean())
     res["answer_said_right"] = float(choice.mean())

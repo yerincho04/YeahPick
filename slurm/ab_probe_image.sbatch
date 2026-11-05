@@ -32,4 +32,4 @@ echo "SLURM_JOB_ID=$SLURM_JOB_ID CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-un
 export HF_TOKEN="${HF_TOKEN:-$(cat "$WORKSPACE_ROOT/hf-cache/token" 2>/dev/null)}"
 conda activate "$CONDA_ENVS_DIR/${ENV:?set ENV}"
 export PYTHONPATH="$PROJECT_ROOT/openvla:$PROJECT_ROOT/SimplerEnv:$PROJECT_ROOT/ManiSkill:$PROJECT_ROOT:${PYTHONPATH:-}" OMP_NUM_THREADS=4
-python -m diagnostics.ab_probe_image --model "${SPEC:?set SPEC}" --name "${NAME:?set NAME}" --condition "${COND:-knowledge}"
+python -m diagnostics.ab_probe_image --model "${SPEC:?set SPEC}" --name "${NAME:?set NAME}" --condition "${COND:-knowledge}" --image-source "${IMG:-robot}"

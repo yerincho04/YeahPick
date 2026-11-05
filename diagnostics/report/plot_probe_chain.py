@@ -1,6 +1,7 @@
 """Is the answer encoded inside each model? Best-layer probe accuracy along both training chains.
 
-Reads outputs/ab_probe/<name>_probe.json (text only) and <name>_image_probe.json (image + text) and writes
+Reads outputs/ab_probe/<name>_probe.json (text only), <name>_image_probe.json (robot camera frame) and
+<name>-sbs_image_probe.json (the two images side by side) and writes
 figures/probe_chain.png. Bars: best layer of the linear and the non-linear (MLP) probe. Grey band: the highest
 score any control reached at any layer (no-question prompt, shuffled labels; linear and MLP), i.e. what
 picking the best of all layers yields with no real signal.
@@ -26,8 +27,9 @@ MODELS = [("llama2-7b", "Llama-2-7B"), ("prismatic-7b", "Prismatic-7B"), ("openv
           ("openvla-sft", "OpenVLA SFT"), (None, None), ("llama3-8b-instruct", "Llama-3-8B\nInstruct"), ("magma", "Magma")]
 
 
-def load(name, image):
-    f = P / f"{name}_{'image_' if image else ''}probe.json"
+def load(name, source):
+    """source: text, frame (robot camera frame) or sbs (the two images side by side)."""
+    f = P / {"text": f"{name}_probe.json", "frame": f"{name}_image_probe.json", "sbs": f"{name}-sbs_image_probe.json"}[source]
     if not f.exists():
         return None
     r = json.loads(f.read_text())
@@ -36,34 +38,36 @@ def load(name, image):
 
 
 def main():
-    fig, axes = plt.subplots(1, 2, figsize=(15, 4.8), sharey=True)
-    for ax, image, title in ((axes[0], False, "A. 텍스트만 (230문항 × 2순서)"), (axes[1], True, "B. 이미지 + 텍스트 (로봇 카메라 장면, 250문항 × 2배치)")):
+    fig, axes = plt.subplots(1, 3, figsize=(20, 4.8), sharey=True)
+    for ax, source, title in ((axes[0], "text", "A. Text only (230 questions × 2 orders)"),
+                              (axes[1], "frame", "B. Image + text: camera frame (250 × 2 layouts)"),
+                              (axes[2], "sbs", "C. Image + text: side by side (250 × 2 layouts)")):
         for x, (name, label) in enumerate(MODELS):
             if name is None:
                 continue
-            r = load(name, image)
+            r = load(name, source)
             if r is None:
-                ax.text(x, 0.45, "이미지 입력\n없음", ha="center", fontsize=8, color=MUTED)
+                ax.text(x, 0.45, "no image\ninput", ha="center", fontsize=8, color=MUTED)
                 continue
-            ax.bar(x - 0.19, r["linear"], width=0.36, color=BLUE, edgecolor=SURFACE, zorder=3, label="선형 probe" if x == 0 else None)
-            ax.bar(x + 0.19, r["mlp"], width=0.36, color=ORANGE, edgecolor=SURFACE, zorder=3, label="비선형 probe (MLP)" if x == 0 else None)
+            ax.bar(x - 0.19, r["linear"], width=0.36, color=BLUE, edgecolor=SURFACE, zorder=3, label="Linear probe" if x == 0 else None)
+            ax.bar(x + 0.19, r["mlp"], width=0.36, color=ORANGE, edgecolor=SURFACE, zorder=3, label="Non-linear probe (MLP)" if x == 0 else None)
             ax.fill_between([x - 0.42, x + 0.42], 0.5, r["control"], color=MUTED, alpha=0.35, zorder=4, linewidth=0,
-                            label="통제 조건 최고값 (질문 제거 · 라벨 섞기)" if x == 0 else None)
+                            label="Control ceiling (question removed, shuffled labels)" if x == 0 else None)
             ax.text(x - 0.19, r["linear"] + 0.012, f"{100 * r['linear']:.0f}", ha="center", fontsize=8, color=INK2)
             ax.text(x + 0.19, r["mlp"] + 0.012, f"{100 * r['mlp']:.0f}", ha="center", fontsize=8, color=INK2)
         ax.axhline(0.5, color=INK2, linewidth=1, zorder=2)
         ax.axvline(4, color=GRID, linewidth=1)
         ax.set_ylim(0.4, 1.06)
-        ax.set_yticks([0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], ["40%", "50% 우연", "60%", "70%", "80%", "90%", "100%"])
+        ax.set_yticks([0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], ["40%", "50% chance", "60%", "70%", "80%", "90%", "100%"])
         ax.set_xticks([x for x, (n, _) in enumerate(MODELS) if n], [l for n, l in MODELS if n], fontsize=9, color=INK)
         ax.yaxis.grid(True, color=GRID, zorder=0)
         for s in ("top", "right", "left"):
             ax.spines[s].set_visible(False)
         ax.tick_params(length=0, colors=MUTED)
         ax.set_title(title, loc="left", fontsize=11, color=INK)
-        ax.text(1.5, 1.035, "OpenVLA 계열", ha="center", fontsize=9, color=INK2)
-        ax.text(5.5, 1.035, "Magma 계열", ha="center", fontsize=9, color=INK2)
-    axes[0].set_ylabel("정답을 읽어낸 정확도 (최고 층)", color=INK2)
+        ax.text(1.5, 1.035, "OpenVLA family", ha="center", fontsize=9, color=INK2)
+        ax.text(5.5, 1.035, "Magma family", ha="center", fontsize=9, color=INK2)
+    axes[0].set_ylabel("Probe accuracy (best layer)", color=INK2)
     h, l = axes[0].get_legend_handles_labels()
     fig.legend(h, l, loc="lower center", ncol=3, frameon=False, fontsize=9)
     fig.tight_layout(rect=(0, 0.07, 1, 1))
