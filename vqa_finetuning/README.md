@@ -23,7 +23,8 @@ types are supervised using their existing answers. The `knowledge` block and
 aggregate/source-question/pair files are metadata, not extra training examples.
 KDEF has missing images and is excluded with user approval.
 
-Default: BF16, two GPUs, batch 1 per GPU, accumulation 8, effective batch 16,
+Default: BF16 base/compute with FP32 adapters/optimizer, two GPUs, batch 8 per GPU,
+accumulation 1, effective batch 16,
 three epochs, 1,500 optimizer updates, AdamW LR 5e-5, cosine decay, 5% warmup,
 LoRA rank 16 / alpha 32 / dropout 0.05 on LLM q_proj and v_proj. Vision encoder,
 projector, embeddings and output head remain frozen. Only answer and EOS tokens

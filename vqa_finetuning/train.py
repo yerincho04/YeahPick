@@ -58,8 +58,8 @@ def main():
     p.add_argument('--data', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--epochs', type=int, default=3)
-    p.add_argument('--batch-size', type=int, default=1)
-    p.add_argument('--accumulation', type=int, default=8)
+    p.add_argument('--batch-size', type=int, default=8)
+    p.add_argument('--accumulation', type=int, default=1)
     p.add_argument('--lr', type=float, default=5e-5)
     p.add_argument('--seed', type=int, default=42)
     p.add_argument('--max-updates', type=int, default=0, help='Smoke test only; 0 uses all epochs')
@@ -87,6 +87,9 @@ def main():
     model = get_peft_model(model, LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, revision=base['revision'],
         target_modules=r'language_model\.model\.layers\.\d+\.self_attn\.(q_proj|v_proj)', bias='none'))
     trainable = [v for v in model.parameters() if v.requires_grad]
+    # Keep adapter/optimizer updates in FP32; the frozen base and compute use BF16.
+    for parameter in trainable:
+        parameter.data = parameter.data.float()
     assert trainable, 'No LoRA parameters selected'
     names = [k for k,v in model.named_parameters() if v.requires_grad]
     assert all('language_model' in k and 'lora_' in k for k in names)
@@ -108,11 +111,15 @@ def main():
     config = dict(vars(a), **base, world_size=world, examples=len(dataset),
         effective_batch=world*a.batch_size*a.accumulation, total_updates=total,
         trainable_parameters=sum(v.numel() for v in trainable), trainable_names=names,
-        precision='bf16 (not quantized)', target='LLM q_proj/v_proj only; vision/projector frozen',
+        precision='BF16 frozen base/compute; FP32 adapters/optimizer; not quantized', target='LLM q_proj/v_proj only; vision/projector frozen',
         supervision='Answer and EOS only; prompt, visual tokens, padding masked',
         data_sha256=hashlib.sha256((a.data/'train.jsonl').read_bytes()).hexdigest())
     start_epoch, updates = 0, 0
     if a.resume:
+        assert a.resume.resolve().parent == a.output.resolve(), 'Resume into the original output directory'
+        previous = json.loads((a.output/'run_config.json').read_text())
+        for key in ['model_id', 'revision', 'world_size', 'data_sha256', 'epochs', 'batch_size', 'accumulation', 'lr', 'seed']:
+            assert previous[key] == config[key], 'Resume configuration changed: '+key
         state = torch.load(a.resume/'training_state.pt', map_location='cpu')
         from peft import set_peft_model_state_dict
         from safetensors.torch import load_file
@@ -122,6 +129,12 @@ def main():
         rng = state['rng'][rank]
         random.setstate(rng['python']); np.random.set_state(rng['numpy'])
         torch.set_rng_state(rng['torch']); torch.cuda.set_rng_state(rng['cuda'], local)
+        if rank == 0:
+            # Discard log records from an interrupted, unsaved partial epoch.
+            old_metrics = [json.loads(x) for x in (a.output/'metrics.jsonl').read_text().splitlines()]
+            old_metrics = [x for x in old_metrics if x['update'] <= updates]
+            assert [x['update'] for x in old_metrics] == list(range(1, updates+1))
+            (a.output/'metrics.jsonl').write_text(''.join(json.dumps(x)+'\n' for x in old_metrics))
     if rank == 0:
         (a.output/'run_config.json').write_text(json.dumps(config, indent=2, default=str)+'\n')
         print(json.dumps(config, default=str), flush=True)
