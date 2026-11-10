@@ -1,0 +1,542 @@
+[
+  {
+    "image_id": "celebrity_01",
+    "slug": "beyonce",
+    "label": "Beyoncé",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Beyoncé, easily recognizable facial likeness, smiling, long wavy honey-blonde hair, holding a silver handheld microphone in her right hand, wearing a dark navy concert outfit, softly blurred blue concert stage background. One person only, waist-up, centered, portrait inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy, face in clear focus. No text, no labels, no watermarks. This is a generated depiction, not documentary footage.",
+    "attribute_question": "What handheld object is the person on the {side} tile holding?",
+    "attribute_answer": "a silver microphone",
+    "semantic_clue": "released the album Lemonade",
+    "source_urls": [
+      "https://www.rcarecords.co.uk/artists/beyonce"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_01.png",
+    "sha256": "eeeb7edbbd120815fd05a8880e06e88f97cc73c18fad3da1bee1faebba56dfbf",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_02",
+    "slug": "dua_lipa",
+    "label": "Dua Lipa",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Dua Lipa, with recognizable facial likeness. adult, long straight dark brown hair, neutral lipstick, wearing a plain red blazer over a white blouse, hands out of frame, softly blurred neutral gray background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the blazer worn by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "released the album Future Nostalgia",
+    "source_urls": [
+      "https://eushop.dualipa.com/products/future-nostalgia-5th-anniversary-edition"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_02.png",
+    "sha256": "3ee6138897da2164f3e98ce71ba7561a89b63ddb896b0f695cc032287e99feaf",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_03",
+    "slug": "adele",
+    "label": "Adele",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Adele, with recognizable facial likeness. adult, swept-back light-brown hair, winged eyeliner, black long-sleeved dress, holding a black handheld microphone, blurred dark green studio background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the dress worn by the person on the {side} tile?",
+    "attribute_answer": "black",
+    "semantic_clue": "released the album 21",
+    "source_urls": [
+      "https://www.adele.com/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_03.png",
+    "sha256": "c5aaac17c9245cc4683192db1a4bea6ff6211af56594036cede77e41289df02b",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_04",
+    "slug": "lady_gaga",
+    "label": "Lady Gaga",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Lady Gaga, with recognizable facial likeness. adult, sleek platinum-blonde bob haircut, plain white suit jacket, large black sunglasses covering her eyes, neutral pale blue background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What accessory covers the eyes of the person on the {side} tile?",
+    "attribute_answer": "black sunglasses",
+    "semantic_clue": "released the album Born This Way",
+    "source_urls": [
+      "https://bornthisway.ladygaga.com/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_04.png",
+    "sha256": "b4df897a163104168183c0b776d1db4f862471d5ae461eb6f8f789d1bfddefb2",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_05",
+    "slug": "ed_sheeran",
+    "label": "Ed Sheeran",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Ed Sheeran, with recognizable facial likeness. adult, short tousled ginger hair and short ginger beard, blue plaid shirt, holding one natural-wood acoustic guitar across his torso, soft warm studio background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What musical instrument is the person on the {side} tile holding?",
+    "attribute_answer": "an acoustic guitar",
+    "semantic_clue": "released the album Divide",
+    "source_urls": [
+      "https://www.edsheeran.com/album/divide"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_05.png",
+    "sha256": "d1a08b67db8cefcaa99a71b767a0a0a4c90e0a6c88b407c1d1a7fe8e67710345",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_06",
+    "slug": "dolly_parton",
+    "label": "Dolly Parton",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Dolly Parton, with recognizable facial likeness. adult, adult, voluminous blonde curly hair, plain bright green collared shirt with no text, silver chain necklace, neutral light gray background, hands out of frame. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the shirt worn by the person on the {side} tile?",
+    "attribute_answer": "bright green",
+    "semantic_clue": "released the 1974 album Jolene",
+    "source_urls": [
+      "https://www.dollyparton.com/album/jolene"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_06.png",
+    "sha256": "68569184af2490897252df1444b0ce32dedef9ca9bbb983e9703db9d087ff57c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_07",
+    "slug": "bruno_mars",
+    "label": "Bruno Mars",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Bruno Mars, with recognizable facial likeness. adult, short curly dark hair, wearing a tan fedora hat and burgundy shirt, slight smile, softly blurred warm brown background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What type of hat is worn by the person on the {side} tile?",
+    "attribute_answer": "a fedora",
+    "semantic_clue": "released the album 24K Magic",
+    "source_urls": [
+      "https://www.brunomars.com/music/24k-magic"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_07.png",
+    "sha256": "b1aedc386deea6527b8e4f75ec450620784634f326abf890f0b889d34542b988",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_08",
+    "slug": "rihanna",
+    "label": "Rihanna",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Rihanna, with recognizable facial likeness. adult, long dark wavy hair, wearing a vivid yellow blazer and small gold hoop earrings, softly blurred blue-gray backdrop, hands out of frame. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the blazer worn by the person on the {side} tile?",
+    "attribute_answer": "yellow",
+    "semantic_clue": "released the album Anti",
+    "source_urls": [
+      "https://www.rihannanow.com/news/18090/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_08.png",
+    "sha256": "b7f7e671d9d5a7a462962ce3270407c2cc549e2b557b8300794621aa53c911bc",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_09",
+    "slug": "paul_mccartney",
+    "label": "Paul McCartney",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Paul McCartney, with recognizable facial likeness. adult depiction, medium-length dark brown hair, clean-shaven face, red zip-front jacket over a black shirt, no hat, neutral gray studio background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the jacket worn by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "was a member of the Beatles",
+    "source_urls": [
+      "https://concord.com/artist/paul-linda-mccartney/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_09.png",
+    "sha256": "667d0c2daa586cf382baa20b70eae1b8b54a32c76abd855468c968e4716d880c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_10",
+    "slug": "elton_john",
+    "label": "Elton John",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Elton John, with recognizable facial likeness. adult, short light brown hair, wearing very prominent round red-framed eyeglasses and a blue jacket, warm neutral studio background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color are the eyeglass frames worn by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "released the album Goodbye Yellow Brick Road",
+    "source_urls": [
+      "https://www.eltonjohn.com/discography/goodbye-yellow-brick-road-40th-anniversary"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_10.png",
+    "sha256": "7b95842b896a804270da5e54a83aeeff89b5ce4cb8046e4e3cd6994532cd80c3",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_11",
+    "slug": "leonardo_dicaprio",
+    "label": "Leonardo DiCaprio",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Leonardo DiCaprio, with recognizable facial likeness. adult, neatly combed dark-blond hair and light stubble, black tuxedo jacket, white shirt, clearly visible black bow tie, softly blurred beige background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What type of neckwear is worn by the person on the {side} tile?",
+    "attribute_answer": "a black bow tie",
+    "semantic_clue": "played Romeo in the 1996 film Romeo + Juliet",
+    "source_urls": [
+      "https://www.20thcenturystudios.com/movies/william-shakespeares-romeo-juliet"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_11.png",
+    "sha256": "8c8add2c5dc83205fecd77e7da1309a96d493b22f706d7d0a7baa6cf3a913a89",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_12",
+    "slug": "emma_watson",
+    "label": "Emma Watson",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Emma Watson, with recognizable facial likeness. adult, shoulder-length brown hair, wearing a plain cream sweater, holding one closed red hardback book at chest height, neutral pale gray background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the book held by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "played Hermione Granger in the original Harry Potter films",
+    "source_urls": [
+      "https://www.harrypotter.com/features/actors-of-the-wizarding-world-part-one-the-stars-that-rose"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_12.png",
+    "sha256": "dacd394298c13b02249cf3841e9a12b1f08f9e1eba056ac2997ed8932014a0d5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_13",
+    "slug": "robert_downey_jr",
+    "label": "Robert Downey Jr.",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Robert Downey Jr., with recognizable facial likeness. adult, short dark hair with gray at temples, neatly shaped goatee, plain charcoal suit and white shirt, prominent purple necktie, neutral blue-gray background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the necktie worn by the person on the {side} tile?",
+    "attribute_answer": "purple",
+    "semantic_clue": "played Tony Stark in the 2008 film Iron Man",
+    "source_urls": [
+      "https://www.marvel.com/articles/movies/iron-man-kevin-feige-jon-favreau-15-anniversary-interview?mibextid=Zxz2cZMarvel"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_13.png",
+    "sha256": "60ffcf0ccd362be83053fc51f76b6e4cc7eb05e96ff79329849270150014fad5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_14",
+    "slug": "audrey_hepburn",
+    "label": "Audrey Hepburn",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Audrey Hepburn, with recognizable facial likeness. adult historical synthetic depiction, short dark brown pixie haircut, wearing a plain royal-blue blazer over a white top, no jewelry at neck, neutral beige background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the blazer worn by the person on the {side} tile?",
+    "attribute_answer": "royal blue",
+    "semantic_clue": "won the Best Actress Oscar for Roman Holiday at the 1954 Academy Awards",
+    "source_urls": [
+      "https://www.oscars.org/oscars/ceremonies/1954/L"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_14.png",
+    "sha256": "e9233eaef3f9d73298658133c0b2ec97e136e41ac6e6d9bb2efb804accdb8300",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_15",
+    "slug": "daniel_radcliffe",
+    "label": "Daniel Radcliffe",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Daniel Radcliffe, with recognizable facial likeness. adult, short dark brown hair and light beard, wearing a gray cardigan over white crew-neck shirt, holding a white ceramic mug with both hands, softly blurred warm brown background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What object is the person on the {side} tile holding with both hands?",
+    "attribute_answer": "a white mug",
+    "semantic_clue": "played Harry Potter in the original Harry Potter films",
+    "source_urls": [
+      "https://www.harrypotter.com/features/actors-of-the-wizarding-world-part-one-the-stars-that-rose"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_15.png",
+    "sha256": "ca53c4cb0740237873ef792463dcfbbc82bc103bb01efd505368201bc044c634",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_16",
+    "slug": "tom_cruise",
+    "label": "Tom Cruise",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Tom Cruise, with recognizable facial likeness. adult, short neatly combed dark hair, wearing a brown leather jacket over a white crew-neck shirt, neutral pale blue backdrop. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What material is the jacket worn by the person on the {side} tile made to look like?",
+    "attribute_answer": "leather",
+    "semantic_clue": "played Pete Maverick Mitchell in the 1986 film Top Gun",
+    "source_urls": [
+      "https://www.paramountmovies.com/movies/top-gun"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_16.png",
+    "sha256": "be158f4ee1bf5a6fef9707131c3d2873575cd8990cbe243b8a2fb9a9df9a8427",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_17",
+    "slug": "denzel_washington",
+    "label": "Denzel Washington",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Denzel Washington, with recognizable facial likeness. adult, closely cropped dark hair with gray at temples, wearing a navy suit jacket, white shirt and plain green necktie, neutral beige studio background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the necktie worn by the person on the {side} tile?",
+    "attribute_answer": "green",
+    "semantic_clue": "won Best Actor for Training Day at the 2002 Academy Awards",
+    "source_urls": [
+      "https://www.oscars.org/oscars/ceremonies/2002"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_17.png",
+    "sha256": "b1e2de8d7f3aa5cb4bb86933a0f36be4f1b77df52bcf9f8804a09cd8bd3a4d02",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_18",
+    "slug": "dwayne_johnson",
+    "label": "Dwayne Johnson",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Dwayne Johnson, with recognizable facial likeness. adult, bald head, friendly smile, muscular build, plain dark green short-sleeved polo shirt, softly blurred gray studio backdrop, arms visible but no props. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What hairstyle does the person on the {side} tile have?",
+    "attribute_answer": "a bald head",
+    "semantic_clue": "voiced Maui in Disney's 2016 animated film Moana",
+    "source_urls": [
+      "https://movies.disney.com/moana"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_18.png",
+    "sha256": "bc4b56fc066f0856e98477863bf8fdffb93a16625e8ce2170b47942182306ba1",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_19",
+    "slug": "jennifer_lawrence",
+    "label": "Jennifer Lawrence",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Jennifer Lawrence, with recognizable facial likeness. adult, shoulder-length blonde hair, wearing a plain burgundy scarf over a dark gray coat, softly blurred neutral cream background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the scarf worn by the person on the {side} tile?",
+    "attribute_answer": "burgundy",
+    "semantic_clue": "starred in the original Hunger Games film series",
+    "source_urls": [
+      "https://investors.lionsgate.com/news-events/news/news-details/2024/LIONSGATE-TO-ADAPT-SUZANNE-COLLINSS-NEWLY-ANNOUNCED-HUNGER-GAMES-NOVEL-SUNRISE-ON-THE-REAPING-INTO-MAJOR-MOTION-PICTURE/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_19.png",
+    "sha256": "0b8fc58b1ecb8355018635f06b6cf9d9c1c0d8dbd0a4232cb6f4e0e59747c214",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_20",
+    "slug": "jackie_chan",
+    "label": "Jackie Chan",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Jackie Chan, with recognizable facial likeness. adult, short black hair, warm smile, wearing a plain white Mandarin-collar jacket with no patterns, softly blurred light blue backdrop. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the jacket worn by the person on the {side} tile?",
+    "attribute_answer": "white",
+    "semantic_clue": "starred in the Rush Hour film series",
+    "source_urls": [
+      "https://www.filmarchive.gov.hk/documents/6.-Research-and-Publication/06-02-Filmmakers-Search/English/Jackie-Chan_e.pdf"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_20.png",
+    "sha256": "a6a03cee8c828917037d4b22760e291c95418e0e3441fc93c0c7bd6155d998bb",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_21",
+    "slug": "rafael_nadal",
+    "label": "Rafael Nadal",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Rafael Nadal. Adult, short dark hair, white headband, plain bright orange tennis shirt without logos, numbers or lettering, holding one tennis racket upright in front of his torso. Waist-up, one person only, centered, softly blurred tennis court background. Narrow even white margin on a square 512x512-style canvas. Natural anatomy and clearly visible face and orange shirt. No text, labels, watermarks or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the shirt worn by the person on the {side} tile?",
+    "attribute_answer": "orange",
+    "semantic_clue": "won 14 French Open singles titles",
+    "source_urls": [
+      "https://www.atptour.com/en/players/p-p/n409/bio"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_21.png",
+    "sha256": "0150a20bd68662908363ca1daffdfdb65c24cb29362c84ea8e6e68bca3b4456b",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_22",
+    "slug": "cristiano_ronaldo",
+    "label": "Cristiano Ronaldo",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Cristiano Ronaldo, with recognizable facial likeness. adult, short dark neatly styled hair, wearing a plain red football jersey with no text, logos, numbers or badge, hands out of frame, softly blurred green pitch backdrop. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the jersey worn by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "won UEFA Euro 2016 with Portugal",
+    "source_urls": [
+      "https://www.uefa.com/uefaeuro/history/news/0253-0d81c1ad22fb-e697e083ebc0-1000--pepe-and-ronaldo-double-up-with-euro-triumph/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_22.png",
+    "sha256": "38188cabc1f15f34244d031758105ff2c1f767d47a579d30522b541a850946ad",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_23",
+    "slug": "serena_williams",
+    "label": "Serena Williams",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Serena Williams, with recognizable facial likeness. adult, dark curly hair pulled back with a plain white headband, wearing a purple tennis top, holding a tennis racket upright beside her torso, softly blurred green tennis court background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What piece of sports equipment is held by the person on the {side} tile?",
+    "attribute_answer": "a tennis racket",
+    "semantic_clue": "won 23 Grand Slam singles tennis titles",
+    "source_urls": [
+      "https://www.wtatennis.com/news/4512405/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_23.png",
+    "sha256": "50b0012413cc0105afd083c043dcdf9623a7158739b4d057873d2cb2aa79c904",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_24",
+    "slug": "roger_federer",
+    "label": "Roger Federer",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Roger Federer, with recognizable facial likeness. adult, short wavy brown hair, wearing a white tennis polo shirt and a red headband across his forehead, softly blurred dark green tennis court background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the headband worn by the person on the {side} tile?",
+    "attribute_answer": "red",
+    "semantic_clue": "won 20 Grand Slam singles tennis titles",
+    "source_urls": [
+      "https://www.atptour.com/en/news/roger-federer-retirement-legacy-story"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_24.png",
+    "sha256": "dab2567bbd4bf97b8485d61b680a57a52facbb82cc37ac50477db638616e0cd3",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_25",
+    "slug": "usain_bolt",
+    "label": "Usain Bolt",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Usain Bolt, with recognizable facial likeness. adult, short black hair, wearing a yellow sleeveless athletic running vest with dark green side panels, no logos, text or numbers, softly blurred stadium background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What is the main color of the running vest worn by the person on the {side} tile?",
+    "attribute_answer": "yellow",
+    "semantic_clue": "ran the men's 100 metres in 9.58 seconds in Berlin in 2009",
+    "source_urls": [
+      "https://worldathletics.org/records/all-time-toplists/sprints/100-metres/all/men/senior"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_25.png",
+    "sha256": "22eac2d7bb1c9d21f6ff9fdd0d783882f2ed96b66fb817107828bc40921f0610",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_26",
+    "slug": "simone_biles",
+    "label": "Simone Biles",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Simone Biles, with recognizable facial likeness. adult, hair in a neat high bun, wearing a plain royal-blue long-sleeved gymnastics leotard with subtle silver sparkles, no text or logos, softly blurred indoor gym background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "How is the hair of the person on the {side} tile styled?",
+    "attribute_answer": "in a high bun",
+    "semantic_clue": "won four gymnastics gold medals at the Rio 2016 Olympic Games",
+    "source_urls": [
+      "https://www.nba.com/clippers/news/24-seconds-with-simone-biles-12/07/16"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_26.png",
+    "sha256": "e46701759dfdb967c5ff7618cb0da167ae9e09372807287422d8229e1566b25e",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_27",
+    "slug": "michael_phelps",
+    "label": "Michael Phelps",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Michael Phelps, with recognizable facial likeness. adult, short dark hair, wearing a plain dark blue athletic warm-up jacket, swimming goggles hanging visibly around his neck, softly blurred pool background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What piece of swimming equipment hangs around the neck of the person on the {side} tile?",
+    "attribute_answer": "swimming goggles",
+    "semantic_clue": "won 23 Olympic gold medals in swimming",
+    "source_urls": [
+      "https://www.olympics.com/ioc/news/how-do-we-know-that-rio-2016-was-a-success"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_27.png",
+    "sha256": "bd0e80ee21a5cee5f02291d6864d227e7ce8eaf2508f72b4a62d509a09c3dbce",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_28",
+    "slug": "stephen_curry",
+    "label": "Stephen Curry",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Stephen Curry, with recognizable facial likeness. adult, short curly brown hair and a short beard, wearing a plain royal-blue sleeveless basketball jersey with yellow trim and no lettering, numbers or logos, holding an orange basketball at chest height, softly blurred indoor court background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the basketball held by the person on the {side} tile?",
+    "attribute_answer": "orange",
+    "semantic_clue": "passed Ray Allen's NBA career three-pointer record in December 2021",
+    "source_urls": [
+      "https://www.nba.com/warriors/news/curry-nba-3point-leader-20211214"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_28.png",
+    "sha256": "b9deb8064383e1acee5c3100f877a3d8d723877014d00aba85c6503851db0639",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_29",
+    "slug": "albert_einstein",
+    "label": "Albert Einstein",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Albert Einstein, with recognizable facial likeness. older adult historical synthetic depiction, iconic wild white hair and a white mustache, wearing a plain gray wool sweater, soft neutral beige study backdrop, face in clear view. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What color is the hair of the person on the {side} tile?",
+    "attribute_answer": "white",
+    "semantic_clue": "developed the theory of special relativity in 1905",
+    "source_urls": [
+      "https://educationalgames.nobelprize.org/educational/physics/relativity/index.html"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_29.png",
+    "sha256": "5c91230073b45e8dabb497416fc42c279f201894b425115697a63e470e9dd855",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  },
+  {
+    "image_id": "celebrity_30",
+    "slug": "marie_curie",
+    "label": "Marie Curie",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square VQA dataset image, Celebrity category.\nPrimary request: A photorealistic synthetic editorial portrait depicting the real public figure Marie Curie, with recognizable facial likeness. adult historical synthetic depiction, brown hair tied back in a tidy low bun, wearing a high-necked black long-sleeved dress, holding one small clear glass test tube upright in one hand, softly blurred historical laboratory background. One person only, waist-up, centered, inset with a narrow even white margin on a square 512x512-style canvas. Natural human anatomy and clearly visible face and specified attributes. No text, labels, captions, watermarks, duplicate people or collage. This is a generated depiction, not a documentary photograph.",
+    "attribute_question": "What glass laboratory object is the person on the {side} tile holding?",
+    "attribute_answer": "a test tube",
+    "semantic_clue": "discovered the elements radium and polonium",
+    "source_urls": [
+      "https://www.nobelprize.org/prizes/chemistry/1911/summary/"
+    ],
+    "image_provenance": "synthetic_named_public_figure_depiction",
+    "path": "celebrity/images/celebrity_30.png",
+    "sha256": "03f20ec032de358c1526a6da9ae1e55f16d014ea2aac8bb142ed8497ddddd210",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "named_generation_prompt"
+  }
+]

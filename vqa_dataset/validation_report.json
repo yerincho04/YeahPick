@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "checks_performed": 39056,
+  "error_count": 0,
+  "categories": {
+    "celebrity": {
+      "images": 30,
+      "source_questions": 200,
+      "selected_sources": 100,
+      "pairs": 100,
+      "groups": 200,
+      "questions": 1000
+    },
+    "living_world": {
+      "images": 30,
+      "source_questions": 200,
+      "selected_sources": 100,
+      "pairs": 100,
+      "groups": 200,
+      "questions": 1000
+    },
+    "traffic": {
+      "images": 30,
+      "source_questions": 200,
+      "selected_sources": 100,
+      "pairs": 100,
+      "groups": 200,
+      "questions": 1000
+    }
+  },
+  "errors": [],
+  "scope": "Structural consistency, asset integrity, source provenance declarations, and answer bookkeeping.",
+  "limitations": [
+    "Visual likeness, visible attributes, sign accuracy, and external factual claims require human review.",
+    "The 200-question source pools are newly authored for this delivery, not original pre-existing questions."
+  ]
+}

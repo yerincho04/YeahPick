@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "created_date": "2026-11-09",
+  "categories": [
+    "celebrity",
+    "living_world",
+    "traffic"
+  ],
+  "images_per_category": 30,
+  "pairs_per_category": 100,
+  "groups_per_pair": 2,
+  "questions_per_group": 5,
+  "total_images": 90,
+  "total_pairs": 300,
+  "total_groups": 600,
+  "total_questions": 3000,
+  "schema_reference": "User-supplied symmetry_vqa.jsonl",
+  "question_provenance": "Newly authored 200-source-instruction pool per category, with 100 selected per category; original pre-existing questions for these categories were not supplied.",
+  "pair_topology": "100 unordered image pairs from the symmetry example, relabeled for each category; every image appears in 6 or 7 pairs.",
+  "image_provenance": "All 90 images are synthetic images depicting named real public figures, real animals, and real Great Britain traffic signs.",
+  "language": "English",
+  "image_size": [
+    512,
+    512
+  ],
+  "pair_image_size": [
+    1024,
+    512
+  ],
+  "split_policy": "No train/test split supplied; split by image identity to avoid image leakage.",
+  "visual_review": {
+    "assets_reviewed": 90,
+    "attribute_answers_reviewed": 90,
+    "traffic_glyphs_reviewed": 30,
+    "scope": "Visible attributes and traffic symbols; no real-person identity authentication."
+  }
+}

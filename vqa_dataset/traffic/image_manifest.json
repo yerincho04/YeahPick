@@ -1,0 +1,572 @@
+[
+  {
+    "image_id": "traffic_01",
+    "slug": "side_road_right",
+    "label": "Side road junction on the right",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with a thick red border and white interior. In its center, a thick black vertical main-road line has one shorter thinner black horizontal side-road branch extending ONLY to the viewer's right, attached halfway up. No branch on the left.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What direction does the short branch point on the sign on the {side} tile?",
+    "attribute_answer": "Right.",
+    "semantic_clue": "warns that a side road joins the main road from the right",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_01.png",
+    "sha256": "1ec93e8e9e502e2923f1b1689acce7589965be281065120e2531db37b0c4c3e4",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_02",
+    "slug": "stop",
+    "label": "Stop",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a regular red octagon with a narrow white inset border. In the center place the exact bold uppercase white text STOP. Eight equal sides, not a circle.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What word is printed on the sign on the {side} tile?",
+    "attribute_answer": "STOP.",
+    "semantic_clue": "requires a complete stop at the junction before proceeding when clear",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_02.png",
+    "sha256": "c029c4712dde62a1bd707c6d13d121fae1bf34137ab10fef79aed0c483193a1d",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_03",
+    "slug": "give_way",
+    "label": "Give way",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an inverted equilateral triangle, point downward, thick red border, white center. Place the exact uppercase black words GIVE WAY on two centered lines.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which way does the triangular sign on the {side} tile point?",
+    "attribute_answer": "Downward.",
+    "semantic_clue": "requires yielding priority to traffic on the major road",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_03.png",
+    "sha256": "a80f9b63e1546cf8d04e1abf57b68ed401eb0fa05e114c919fd7c55b6eeef626",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_04",
+    "slug": "no_entry",
+    "label": "No entry",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid red circle containing one thick white HORIZONTAL rectangular bar centered across its middle. No black symbols and no text.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What white shape is inside the red sign on the {side} tile?",
+    "attribute_answer": "A horizontal bar.",
+    "semantic_clue": "prohibits vehicular entry from this direction",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_04.png",
+    "sha256": "7433be5186b9983060ae349e7fa3bf7428bb43c3458f24d19088719b21deacd7",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_05",
+    "slug": "maximum_speed_30",
+    "label": "30 mph maximum speed",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring border and the exact large bold black numeral 30 centered. No unit printed; the jurisdiction is Great Britain so it represents miles per hour.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What number is printed on the sign on the {side} tile?",
+    "attribute_answer": "30.",
+    "semantic_clue": "sets a maximum permitted speed of 30 miles per hour",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/speed-limit-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_05.png",
+    "sha256": "49c417784fd1d95d9074bc2eac2cce7d2504b8b98c9052de3c32ec755538c34a",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_06",
+    "slug": "no_left_turn",
+    "label": "No left turn",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring. In the center a black arrow travels upward then bends 90 degrees LEFT with its arrowhead pointing toward the viewer's left. One red diagonal prohibition slash crosses the arrow. The arrowhead must point LEFT.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which turn arrow is crossed out on the sign on the {side} tile?",
+    "attribute_answer": "A left-turn arrow.",
+    "semantic_clue": "prohibits turning left at the junction",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_06.png",
+    "sha256": "7eae77e74530716c0f15cfc63cc67af341f53a5f3f5cdd352b03df0f437417a8",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_07",
+    "slug": "no_right_turn",
+    "label": "No right turn",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring. In the center a black arrow travels upward then bends 90 degrees RIGHT with its arrowhead pointing toward the viewer's right. One red diagonal prohibition slash crosses the arrow. The arrowhead must point RIGHT.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which turn arrow is crossed out on the sign on the {side} tile?",
+    "attribute_answer": "A right-turn arrow.",
+    "semantic_clue": "prohibits turning right at the junction",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_07.png",
+    "sha256": "7a12fd17a4336ea121e68c109e6d47ee1622e4ee5c7790b2b5961518eec310f5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_08",
+    "slug": "no_u_turn",
+    "label": "No U-turn",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring. In the center a black inverted-U curved arrow rises on the left, bends over at the top, and returns downward on the right with a downward arrowhead, clearly a U-turn. One red diagonal prohibition slash crosses this curved arrow.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What kind of curved arrow is crossed out on the sign on the {side} tile?",
+    "attribute_answer": "A U-turn arrow.",
+    "semantic_clue": "prohibits reversing direction by making a U-turn",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_08.png",
+    "sha256": "4239f55f1462a926d875f47904076f2277ebbc028dc6db3343d804b324631ded",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_09",
+    "slug": "no_overtaking",
+    "label": "No overtaking",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red border. Center two simple front-view car silhouettes side by side: the car on the viewer's LEFT is RED; the car on the viewer's RIGHT is BLACK. No diagonal slash.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which two colors are used for the car symbols on the sign on the {side} tile?",
+    "attribute_answer": "Red and black.",
+    "semantic_clue": "prohibits overtaking in the indicated section of road",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_09.png",
+    "sha256": "bdeddfd6593164499b6558f80cd3e76c4aaab1aea0eea16903edb3925debb24c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_10",
+    "slug": "no_vehicles",
+    "label": "No vehicles",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring border and a completely EMPTY white center. No symbols, no words, no diagonal slash.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Is there a symbol inside the red ring on the sign on the {side} tile?",
+    "attribute_answer": "No; the center is blank.",
+    "semantic_clue": "prohibits vehicles except pedal cycles being pushed by hand",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_10.png",
+    "sha256": "f0f96deb0c6d2d21233c15d1c125641c79b9e55686d4b481deef287e0e687ff1",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_11",
+    "slug": "no_motor_vehicles",
+    "label": "No motor vehicles",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring. Center two BLACK pictograms stacked vertically: a side-view motorcycle on TOP and a front-view car BELOW. No slash and no words.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which two vehicle types are shown on the sign on the {side} tile?",
+    "attribute_answer": "A motorcycle and a car.",
+    "semantic_clue": "prohibits motor vehicles while allowing non-motor traffic unless otherwise restricted",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_11.png",
+    "sha256": "374277c9b6c9be6318af2de0bfa89142723c5977accf853cfa9a8ec73cd2d605",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_12",
+    "slug": "no_pedestrians",
+    "label": "No pedestrians",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a white circular disc with a thick red ring. Center one BLACK simple full-body walking-person silhouette in profile, one arm and leg forward. No diagonal slash, no vehicles, no text.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What figure is inside the red ring on the sign on the {side} tile?",
+    "attribute_answer": "A walking person.",
+    "semantic_clue": "prohibits pedestrians from using the route",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "regulatory",
+    "path": "traffic/images/traffic_12.png",
+    "sha256": "9a2bdebcb7ca909c2728e6c6d711b87537ad2746ddca8b49c2444c984a3c2177",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_13",
+    "slug": "turn_left",
+    "label": "Turn left",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign with one large plain WHITE arrow pointing horizontally LEFT. Straight shaft, triangular arrowhead at the viewer's left; no bend, no other arrows.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which direction does the white arrow point on the sign on the {side} tile?",
+    "attribute_answer": "Left.",
+    "semantic_clue": "requires traffic to proceed to the left",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_13.png",
+    "sha256": "332f74d366f84b9903da3fa2eb409dd4c7ccdfbe2ec6642c98be20015c6d1bcd",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_14",
+    "slug": "turn_right",
+    "label": "Turn right",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign with one large plain WHITE arrow pointing horizontally RIGHT. Straight shaft, triangular arrowhead at the viewer's right; no bend, no other arrows.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which direction does the white arrow point on the sign on the {side} tile?",
+    "attribute_answer": "Right.",
+    "semantic_clue": "requires traffic to proceed to the right",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_14.png",
+    "sha256": "232b12e9760a884167ccf1622d0f2a023b930eaaf8fc8d7d1dc30ac7723aa753",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_15",
+    "slug": "ahead_only",
+    "label": "Ahead only",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign with one large plain WHITE vertical arrow pointing straight UP. Straight shaft and upward triangular arrowhead, no bend and no additional arrows.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Which direction does the white arrow point on the sign on the {side} tile?",
+    "attribute_answer": "Straight up.",
+    "semantic_clue": "requires traffic to proceed straight ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_15.png",
+    "sha256": "44df94274d71c5de91d28781799532cbbdeb73e7f780430ac4b418c3b3d28618",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_16",
+    "slug": "keep_left",
+    "label": "Keep left",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign with one large straight WHITE arrow angled diagonally from the upper-right to the LOWER-LEFT. The triangular arrowhead is at the bottom-left, clearly a keep-left traffic sign.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Where does the diagonal white arrow point on the sign on the {side} tile?",
+    "attribute_answer": "Down and left.",
+    "semantic_clue": "requires traffic to pass to the left of an obstruction",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_16.png",
+    "sha256": "d14406f56359ba08ff502203ba01d24b9ef490521a3191da5b1b850078c2606b",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_17",
+    "slug": "keep_right",
+    "label": "Keep right",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign with one large straight WHITE arrow angled diagonally from the upper-left to the LOWER-RIGHT. The triangular arrowhead is at the bottom-right, clearly a keep-right traffic sign.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Where does the diagonal white arrow point on the sign on the {side} tile?",
+    "attribute_answer": "Down and right.",
+    "semantic_clue": "requires traffic to pass to the right of an obstruction",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_17.png",
+    "sha256": "c92ae9e3b3880bf8efabac6a356c4f89524aaa0fcaf88253f44a34ba7da1d8b5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_18",
+    "slug": "mini_roundabout",
+    "label": "Mini-roundabout",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: a solid royal-blue circular sign containing THREE thick WHITE curved arrows chasing clockwise around the center in a ring, separated by equal blue gaps. No other shapes or text.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "How many curved white arrows appear on the sign on the {side} tile?",
+    "attribute_answer": "Three.",
+    "semantic_clue": "indicates a mini-roundabout where traffic from the immediate right has priority",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/regulatory-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "mandatory",
+    "path": "traffic/images/traffic_18.png",
+    "sha256": "36f639c79dae02dd7a79d01ffc2a0ff4fd324d023765322e68b1b28fda8b3ee5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_19",
+    "slug": "bend_right",
+    "label": "Bend to the right",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with a thick red border and white interior. Center one thick BLACK road-bend glyph: vertical bottom section curving sharply toward the RIGHT near the top, like a right-bending road with no arrowhead.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "In which direction does the black road symbol bend on the sign on the {side} tile?",
+    "attribute_answer": "Right.",
+    "semantic_clue": "warns of a bend in the road to the right ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_19.png",
+    "sha256": "051ce21da4541f1bef815bdd45a93e3543d8aa291b12f935cb3b565666697394",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_20",
+    "slug": "crossroads",
+    "label": "Crossroads",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a BLACK plus-shaped crossroads symbol: a thick vertical main-road bar intersected at its center by a thinner horizontal side-road bar extending equally left and right.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What junction shape is shown on the sign on the {side} tile?",
+    "attribute_answer": "A cross-shaped junction.",
+    "semantic_clue": "warns that a crossroads lies ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_20.png",
+    "sha256": "94346c5bb06fc290ca2d12428f326f65615799a1f1cb832a90054c064cd648fc",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_21",
+    "slug": "road_narrows_both_sides",
+    "label": "Road narrows on both sides",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center TWO separate BLACK road-edge lines. Both start wide apart at the bottom and curve inward symmetrically so the gap between them is narrower at the top. No arrows.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "Do one or both black road edges move inward on the sign on the {side} tile?",
+    "attribute_answer": "Both edges move inward.",
+    "semantic_clue": "warns that the road becomes narrower on both sides ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_21.png",
+    "sha256": "34d494a29c3ca2620e829b20b51c9304e457ec6a4a887234aebc33e806f51410",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_22",
+    "slug": "traffic_signals_ahead",
+    "label": "Traffic signals ahead",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a BLACK upright traffic-light housing with exactly THREE circular lamps stacked vertically: RED at the top, AMBER in the middle, GREEN at the bottom.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What colors are the three lamps from top to bottom on the sign on the {side} tile?",
+    "attribute_answer": "Red, amber, green.",
+    "semantic_clue": "warns of traffic signals ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_22.png",
+    "sha256": "da7eca14709a2e08b58ceb54c4d8375d0386f27c3fd761bb77be44fc8e537e28",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_23",
+    "slug": "slippery_road",
+    "label": "Slippery road",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a BLACK front-view car tilted slightly, with TWO clear wavy black skid trails below its wheels, indicating a skidding car.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What marks are drawn below the car on the sign on the {side} tile?",
+    "attribute_answer": "Two wavy skid marks.",
+    "semantic_clue": "warns that the road surface may be slippery",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_23.png",
+    "sha256": "5afb987652910bf822f0313aaa9da5254372cd548cf477c805b192917f6bf5ac",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_24",
+    "slug": "falling_rocks",
+    "label": "Falling rocks",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a BLACK steep jagged cliff face on the RIGHT with several small detached BLACK angular rocks shown falling toward the lower LEFT. No vehicle.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What is falling beside the cliff on the sign on the {side} tile?",
+    "attribute_answer": "Rocks.",
+    "semantic_clue": "warns of falling or fallen rocks on the road",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_24.png",
+    "sha256": "2f10ab541308efdcb6d012a4f23a97ce8b2d14e880f7ff0424defd590d114237",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_25",
+    "slug": "wild_animals",
+    "label": "Wild animals",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center one BLACK silhouette of a leaping deer in side view, clearly recognizable with antlers, long legs and small tail. No other animals.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What animal silhouette appears on the sign on the {side} tile?",
+    "attribute_answer": "A deer.",
+    "semantic_clue": "warns that wild animals may be in or crossing the road",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_25.png",
+    "sha256": "9a0526f99e06330d017fe2aa4882bd10b92099f484625622d6daba8a4a9320d7",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_26",
+    "slug": "cattle",
+    "label": "Cattle",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center one BLACK side-view silhouette of a cow standing on four legs, with a substantial rectangular body, short horns, visible udder and a long thin tail. No other animals.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What farm animal appears on the sign on the {side} tile?",
+    "attribute_answer": "A cow.",
+    "semantic_clue": "warns that cattle may be on or crossing the road",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_26.png",
+    "sha256": "906ea59f60c05d28ccf309419c1fbb0211f7cb26b2151222166c44a9c89833f9",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_27",
+    "slug": "children",
+    "label": "Children going to or from school",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center TWO BLACK human-child silhouettes holding hands while walking or running across, one taller child leading a smaller child. No adults or additional people.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "How many people are depicted on the sign on the {side} tile?",
+    "attribute_answer": "Two.",
+    "semantic_clue": "warns of children going to or from school",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_27.png",
+    "sha256": "66c53ec3122257daf63386dec8dfc8efe98217868ccb2b9e4ac09309a7cfe428",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_28",
+    "slug": "uneven_road",
+    "label": "Uneven road",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a solid BLACK ground silhouette whose top edge forms TWO rounded adjacent humps. The two humps are clearly separated by a valley. No cars.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "How many rounded humps are shown on the sign on the {side} tile?",
+    "attribute_answer": "Two.",
+    "semantic_clue": "warns of an uneven road surface ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_28.png",
+    "sha256": "49291d8acef1a7832b1f7b0afcd0545840619e8794b4655532a44b88c9febeec",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_29",
+    "slug": "opening_bridge",
+    "label": "Opening bridge",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a BLACK schematic of an opening bascule bridge: its roadway deck is lifted diagonally upward to the right above water, with one horizontal black wavy water line underneath. No boat.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "How is the bridge deck positioned on the sign on the {side} tile?",
+    "attribute_answer": "Raised diagonally.",
+    "semantic_clue": "warns of an opening or swing bridge ahead",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_29.png",
+    "sha256": "afd78843cb35f6a9c260a4f4d2602a51daedb23b54a4ee03db85b310b80fb863",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "traffic_30",
+    "slug": "other_danger",
+    "label": "Other danger",
+    "prompt": "Use case: scientific-educational\nAsset type: one generated image of a real Great Britain traffic sign for a VQA dataset.\nPrimary request: an upright equilateral triangle with thick red border and white interior. Center a large BLACK exclamation mark, one thick vertical stroke above one separate circular dot. No supplemental plate and no text.\nStyle/medium: crisp flat traffic-sign artwork, faithful to real UK Department for Transport symbol conventions, front-on orthographic view, solid clean colors and sharp edges.\nComposition: one sign only centered on a pure white square canvas, complete sign visible with an even generous white margin, no pole, no scenery, no cast shadows, no perspective distortion.\nConstraints: exact specified symbol, arrow direction, shape and colors. No captions, image labels, watermarks, decorative elements or text except the traffic-sign text explicitly specified above. This is an AI-generated reproduction, not official artwork.",
+    "attribute_question": "What punctuation mark appears on the sign on the {side} tile?",
+    "attribute_answer": "An exclamation mark.",
+    "semantic_clue": "warns of another danger whose nature is normally described on an accompanying plate",
+    "source_urls": [
+      "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs"
+    ],
+    "jurisdiction": "Great Britain",
+    "sign_family": "warning",
+    "path": "traffic/images/traffic_30.png",
+    "sha256": "a4e087c58cf29c7b1d5bff3a8f10b17db5e8a21f13e6141b5992c47fad710af9",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  }
+]
