@@ -1,0 +1,85 @@
+{
+  "examples": 8000,
+  "groups": 1600,
+  "pairs": 800,
+  "by_category": {
+    "attribute": 1000,
+    "emotion": 1000,
+    "state": 1000,
+    "counting": 1000,
+    "symmetry": 1000,
+    "celebrity": 1000,
+    "living_world": 1000,
+    "traffic": 1000
+  },
+  "by_question_type": {
+    "Object recognition": 1600,
+    "Attribute recognition": 1600,
+    "Semantic reasoning": 1600,
+    "Visual grounding": 1600,
+    "Counterfactual grounding": 1600
+  },
+  "train_sha256": "c6d4608f50e2c6ca05c52e0bf912d5c75a5a9077e54789c210440640b3457288",
+  "sources": [
+    {
+      "branch": "Yerin",
+      "revision": "bd2fc842b547663577347fc9c69163b1b5468136",
+      "file": "VQA_dataset_v2/attribute_vqa.jsonl",
+      "sha256": "fa091d171b01c7a9800ae96727ca620b3fd687cc255263b56e0ebd31de6540bd",
+      "groups": 200
+    },
+    {
+      "branch": "Yerin",
+      "revision": "bd2fc842b547663577347fc9c69163b1b5468136",
+      "file": "VQA_dataset_v2/emotion_vqa.jsonl",
+      "sha256": "e59ae842725261228ae21e87b43e7dea3ca04e1dc488dd736b83c3a08ca37e7d",
+      "groups": 200
+    },
+    {
+      "branch": "Yerin",
+      "revision": "bd2fc842b547663577347fc9c69163b1b5468136",
+      "file": "VQA_dataset_v2/state_vqa.jsonl",
+      "sha256": "0207b77750f3d00a6bd8d2f048828067617b8afa0604ba8e1d69ce836a823746",
+      "groups": 200
+    },
+    {
+      "branch": "hyerin",
+      "revision": "354746b060d36cd528e76a34aa373808daa16412",
+      "file": "VQA_dataset/counting_vqa.jsonl",
+      "sha256": "bafd58132c2740e6322f4eafcccfdf32cc7364d4ee39aa02068ed6c4714ab692",
+      "groups": 200
+    },
+    {
+      "branch": "hyerin",
+      "revision": "354746b060d36cd528e76a34aa373808daa16412",
+      "file": "VQA_dataset/symmetry_vqa.jsonl",
+      "sha256": "f9ca2396afc707d34fe7017d6816d99d4554d93ea1ebb5a88fb2dba95f77b50b",
+      "groups": 200
+    },
+    {
+      "branch": "jaeho",
+      "revision": "bfaf666512c1bc89f61da2c1adeac00e6834492f",
+      "file": "vqa_dataset/celebrity/celebrity_vqa.jsonl",
+      "sha256": "40adf36aac27f5f8f627f8346bfd5622f6e41e4bb4af029f65edaa72ff0407a3",
+      "groups": 200
+    },
+    {
+      "branch": "jaeho",
+      "revision": "bfaf666512c1bc89f61da2c1adeac00e6834492f",
+      "file": "vqa_dataset/living_world/living_world_vqa.jsonl",
+      "sha256": "a67b361370159e28c3b32b7e65531ab24d6af40a2053d40c64845aa4e9d33197",
+      "groups": 200
+    },
+    {
+      "branch": "jaeho",
+      "revision": "bfaf666512c1bc89f61da2c1adeac00e6834492f",
+      "file": "vqa_dataset/traffic/traffic_vqa.jsonl",
+      "sha256": "2f54c63b1bd7497e92713c5c4a9c80e75db6721f05fb9548afb74af38082b288",
+      "groups": 200
+    }
+  ],
+  "image_manifest_sha256": "eb2f32f81850cda1d10768a61733240f618b216c8a91404c2894c137ea00bdd8",
+  "split": "All examples used for training; no validation or test split.",
+  "excluded": "emotion_kdef: missing images; excluded by explicit user instruction. Aggregate JSONL, source questions and pair metadata are not additional QA examples.",
+  "image_layout": "224x224 RGB; left/right 112x224 letterboxed slots, white background; no augmentation"
+}

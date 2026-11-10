@@ -1,0 +1,13 @@
+# Weights, datasets, caches and resumable optimizer states stay off GitHub.
+data/
+sources/
+run/
+smoke_run/
+weights/
+final_adapter/
+merged_model/
+epoch-*/
+*.safetensors
+*.pt
+*.bin
+__pycache__/
