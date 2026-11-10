@@ -13,12 +13,15 @@ files are pinned in `prepare_data.py`. From this directory, run:
 python fetch_sources.py --output sources
 python prepare_data.py --sources sources --output data
 bash run.sh
+python make_report.py --run run --audit data/data_audit.json --output experiment_report.md
+python plot_training.py --metrics run/metrics.jsonl --output training_curves.png
 python export_merged.py --adapter run/final_adapter --output merged_model
 ```
 
 The input is one 224x224 RGB image with both source tiles in fixed left/right
 order, preserving aspect ratio within each half. No labels, category names,
-knowledge provenance, or expected answers are added to the input. All five QA
+knowledge provenance, or expected answers are added to the question prompt.
+Standard teacher forcing appends the target answer during training. All five QA
 types are supervised using their existing answers. The `knowledge` block and
 aggregate/source-question/pair files are metadata, not extra training examples.
 KDEF has missing images and is excluded with user approval.
@@ -47,3 +50,6 @@ The standalone merged model retains the original OpenVLA configuration/action
 normalization statistics. Use its text generation interface for VQA, or its
 action interface for later robot testing. Neither action preservation nor action
 improvement is established by this VQA-only training run.
+
+See `evaluation_notes.md` before using the repository's existing robot evaluation
+scripts: their default `UNNORM=sft` is absent from the official base model.

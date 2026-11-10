@@ -1,0 +1,11 @@
+{
+  "adapter_tensors": 128,
+  "adapter_finite": true,
+  "all_lora_B_updated": true,
+  "adapter_dtype": "float32",
+  "merged_parameters_finite": true,
+  "standalone_offline_load": true,
+  "synthetic_cached_generation_tokens": 2,
+  "performance_evaluation": false,
+  "note": "Synthetic white-image API check only; no VQA correctness or robot evaluation."
+}

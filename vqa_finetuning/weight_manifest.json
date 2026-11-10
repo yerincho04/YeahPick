@@ -1,0 +1,54 @@
+{
+  "format": "PEFT LoRA adapter",
+  "base_model": {
+    "model_id": "openvla/openvla-7b",
+    "revision": "47a0ec7fc4ec123775a391911046cf33cf9ed83f"
+  },
+  "files": [
+    {
+      "path": "weights/final_adapter/README.md",
+      "bytes": 5092,
+      "sha256": "45489ee7bb63b7a1e48786d42b81d6462e2d0f144b3e442a75ad7553cd2e9611"
+    },
+    {
+      "path": "weights/final_adapter/adapter_config.json",
+      "bytes": 892,
+      "sha256": "de688640d953286f40a25e570508336e78aa273e5aa306a27dd7a6cb40965d1e"
+    },
+    {
+      "path": "weights/final_adapter/adapter_model.safetensors",
+      "bytes": 33573544,
+      "sha256": "899c28f39109db9655f899a7f1934a42305d7f1e5a799357a16d839cfb396b90"
+    },
+    {
+      "path": "weights/final_adapter/added_tokens.json",
+      "bytes": 21,
+      "sha256": "ab43123267b190cb7990bc9f2ae4ad32dcb7ed029fb0fccb1b4e062c6f54a2a1"
+    },
+    {
+      "path": "weights/final_adapter/preprocessor_config.json",
+      "bytes": 1690,
+      "sha256": "52ca6dd7fb31a2757658f94775b659553bc3532ab04babef02779387b3dec214"
+    },
+    {
+      "path": "weights/final_adapter/special_tokens_map.json",
+      "bytes": 552,
+      "sha256": "cb90ee5cf5793aa444039af9795b00db59d3fef8942e7eca9cf1990bab370d61"
+    },
+    {
+      "path": "weights/final_adapter/tokenizer.json",
+      "bytes": 3619197,
+      "sha256": "447e13a9685e052f04d08e5274ea17b3a427e2df3cca184ebaf51c50da7e20de"
+    },
+    {
+      "path": "weights/final_adapter/tokenizer.model",
+      "bytes": 499723,
+      "sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347"
+    },
+    {
+      "path": "weights/final_adapter/tokenizer_config.json",
+      "bytes": 1270,
+      "sha256": "1c7a2932c54d574059f711099014d25cfdc58ec6417e5d6d96f1e56096b85f9a"
+    }
+  ]
+}

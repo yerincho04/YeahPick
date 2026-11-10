@@ -3,6 +3,8 @@ import argparse
 import json
 from pathlib import Path
 import statistics
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 p = argparse.ArgumentParser()
 p.add_argument('--run', type=Path, required=True)
@@ -20,6 +22,8 @@ mean = lambda xs: statistics.mean(x['loss'] for x in xs)
 rows = '\n'.join(f'| {cat} | {n} |' for cat,n in d['by_category'].items())
 epochs = '\n'.join(f'| {e} | {mean([x for x in metrics if e-1 < x["epoch"] <= e]):.6f} |' for e in range(1,c['epochs']+1))
 report = f'''# OpenVLA VQA 파인튜닝 실험 보고서
+
+보고서 작성일: {datetime.now(ZoneInfo('Asia/Seoul')).date().isoformat()} (KST)
 
 ## 목적과 범위
 
@@ -56,8 +60,10 @@ metadata는 추가 학습 레코드로 세지 않았다. 이미지가 없는 KDE
 
 입력은 좌우 두 타일을 고정 순서로 배치한 224×224 RGB 이미지다. 각 타일은
 112×224 영역 안에 종횡비를 유지해 배치하고 빈 공간을 흰색으로 채웠다.
-정답·labels·knowledge·카테고리 정보는 입력에 포함하지 않았다. 이미지 증강 및
-텍스트 잘림은 적용하지 않았다. 이 작은 해상도는 세부 시각 정보의 제약이 될 수 있다.
+정답·labels·knowledge·카테고리 정보는 질문 프롬프트에 추가하지 않았다. 학습에서는
+표준 teacher forcing으로 정답 토큰을 뒤에 붙이고 정답·EOS에만 loss를 계산했다.
+이미지 증강 및 텍스트 잘림은 적용하지 않았다. 이 작은 해상도는 세부 시각 정보의
+제약이 될 수 있다.
 
 Train manifest SHA-256: `{d['train_sha256']}`
 
@@ -99,12 +105,21 @@ GitHub의 `hyerin` 브랜치 `vqa_finetuning/`에는 코드, 원본 모델 revis
 데이터 audit와 이미지 hash manifest, 설정, 패키지 목록, 학습 지표 및 본 보고서를
 저장한다. Weight와 optimizer 상태는 GitHub에 올리지 않는다.
 
-로컬 `outputs/vqa_finetuning/weights/`에 최종 LoRA adapter와 원본에 merge한
-BF16 전체 모델을 보관한다. `export_merged.py`로 merge를 재현할 수 있다.
-전체 모델은 원본 action normalization 설정을 유지한다. 학습에서 action loss를
+로컬 `outputs/vqa_finetuning/weights/`에 최종 학습 weight를 보관한다. 실제 전달
+파일과 해시는 `weight_manifest.json`에 기록한다. LoRA adapter는 지정된 원본
+모델과 revision을 함께 사용해야 한다. `export_merged.py`로 adapter를 원본에
+merge하여 BF16 전체 모델을 재현할 수 있다. 전체 모델은 원본 action normalization
+설정을 유지한다. 학습에서 action loss를
 사용하지 않았으므로 이후 행동 평가에서 기존 제어 능력 유지 여부와 의미 지시
 성공률을 모두 확인해야 한다. 학습에 사용한 이미지/질문과의 중복 여부도 후속
 평가 설계에서 구분해야 한다.
+
+## 학습 곡선 및 후속 평가 설정
+
+![Training loss and learning-rate curves](training_curves.png)
+
+공식 원본과 기존 rlvla 모델의 차이, `UNNORM=sft` 호환성 및 생성 라이브러리
+버전 관련 사항은 [후속 평가 참고](evaluation_notes.md)에 기록했다.
 '''
 a.output.write_text(report)
 print(a.output)
