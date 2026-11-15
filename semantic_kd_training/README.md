@@ -22,7 +22,7 @@ Only successful action episodes are used. The VQA file supplies the Knowledge in
 
 Edit [config/config.py](config/config.py). Defaults: pair-level 80% train / 10% validation / 10% test **among successful pairs within each category**, layer 16, cosine KD weight 0.1, LoRA rank 16, 4-bit student, micro-batch 1, gradient accumulation 8, and 2,000 optimizer steps. Original and swapped layouts and all seeds of a pair stay in the same split. Images are reused across pairs, so pair splitting does not guarantee image-disjoint splits.
 
-`teacher_model` defaults to `prism-dinosiglip-224px+7b`; `student_model` defaults to the project's `gen-robot/openvla-7b-rlvla-sft_16k`. The teacher checkpoint may require Hugging Face access to its Llama 2 backbone. CUDA, the repository's OpenVLA dependencies, PEFT, and bitsandbytes are required. Student training does not need the ManiSkill renderer.
+`teacher_model` defaults to `prism-dinosiglip-224px+7b`; `student_model` defaults to the project's `gen-robot/openvla-7b-rlvla-sft_16k`. For teacher inference, Prismatic loads its own checkpoint weights but needs Llama 2 config/tokenizer files. `teacher_llama2_metadata_repo` defaults to the accessible `NousResearch/Llama-2-7b-hf` mirror for those files; change it to `meta-llama/Llama-2-7b-hf` if you have access to Meta's repository. CUDA, the repository's OpenVLA dependencies, PEFT, and bitsandbytes are required. Student training does not need the ManiSkill renderer.
 
 ## Run on Linux
 

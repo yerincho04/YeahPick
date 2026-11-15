@@ -18,6 +18,8 @@ class Config:
 
     # 7B teacher features are cached before student training, never loaded together.
     teacher_model: str = "prism-dinosiglip-224px+7b"
+    # Only its Llama 2 config/tokenizer are read; Prismatic checkpoint supplies the weights.
+    teacher_llama2_metadata_repo: str = "NousResearch/Llama-2-7b-hf"
     student_model: str = "gen-robot/openvla-7b-rlvla-sft_16k"
     action_unnorm_key: str = "kd_act2answer"
     kd_layers: tuple[int, ...] = (16,)  # hidden_states[0] is the embedding output

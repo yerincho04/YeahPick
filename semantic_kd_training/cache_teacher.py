@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import defaultdict
 
 import numpy as np
@@ -35,12 +36,16 @@ def main() -> None:
 
     cache_root = CONFIG.work_dir / "teacher_features"
     cache_root.mkdir(parents=True, exist_ok=True)
-    signature = {"teacher_model": CONFIG.teacher_model, "layers": list(CONFIG.kd_layers),
+    signature = {"teacher_model": CONFIG.teacher_model,
+                 "llama2_metadata_repo": CONFIG.teacher_llama2_metadata_repo,
+                 "layers": list(CONFIG.kd_layers),
                  "prompt": "PurePromptBuilder(openvla), Knowledge instruction -> tile question"}
     signature_path = cache_root / "signature.json"
     if signature_path.exists():
         if json.loads(signature_path.read_text(encoding="utf-8")) != signature:
-            raise ValueError("Teacher cache config changed; use a fresh work_dir")
+            if any(cache_root.rglob("layer_*.npy")):
+                raise ValueError("Teacher cache config changed; use a fresh work_dir")
+            signature_path.write_text(json.dumps(signature, indent=2), encoding="utf-8")
     else:
         signature_path.write_text(json.dumps(signature, indent=2), encoding="utf-8")
 
@@ -53,6 +58,7 @@ def main() -> None:
         print("TEACHER_CACHE_READY (all requested episodes already cached)", flush=True)
         return
 
+    os.environ["PRISMATIC_LLAMA2_7B_METADATA_REPO"] = CONFIG.teacher_llama2_metadata_repo
     from prismatic.models.load import load
 
     teacher = load(CONFIG.teacher_model)
