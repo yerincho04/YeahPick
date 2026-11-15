@@ -24,7 +24,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--layout", choices=("both", "original", "swapped"), default="both")
-    parser.add_argument("--max-steps", type=int, default=80)
+    parser.add_argument("--max-steps", type=int, default=110)
     parser.add_argument("--retry-failed", action="store_true")
     parser.add_argument("--build-only", action="store_true")
     return parser.parse_args()
@@ -67,8 +67,8 @@ def controller_action(env, desired_cube: np.ndarray, cube_tcp_offset: np.ndarray
     desired_ee_base = ee_base + desired_tcp_base - tcp_base
     delta = (desired_ee_base - target_ee_base)[0].detach().cpu().numpy()
     norm = np.linalg.norm(delta)
-    if norm > 0.025:
-        delta *= 0.025 / norm
+    if norm > 0.020:
+        delta *= 0.020 / norm
     action = np.zeros(7, dtype=np.float32)
     action[:3] = delta
     action[6] = gripper
@@ -97,7 +97,13 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     board_top = board_p[2] + float(task.model_bbox_sizes[board_name][2].item()) / 2
     start_cube = position(cube)
     cube_tcp_offset = start_cube - position(task.agent.tcp)
-    lift_z = max(float(start_cube[2]) + 0.045, float(board_top) + 0.12)
+    # The left board is farther from the robot base. Aim 3 cm toward the base
+    # on each axis; the 11 cm tile still has room for the 3 cm cube.
+    robot_xy = position(task.agent.robot)[:2]
+    place_xy = board_p[:2] + np.clip(robot_xy - board_p[:2], -0.03, 0.03)
+    # The pregrasp cube starts well above the boards. Extra lifting needlessly
+    # pushes the farther, left-side target toward the arm's reach limit.
+    lift_z = max(float(start_cube[2]), float(board_top) + 0.08)
     place_z = float(board_top) + 0.015 + 0.012
     instruction = task.get_language_instruction()[0]
     frames: list[np.ndarray] = []
@@ -109,7 +115,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     failure_reason = None
     environment_terminated = False
     time_limit_reached = False
-    limits = {"lift": 12, "transfer": 32, "lower": 22}
+    limits = {"lift": 12, "transfer": 48, "lower": 22}
 
     for step in range(max_steps - 10):
         cube_p = position(cube)
@@ -117,13 +123,13 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
             goal = np.array([start_cube[0], start_cube[1], lift_z], dtype=np.float32)
             arrived = abs(float(cube_p[2] - lift_z)) < 0.025
         elif phase == "transfer":
-            goal = np.array([board_p[0], board_p[1], lift_z], dtype=np.float32)
+            goal = np.array([place_xy[0], place_xy[1], lift_z], dtype=np.float32)
             arrived = float(np.linalg.norm(cube_p[:2] - goal[:2])) < 0.025
         elif phase == "lower":
-            goal = np.array([board_p[0], board_p[1], place_z], dtype=np.float32)
+            goal = np.array([place_xy[0], place_xy[1], place_z], dtype=np.float32)
             arrived = float(np.linalg.norm(cube_p - goal)) < 0.023
         else:
-            goal = np.array([board_p[0], board_p[1], place_z], dtype=np.float32)
+            goal = np.array([place_xy[0], place_xy[1], place_z], dtype=np.float32)
             arrived = False
 
         if arrived and phase != "release":
@@ -169,6 +175,12 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         "success": bool(success), "failure_reason": None if success else failure_reason,
         "final_cube_position": position(cube).tolist(),
         "target_board_position": board_p.tolist(),
+        "place_xy_target": place_xy.tolist(),
+        "final_tcp_position": position(task.agent.tcp).tolist(),
+        "final_xy_error": float(np.linalg.norm(position(cube)[:2] - place_xy)),
+        "final_cube_tcp_offset_error": float(np.linalg.norm(
+            (position(cube) - position(task.agent.tcp)) - cube_tcp_offset
+        )),
         "released": bool(released),
         "final_phase": phase,
         "environment_terminated": environment_terminated,
