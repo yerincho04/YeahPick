@@ -1,4 +1,4 @@
-"""Evaluate an adapter on the held-out action-step test split."""
+"""Evaluate action, VQA, and robot-grounding losses on a held-out split."""
 
 from __future__ import annotations
 

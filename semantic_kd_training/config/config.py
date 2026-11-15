@@ -24,14 +24,19 @@ class Config:
     action_unnorm_key: str = "kd_act2answer"
     kd_layers: tuple[int, ...] = (16,)  # hidden_states[0] is the embedding output
     kd_weight: float = 0.1
+    vqa_weight: float = 0.5
+    grounding_weight: float = 0.5
+    vqa_aux_probability: float = 0.75  # Every micro-step also trains one auxiliary task.
+    teacher_max_answer_tokens: int = 24
+    student_max_answer_tokens: int = 24
 
     train_ratio: float = 0.8
     val_ratio: float = 0.1
     test_ratio: float = 0.1
     split_seed: int = 42
 
-    # One sample is one pre-action camera frame + one 7D scripted action.
-    max_train_steps: int = 2000
+    # Each epoch traverses every successful scripted action frame once.
+    train_epochs: int = 3
     micro_batch_size: int = 1
     gradient_accumulation_steps: int = 8
     learning_rate: float = 1e-4

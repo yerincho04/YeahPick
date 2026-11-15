@@ -12,8 +12,8 @@ from PIL import Image
 from config import CONFIG
 
 
-def read_manifest(split: str) -> list[dict]:
-    path = CONFIG.work_dir / f"{split}.jsonl"
+def read_manifest(split: str, suffix: str = "") -> list[dict]:
+    path = CONFIG.work_dir / f"{split}{suffix}.jsonl"
     if not path.is_file():
         raise FileNotFoundError(f"Run prepare.py first: {path}")
     with path.open(encoding="utf-8") as stream:
@@ -21,7 +21,11 @@ def read_manifest(split: str) -> list[dict]:
 
 
 def teacher_feature_path(sample: dict, layer: int) -> Path:
-    return CONFIG.work_dir / "teacher_features" / sample["episode_id"] / f"layer_{layer}.npy"
+    return CONFIG.work_dir / "teacher_vqa_features" / sample["sample_id"] / f"layer_{layer}.npy"
+
+
+def teacher_result_path(sample: dict) -> Path:
+    return CONFIG.work_dir / "teacher_vqa_features" / sample["sample_id"] / "result.json"
 
 
 def prompt_for_question(question: str) -> str:
@@ -58,13 +62,21 @@ def action_inputs(sample: dict, processor, action_tokenizer, stats: dict) -> dic
     return {"input_ids": ids, "labels": labels, "pixel_values": pixel}
 
 
-def semantic_inputs(sample: dict, processor) -> dict:
-    prompt = prompt_for_question(sample["semantic_question"])
-    ids = processor.tokenizer(prompt, add_special_tokens=True, return_tensors="pt")["input_ids"]
+def qa_inputs(sample: dict, processor) -> tuple[dict, int]:
+    tokenizer = processor.tokenizer
+    prompt = prompt_for_question(sample["question"])
+    prefix = tokenizer(prompt, add_special_tokens=True, return_tensors="pt")["input_ids"]
+    answer = tokenizer(" " + sample["answer"], add_special_tokens=False,
+                       return_tensors="pt")["input_ids"]
+    if answer.numel() > CONFIG.student_max_answer_tokens:
+        raise ValueError(f"Answer exceeds token limit: {sample['sample_id']}")
+    eos = torch.tensor([[tokenizer.eos_token_id]], dtype=prefix.dtype)
+    ids = torch.cat((prefix, answer, eos), dim=1)
+    labels = torch.cat((torch.full_like(prefix, -100), answer, eos), dim=1)
     with Image.open(sample["image"]) as raw:
         image = torch.from_numpy(np.asarray(raw.convert("RGB")).copy()).permute(2, 0, 1).unsqueeze(0)
     pixel = processor.image_processor.apply_transform(image.float())
-    return {"input_ids": ids, "pixel_values": pixel}
+    return {"input_ids": ids, "labels": labels, "pixel_values": pixel}, prefix.shape[1]
 
 
 def register_openvla() -> None:

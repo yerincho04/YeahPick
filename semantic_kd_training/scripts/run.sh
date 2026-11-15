@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="$(cd "$ROOT/.." && pwd)"
 MODE="${1:-all}"
+shift || true
 
 if [ -z "${CONDA_PREFIX:-}" ] && command -v conda >/dev/null 2>&1; then
   CONDA_BASE="$(conda info --base)"
@@ -17,9 +18,9 @@ export TOKENIZERS_PARALLELISM=false
 
 case "$MODE" in
   prepare) python3 -u "$ROOT/prepare.py" ;;
-  cache) python3 -u "$ROOT/cache_teacher.py" ;;
+  cache) python3 -u "$ROOT/cache_teacher.py" "$@" ;;
   train) python3 -u "$ROOT/train.py" ;;
-  test) python3 -u "$ROOT/evaluate.py" ;;
+  test) python3 -u "$ROOT/evaluate.py" "$@" ;;
   all)
     python3 -u "$ROOT/prepare.py"
     python3 -u "$ROOT/cache_teacher.py"

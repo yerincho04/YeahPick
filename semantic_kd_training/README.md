@@ -1,39 +1,33 @@
-# Stage 2: VLM → VLA semantic knowledge distillation
+# Semantic KD training
 
-This folder trains an OpenVLA LoRA adapter with `action CE + λ × semantic representation KD`. The frozen Prismatic VLM teacher is run first to cache hidden states; the student is then trained separately. No new action head is added.
+One OpenVLA LoRA adapter is trained with three signals: action cross-entropy on successful scripted demonstrations, gold-answer cross-entropy on **all five** VQA types, and gold-answer cross-entropy for choosing the correct tile in the robot camera image. A frozen Prismatic VLM also supplies a representation target for a QA sample when its generated answer matches the gold answer. Teacher errors never remove the sample from gold-answer training.
 
 ## Inputs
 
-Copy **the contents** of `KD_VQA_dataset/` into `input/dataset/` and **the contents** of `scripted_action_collection/output/` into `input/action_data/`:
+Copy the contents of `KD_VQA_dataset/` to `input/dataset/`, and the contents of `scripted_action_collection/output/` to `input/action_data/`:
 
 ```text
 input/dataset/<category>/vqa.jsonl
 input/dataset/<category>/images/...
 input/action_data/episodes.jsonl
-input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/
-  metadata.json
-  actions.npy
-  frames/0000.jpg ...
+input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/actions.npy
+input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/frames/0000.jpg ...
 ```
 
-Only successful action episodes are used. The VQA file supplies the Knowledge instruction and answer side; the semantic KD question asks which tile satisfies that instruction. The other four VQA question types are not used in this Stage 2 loss. Each step uses its pre-action robot camera frame, not the standalone tile images.
-
-## Configuration
-
-Edit [config/config.py](config/config.py). Defaults: pair-level 80% train / 10% validation / 10% test **among successful pairs within each category**, layer 16, cosine KD weight 0.1, LoRA rank 16, 4-bit student, micro-batch 1, gradient accumulation 8, and 2,000 optimizer steps. Original and swapped layouts and all seeds of a pair stay in the same split. Images are reused across pairs, so pair splitting does not guarantee image-disjoint splits.
-
-`teacher_model` defaults to `prism-dinosiglip-224px+7b`; `student_model` defaults to the project's `gen-robot/openvla-7b-rlvla-sft_16k`. For teacher inference, Prismatic loads its own checkpoint weights but needs Llama 2 config/tokenizer files. `teacher_llama2_metadata_repo` defaults to the accessible `NousResearch/Llama-2-7b-hf` mirror for those files; change it to `meta-llama/Llama-2-7b-hf` if you have access to Meta's repository. CUDA, the repository's OpenVLA dependencies, PEFT, and bitsandbytes are required. Student training does not need the ManiSkill renderer.
+`prepare` joins the files by category and pair ID. It creates a left/right composite image for each VQA pair and retains both focus rows and their five questions. Robot grounding uses the first pre-action camera frame of each successful episode and accounts for swapped layouts. Action training uses every frame of every successful episode. The split is by pair within each category (80/10/10 by default), so the two focus rows and all action layouts and seeds of a pair remain together. Images reused across different pairs may still occur in multiple splits.
 
 ## Run on Linux
 
-With the project environment active:
+Edit `config/config.py`, activate the OpenVLA environment, then run:
 
 ```bash
 bash semantic_kd_training/scripts/run.sh all
 ```
 
-You can also run the stages separately with `prepare`, `cache`, `train`, or `test`. The Teacher cache can be resumed: completed episode feature files are skipped. Train/validation/test manifests and action normalization statistics are written to `work/`. LoRA adapters, metrics, and a copy of the action statistics are written to `output/`.
+Stages can be run separately with `prepare`, `cache`, `train`, and `test`. `cache --split train` and similar split options are supported. `work/` stores the three manifests per split, composite images, teacher answers and features, and action statistics. `output/` stores the LoRA adapter and metrics. Teacher features are computed once per VQA question and once per robot episode grounding question; action frames do not each require teacher inference.
 
-`test` computes held-out action prediction cross-entropy and KD cosine distance. It does **not** report robot task success; that requires running the saved adapter in Act2Answer separately. The LoRA adapter needs its saved `dataset_statistics.json` and the `kd_act2answer` normalization key when used for action inference.
+The default teacher is `prism-dinosiglip-224px+7b`; the default student is `gen-robot/openvla-7b-rlvla-sft_16k`. `NousResearch/Llama-2-7b-hf` supplies Llama 2 config/tokenizer metadata for the Prismatic teacher, while the teacher checkpoint supplies its weights. The student uses 4-bit QLoRA by default. Each configured epoch visits all successful action frames; VQA and grounding are interleaved at the probabilities in `config/config.py`.
 
-The pipeline has not been run in this Windows workspace, following the request to leave experiments and validation to the user. In particular, 7B teacher extraction can take substantial time and the 24 GB student setting may still need adjustment for the server's CUDA stack.
+Validation reports action, VQA, and robot-grounding losses, plus **teacher-forced exact token accuracy** for the QA branches. This is not free-generation accuracy or robot rollout success. Final test evaluation requires the test teacher cache, which `all` creates.
+
+This code has not been executed or tested in this workspace, per the request to leave validation to the user.
