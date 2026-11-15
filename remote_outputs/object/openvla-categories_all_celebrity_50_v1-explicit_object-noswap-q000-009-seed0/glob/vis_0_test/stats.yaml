@@ -1,0 +1,87 @@
+env_name: Act2AnswerV4-v1
+ep_len: 80
+epoch: 0
+instruction:
+  0: Place the cube on the Adele.
+  1: Place the cube on the Angelina Jolie.
+  2: Place the cube on the Ariana Grande.
+  3: Place the cube on the Audrey Hepburn.
+  4: "Place the cube on the Beyonc\xE9."
+  5: Place the cube on the Billie Eilish.
+  6: Place the cube on the Bob Marley.
+  7: Place the cube on the Brad Pitt.
+  8: Place the cube on the Bruno Mars.
+  9: Place the cube on the Celine Dion.
+last_info:
+  0:
+    success: false
+  1:
+    success: true
+  2:
+    success: false
+  3:
+    success: true
+  4:
+    success: false
+  5:
+    success: true
+  6:
+    success: false
+  7:
+    success: true
+  8:
+    success: false
+  9:
+    success: true
+stats:
+  consecutive_grasp: 0.0
+  diag_answer_side_is_left: 0.5
+  diag_cube_pos: 0.3656
+  diag_eef_pos: 0.2694
+  diag_gripper_state: 0.1
+  diag_left_target_pos: 0.1558
+  diag_pair_id: 4.5
+  diag_right_target_pos: 0.2593
+  diag_swap: 0.0
+  elapsed_steps: 90.0
+  is_answered: 0.9
+  is_src_obj_grasped: 1.0
+  is_success: 0.5
+  is_success_soft_v1: 0.3
+  pi_0: 0.3392
+  prev_is_grasped: 0.1
+  release_near_target: 0.4
+  release_near_target_only_grasped: 0.4
+  release_recorded: 0.9
+  soft_step: 91.0
+  success: 0.5
+  target_grasped: 0.0
+  target_height: 0.0
+  tcp_closer_to_target_than_wrong: 0.5
+  tcp_closer_to_target_than_wrong_only_grasped: 0.5
+  tcp_correct_side_frac: 0.4967
+  tcp_d0: 0.1882
+  tcp_dwell_target_3s: 0.5
+  tcp_dwell_target_3s_only_grasped: 0.5
+  tcp_dwell_target_consec: 29.3
+  tcp_dwell_target_consec_max: 32.9
+  tcp_dwell_target_steps: 38.8
+  tcp_first_choice_correct: 0.5
+  tcp_first_choice_correct_only_grasped: 0.5
+  tcp_first_enter_target_t: 500000000.0
+  tcp_first_enter_wrong_t: 500000000.0
+  tcp_min_dist_target_xy: 0.1319
+  tcp_min_dist_wrong_xy: 0.1157
+  tcp_net_progress: 0.0563
+  tcp_prev_dist_target: 0.165
+  tcp_prev_xy: -0.057
+  tcp_progress_cnt: 90.0
+  tcp_progress_frac: 0.4422
+  tcp_progress_steps: 39.8
+  tcp_time_correct_side_steps: 45.2
+  tcp_vel_align_cnt: 90.0
+  tcp_vel_align_mean: 0.0002
+  tcp_vel_align_pos_frac: 0.4478
+  tcp_vel_align_pos_steps: 40.3
+  tcp_vel_align_sum: 0.0197
+  wrong_grasp: 0.0

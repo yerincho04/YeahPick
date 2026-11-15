@@ -1,0 +1,87 @@
+env_name: Act2AnswerV4-v1
+ep_len: 80
+epoch: 0
+instruction:
+  0: Place the cube on the tile with red circles.
+  1: Place the cube on the tile with red circles.
+  2: Place the cube on the tile with blue circles.
+  3: Place the cube on the tile with blue circles.
+  4: Place the cube on the tile with red circles.
+  5: Place the cube on the tile with blue circles.
+  6: Place the cube on the tile with blue circles.
+  7: Place the cube on the tile with red circles.
+  8: Place the cube on the tile with blue circles.
+  9: Place the cube on the tile with red circles.
+last_info:
+  0:
+    success: true
+  1:
+    success: true
+  2:
+    success: false
+  3:
+    success: true
+  4:
+    success: false
+  5:
+    success: true
+  6:
+    success: true
+  7:
+    success: false
+  8:
+    success: false
+  9:
+    success: true
+stats:
+  consecutive_grasp: 0.0
+  diag_answer_side_is_left: 0.5
+  diag_cube_pos: 0.2504
+  diag_eef_pos: 0.2244
+  diag_gripper_state: 0.0
+  diag_left_target_pos: 0.1558
+  diag_pair_id: 4.5
+  diag_right_target_pos: 0.2587
+  diag_swap: 0.0
+  elapsed_steps: 90.0
+  is_answered: 0.8
+  is_src_obj_grasped: 1.0
+  is_success: 0.6
+  is_success_soft_v1: 0.5
+  pi_0: 0.3443
+  prev_is_grasped: 0.0
+  release_near_target: 0.7
+  release_near_target_only_grasped: 0.7
+  release_recorded: 1.0
+  soft_step: 91.0
+  success: 0.6
+  target_grasped: 0.0
+  target_height: 0.0
+  tcp_closer_to_target_than_wrong: 0.7
+  tcp_closer_to_target_than_wrong_only_grasped: 0.7
+  tcp_correct_side_frac: 0.6681
+  tcp_d0: 0.1882
+  tcp_dwell_target_3s: 0.8
+  tcp_dwell_target_3s_only_grasped: 0.8
+  tcp_dwell_target_consec: 19.3
+  tcp_dwell_target_consec_max: 37.6
+  tcp_dwell_target_steps: 40.5
+  tcp_first_choice_correct: 0.5
+  tcp_first_choice_correct_only_grasped: 0.5
+  tcp_first_enter_target_t: 100000016.0
+  tcp_first_enter_wrong_t: 300000000.0
+  tcp_min_dist_target_xy: 0.0675
+  tcp_min_dist_wrong_xy: 0.1304
+  tcp_net_progress: 0.1207
+  tcp_prev_dist_target: 0.1146
+  tcp_prev_xy: -0.1206
+  tcp_progress_cnt: 90.0
+  tcp_progress_frac: 0.5178
+  tcp_progress_steps: 46.6
+  tcp_time_correct_side_steps: 60.8
+  tcp_vel_align_cnt: 90.0
+  tcp_vel_align_mean: 0.0007
+  tcp_vel_align_pos_frac: 0.5422
+  tcp_vel_align_pos_steps: 48.8
+  tcp_vel_align_sum: 0.0646
+  wrong_grasp: 0.0

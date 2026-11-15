@@ -1,0 +1,87 @@
+env_name: Act2AnswerV4-v1
+ep_len: 80
+epoch: 0
+instruction:
+  0: Place the cube on the 1:00 AM clock.
+  1: Place the cube on the 7:00 PM clock.
+  2: Place the cube on the 6:00 AM clock.
+  3: Place the cube on the 12:00 PM clock.
+  4: Place the cube on the 11:00 PM clock.
+  5: Place the cube on the 2:00 AM clock.
+  6: Place the cube on the 12:00 PM clock.
+  7: Place the cube on the 4:00 PM clock.
+  8: Place the cube on the 8:00 AM clock.
+  9: Place the cube on the 10:00 AM clock.
+last_info:
+  0:
+    success: false
+  1:
+    success: false
+  2:
+    success: true
+  3:
+    success: false
+  4:
+    success: true
+  5:
+    success: false
+  6:
+    success: false
+  7:
+    success: true
+  8:
+    success: false
+  9:
+    success: false
+stats:
+  consecutive_grasp: 0.0
+  diag_answer_side_is_left: 0.5
+  diag_cube_pos: 0.2135
+  diag_eef_pos: 0.2145
+  diag_gripper_state: 0.3
+  diag_left_target_pos: 0.1556
+  diag_pair_id: 4.5
+  diag_right_target_pos: 0.2592
+  diag_swap: 0.0
+  elapsed_steps: 90.0
+  is_answered: 1.0
+  is_src_obj_grasped: 1.0
+  is_success: 0.3
+  is_success_soft_v1: 0.3
+  pi_0: 0.3673
+  prev_is_grasped: 0.3
+  release_near_target: 0.2
+  release_near_target_only_grasped: 0.2
+  release_recorded: 0.7
+  soft_step: 91.0
+  success: 0.3
+  target_grasped: 0.0
+  target_height: 0.0
+  tcp_closer_to_target_than_wrong: 0.3
+  tcp_closer_to_target_than_wrong_only_grasped: 0.3
+  tcp_correct_side_frac: 0.3022
+  tcp_d0: 0.1882
+  tcp_dwell_target_3s: 0.7
+  tcp_dwell_target_3s_only_grasped: 0.7
+  tcp_dwell_target_consec: 11.9
+  tcp_dwell_target_consec_max: 22.1
+  tcp_dwell_target_steps: 24.6
+  tcp_first_choice_correct: 0.5
+  tcp_first_choice_correct_only_grasped: 0.5
+  tcp_first_enter_target_t: 200000032.0
+  tcp_first_enter_wrong_t: 17.1
+  tcp_min_dist_target_xy: 0.1108
+  tcp_min_dist_wrong_xy: 0.0665
+  tcp_net_progress: 0.0774
+  tcp_prev_dist_target: 0.1831
+  tcp_prev_xy: -0.1564
+  tcp_progress_cnt: 90.0
+  tcp_progress_frac: 0.4411
+  tcp_progress_steps: 39.7
+  tcp_time_correct_side_steps: 27.5
+  tcp_vel_align_cnt: 90.0
+  tcp_vel_align_mean: -0.0
+  tcp_vel_align_pos_frac: 0.4344
+  tcp_vel_align_pos_steps: 39.1
+  tcp_vel_align_sum: -0.0011
+  wrong_grasp: 0.0
