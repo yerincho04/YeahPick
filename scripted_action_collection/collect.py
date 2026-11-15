@@ -107,6 +107,8 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     phase_steps = 0
     release_steps = 0
     failure_reason = None
+    environment_terminated = False
+    time_limit_reached = False
     limits = {"lift": 12, "transfer": 32, "lower": 22}
 
     for step in range(max_steps - 10):
@@ -140,13 +142,17 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         obs, _, terminated, truncated, info = env.step(
             torch.as_tensor(command, device=task.device).reshape(1, 7)
         )
+        environment_terminated = scalar(terminated)
+        time_limit_reached = scalar(truncated)
         phase_steps += 1
         if phase == "release":
             release_steps += 1
             if release_steps >= 10:
                 break
-        if scalar(terminated) or scalar(truncated):
-            failure_reason = "episode_ended"
+        # ManiSkill sets terminated=True whenever the cube is above the correct
+        # tile, including while the gripper still holds it. Continue to release.
+        if time_limit_reached:
+            failure_reason = "time_limit_reached"
             break
 
     released = not scalar(task.agent.is_grasping(cube))
@@ -164,6 +170,9 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         "final_cube_position": position(cube).tolist(),
         "target_board_position": board_p.tolist(),
         "released": bool(released),
+        "final_phase": phase,
+        "environment_terminated": environment_terminated,
+        "time_limit_reached": time_limit_reached,
     }
     return metadata, frames, np.asarray(actions, dtype=np.float32), np.asarray(qposes, dtype=np.float32)
 
