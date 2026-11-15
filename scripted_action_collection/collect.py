@@ -42,8 +42,10 @@ def position(actor) -> np.ndarray:
     return vector(actor.pose.p)
 
 
-def frame(obs) -> np.ndarray:
-    return obs["sensor_data"]["3rd_view_camera"]["rgb"][0].to("cpu").numpy().astype(np.uint8)
+def frame(obs):
+    # Snapshot the rendered frame on the GPU. Failed episodes never need a
+    # GPU-to-CPU image transfer; successful ones are copied when saved.
+    return obs["sensor_data"]["3rd_view_camera"]["rgb"][0].clone()
 
 
 def controller_action(env, desired_cube: np.ndarray, cube_tcp_offset: np.ndarray,
@@ -76,7 +78,7 @@ def controller_action(env, desired_cube: np.ndarray, cube_tcp_offset: np.ndarray
 
 
 def collect_episode(env, pair: dict, swapped: bool, seed: int,
-                    max_steps: int) -> tuple[dict, list[np.ndarray], np.ndarray, np.ndarray]:
+                    max_steps: int) -> tuple[dict, list, np.ndarray, np.ndarray]:
     import torch
 
     task = env.unwrapped
@@ -106,9 +108,9 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     lift_z = max(float(start_cube[2]), float(board_top) + 0.08)
     place_z = float(board_top) + 0.015 + 0.012
     instruction = task.get_language_instruction()[0]
-    frames: list[np.ndarray] = []
+    frames: list = []
     actions: list[np.ndarray] = []
-    qposes: list[np.ndarray] = []
+    qposes: list = []
     phase = "lift"
     phase_steps = 0
     release_steps = 0
@@ -144,7 +146,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         command = controller_action(env, goal, cube_tcp_offset, gripper)
         frames.append(frame(obs))
         actions.append(command.copy())
-        qposes.append(vector(task.agent.robot.get_qpos()))
+        qposes.append(task.agent.robot.get_qpos()[0].clone())
         obs, _, terminated, truncated, info = env.step(
             torch.as_tensor(command, device=task.device).reshape(1, 7)
         )
@@ -186,16 +188,20 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         "environment_terminated": environment_terminated,
         "time_limit_reached": time_limit_reached,
     }
-    return metadata, frames, np.asarray(actions, dtype=np.float32), np.asarray(qposes, dtype=np.float32)
+    saved_qposes = (torch.stack(qposes).cpu().numpy().astype(np.float32)
+                    if success else np.empty((0, 0), dtype=np.float32))
+    return metadata, frames, np.asarray(actions, dtype=np.float32), saved_qposes
 
 
-def save_success(metadata: dict, frames: list[np.ndarray], actions: np.ndarray,
+def save_success(metadata: dict, frames: list, actions: np.ndarray,
                  qposes: np.ndarray, directory: Path) -> None:
     directory.mkdir(parents=True, exist_ok=True)
     frames_dir = directory / "frames"
     frames_dir.mkdir(exist_ok=True)
     for step, image in enumerate(frames):
-        Image.fromarray(image).save(frames_dir / f"{step:04d}.jpg", quality=90)
+        Image.fromarray(image.cpu().numpy().astype(np.uint8)).save(
+            frames_dir / f"{step:04d}.jpg", quality=90
+        )
     np.save(directory / "actions.npy", actions)
     np.save(directory / "robot_qpos.npy", qposes)
     (directory / "metadata.json").write_text(
