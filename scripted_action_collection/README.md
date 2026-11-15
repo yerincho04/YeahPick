@@ -18,6 +18,15 @@ bash scripted_action_collection/scripts/collect.sh --category public_info --coun
 
 Options include `--start-pair`, `--count`, `--layout original|swapped|both`, `--seed`, `--repeats`, `--max-steps`, `--retry-failed`, and `--build-only`. `EVAL_GPU=0` chooses the CUDA GPU; an existing `VK_ICD_FILENAMES` is preserved. Ctrl-C ends the foreground Python process. Re-running skips completed episode IDs; use `--retry-failed` to try failed IDs again.
 
+To recollect a category from scratch after changing its assets, stop all collectors first, then archive that category's saved episodes and manifest records. Other categories stay in place:
+
+```bash
+python3 scripted_action_collection/scripts/reset_category.py public_info
+bash scripted_action_collection/scripts/collect.sh --category public_info
+```
+
+The old records and episode folders are preserved under `output/archive/`. Do not run the reset while another collector is writing the shared `episodes.jsonl`.
+
 Outputs:
 
 ```text
