@@ -72,23 +72,28 @@ def main() -> None:
                 rgb = image.convert("RGB")
                 with torch.autocast("cuda", dtype=torch.bfloat16):
                     output = teacher(input_ids=ids, pixel_values=transformed(rgb, teacher),
-                                     output_hidden_states=True, return_dict=True)
+                                     output_hidden_states=True, use_cache=True,
+                                     return_dict=True)
                 vectors = {}
                 for layer in CONFIG.kd_layers:
                     if layer >= len(output.hidden_states):
                         raise ValueError(f"Teacher has no hidden_states[{layer}]")
                     vectors[layer] = output.hidden_states[layer][0, -1].float().cpu().numpy()
-                del output
+            # Greedy decoding through Prismatic.forward avoids GenerationMixin's
+            # version-dependent private cache attributes. Reuse the prompt pass.
+            generated_tokens = []
+            for token_index in range(CONFIG.teacher_max_answer_tokens):
+                token = output.logits[:, -1:].argmax(dim=-1)
+                token_id = int(token.item())
+                if token_id == tokenizer.eos_token_id:
+                    break
+                generated_tokens.append(token_id)
+                if token_index + 1 == CONFIG.teacher_max_answer_tokens:
+                    break
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    generated_ids = teacher.generate(image=rgb, prompt_text=prompt,
-                                                     max_new_tokens=CONFIG.teacher_max_answer_tokens,
-                                                     do_sample=False)
-            if isinstance(generated_ids, str):
-                generated = generated_ids
-            else:
-                generated = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
-                if generated.startswith(prompt):
-                    generated = generated[len(prompt):]
+                    output = teacher(input_ids=token, past_key_values=output.past_key_values,
+                                     use_cache=True, return_dict=True)
+            generated = tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
             result = {"sample_id": sample["sample_id"], "question": sample["question"],
                       "image": sample["image"], "answer": sample["answer"],
                       "teacher_answer": generated.strip(),
