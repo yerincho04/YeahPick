@@ -21,6 +21,13 @@ CATEGORIES = (
 )
 TILE_WIDTH = 0.11
 TILE_THICKNESS = 0.006
+PUBLIC_INFO_ASSET_VERSION = "white_svg_background_v1"
+
+
+def on_white(image: Image.Image) -> Image.Image:
+    rgba = image.convert("RGBA")
+    background = Image.new("RGBA", rgba.size, (255, 255, 255, 255))
+    return Image.alpha_composite(background, rgba).convert("RGB")
 
 
 def load_image(path: Path) -> Image.Image:
@@ -29,9 +36,9 @@ def load_image(path: Path) -> Image.Image:
 
         png = cairosvg.svg2png(url=str(path), output_width=512, output_height=512)
         with Image.open(io.BytesIO(png)) as image:
-            return image.convert("RGB")
+            return on_white(image)
     with Image.open(path) as image:
-        return ImageOps.exif_transpose(image).convert("RGB")
+        return on_white(ImageOps.exif_transpose(image))
 
 
 def make_tile(image: Image.Image) -> bytes:
@@ -94,6 +101,11 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
     pairs = read_pairs(category)
     output = ASSETS / category
     output.mkdir(parents=True, exist_ok=True)
+    version_path = output / ".asset_version"
+    rebuild_public_info = category == "public_info" and (
+        not version_path.is_file()
+        or version_path.read_text(encoding="utf-8").strip() != PUBLIC_INFO_ASSET_VERSION
+    )
     images = OrderedDict()
     for pair in pairs:
         for side in ("left", "right"):
@@ -113,12 +125,14 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
             raise FileNotFoundError(image_path)
         glb_path = shape_dir / "textured.glb"
         collision_path = shape_dir / "collision.obj"
-        if not glb_path.is_file():
+        if rebuild_public_info or not glb_path.is_file():
             image = load_image(image_path)
             # The existing public-info GLBs use a clockwise quarter-turn.
             if category == "public_info":
                 image = image.transpose(Image.Transpose.ROTATE_270)
-            glb_path.write_bytes(make_tile(image))
+            temporary_path = glb_path.with_suffix(".glb.tmp")
+            temporary_path.write_bytes(make_tile(image))
+            temporary_path.replace(glb_path)
         if not collision_path.is_file():
             collision_path.write_text(
                 trimesh.creation.box(
@@ -134,6 +148,9 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
             },
             "scales": [1.0], "density": 6368,
         }
+
+    if rebuild_public_info:
+        version_path.write_text(PUBLIC_INFO_ASSET_VERSION, encoding="utf-8")
 
     env_pairs = []
     for index, pair in enumerate(pairs):
