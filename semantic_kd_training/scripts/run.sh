@@ -19,6 +19,30 @@ export PYTHONPATH="$ROOT:$REPO/openvla:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES="${KD_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
 
+if [ "$MODE" = train ] || [ "$MODE" = all ]; then
+  # Container CUDA libraries can precede the PyTorch cu121 wheel on the loader path.
+  # DDP must load the NCCL release paired with torch 2.2.0+cu121.
+  NCCL_LIB="$(python3 - <<'PY'
+from importlib.metadata import PackageNotFoundError, distribution
+from pathlib import Path
+
+try:
+    package = distribution("nvidia-nccl-cu12")
+except PackageNotFoundError:
+    raise SystemExit("Missing nvidia-nccl-cu12; install version 2.19.3")
+if package.version != "2.19.3":
+    raise SystemExit(
+        f"nvidia-nccl-cu12=={package.version}; install version 2.19.3 for torch 2.2.0+cu121"
+    )
+library = Path(package.locate_file("nvidia/nccl/lib/libnccl.so.2"))
+if not library.is_file():
+    raise SystemExit(f"NCCL library missing: {library}")
+print(library)
+PY
+)"
+  export LD_PRELOAD="$NCCL_LIB${LD_PRELOAD:+:$LD_PRELOAD}"
+fi
+
 case "$MODE" in
   prepare) python3 -u "$ROOT/prepare.py" ;;
   cache) python3 -u "$ROOT/cache_teacher.py" "$@" ;;

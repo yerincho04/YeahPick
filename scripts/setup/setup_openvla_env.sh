@@ -37,6 +37,7 @@ retry pip4 install torch==2.2.0 torchvision==0.17.0 --index-url https://download
 retry pip4 install flash-attn==2.7.4.post1 --no-build-isolation
 retry pip4 install -r "$REPO_ROOT/requirements/openvla.txt"
 retry pip4 install -e "$REPO_ROOT/ManiSkill" -e "$REPO_ROOT/SimplerEnv" -e "$REPO_ROOT/openvla"
+retry pip4 install --no-deps nvidia-nccl-cu12==2.19.3
 
 python - <<'PY'
 import torch, transformers
