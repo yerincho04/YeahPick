@@ -21,7 +21,7 @@ CATEGORIES = (
 )
 TILE_WIDTH = 0.11
 TILE_THICKNESS = 0.006
-PUBLIC_INFO_ASSET_VERSION = "white_svg_background_v1"
+PUBLIC_INFO_ASSET_VERSION = "white_svg_background_unrotated_v2"
 
 
 def on_white(image: Image.Image) -> Image.Image:
@@ -127,9 +127,6 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
         collision_path = shape_dir / "collision.obj"
         if rebuild_public_info or not glb_path.is_file():
             image = load_image(image_path)
-            # The existing public-info GLBs use a clockwise quarter-turn.
-            if category == "public_info":
-                image = image.transpose(Image.Transpose.ROTATE_270)
             temporary_path = glb_path.with_suffix(".glb.tmp")
             temporary_path.write_bytes(make_tile(image))
             temporary_path.replace(glb_path)
