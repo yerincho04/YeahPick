@@ -117,6 +117,7 @@ def load_student(training: bool, adapter_path: Path | None = None):
         "vision_backbone": 0,
         "projector": 0,
         "language_model.model.embed_tokens": 0,
+        "language_model.model.rotary_emb": 0,
         "language_model.model.norm": 1,
         "language_model.lm_head": 1,
     }
