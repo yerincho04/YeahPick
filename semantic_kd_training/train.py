@@ -256,7 +256,11 @@ def main() -> None:
     if CONFIG.gradient_accumulation_steps % world_size:
         raise ValueError("gradient_accumulation_steps must be divisible by the GPU count")
     torch.cuda.set_device(rank)
-    dist.init_process_group(backend="nccl", timeout=timedelta(hours=12))
+    # Gloo supports CUDA collectives and avoids the container's incompatible NCCL runtime.
+    backend = os.environ.get("KD_DDP_BACKEND", "gloo")
+    dist.init_process_group(backend=backend, timeout=timedelta(hours=12))
+    if rank == 0:
+        print(f"DDP backend={backend} world_size={world_size}", flush=True)
     local_steps = CONFIG.gradient_accumulation_steps // world_size
     torch.manual_seed(CONFIG.seed)
     np.random.seed(CONFIG.seed)

@@ -18,8 +18,9 @@ fi
 export PYTHONPATH="$ROOT:$REPO/openvla:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES="${KD_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
+export KD_DDP_BACKEND="${KD_DDP_BACKEND:-gloo}"
 
-if [ "$MODE" = train ] || [ "$MODE" = all ]; then
+if { [ "$MODE" = train ] || [ "$MODE" = all ]; } && [ "$KD_DDP_BACKEND" = nccl ]; then
   # Container CUDA libraries can precede the PyTorch cu121 wheel on the loader path.
   # DDP must load the NCCL release paired with torch 2.2.0+cu121.
   NCCL_LIB="$(python3 - <<'PY'
