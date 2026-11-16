@@ -129,6 +129,13 @@ def load_student(training: bool, adapter_path: Path | None = None):
     model = AutoModelForVision2Seq.from_pretrained(CONFIG.student_model, **kwargs)
     if not ({0, 1} <= set(model.hf_device_map.values())):
         raise RuntimeError(f"Student was not placed on both GPUs: {model.hf_device_map}")
+    # RoPE buffers are non-persistent in some Transformers releases, so loading
+    # checkpoint weights does not necessarily place them with their modules.
+    model.language_model.model.rotary_emb.to("cuda:0")
+    for index, layer in enumerate(model.language_model.model.layers):
+        rotary = getattr(layer.self_attn, "rotary_emb", None)
+        if rotary is not None:
+            rotary.to(f"cuda:{0 if index < split else 1}")
     statistics = json.loads((CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"))
     model.norm_stats.update(statistics)
     if training and CONFIG.gradient_checkpointing:
