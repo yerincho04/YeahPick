@@ -57,8 +57,9 @@ def action_inputs(sample: dict, processor, action_tokenizer, stats: dict) -> dic
     labels = ids.clone()
     labels[:, :-(len(action) + 1)] = -100  # 7 action tokens + EOS
     with Image.open(sample["image"]) as raw:
-        image = torch.from_numpy(np.asarray(raw.convert("RGB")).copy()).permute(2, 0, 1).unsqueeze(0)
-    pixel = processor.image_processor.apply_transform(image.float())
+        pixel = processor.image_processor(
+            images=raw.convert("RGB"), return_tensors="pt"
+        )["pixel_values"]
     return {"input_ids": ids, "labels": labels, "pixel_values": pixel}
 
 
@@ -74,8 +75,9 @@ def qa_inputs(sample: dict, processor) -> tuple[dict, int]:
     ids = torch.cat((prefix, answer, eos), dim=1)
     labels = torch.cat((torch.full_like(prefix, -100), answer, eos), dim=1)
     with Image.open(sample["image"]) as raw:
-        image = torch.from_numpy(np.asarray(raw.convert("RGB")).copy()).permute(2, 0, 1).unsqueeze(0)
-    pixel = processor.image_processor.apply_transform(image.float())
+        pixel = processor.image_processor(
+            images=raw.convert("RGB"), return_tensors="pt"
+        )["pixel_values"]
     return {"input_ids": ids, "labels": labels, "pixel_values": pixel}, prefix.shape[1]
 
 
