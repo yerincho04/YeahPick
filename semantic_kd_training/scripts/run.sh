@@ -18,9 +18,9 @@ fi
 export PYTHONPATH="$ROOT:$REPO/openvla:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES="${KD_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
-export KD_DDP_BACKEND="${KD_DDP_BACKEND:-gloo}"
+export KD_DDP_BACKEND="${KD_DDP_BACKEND:-nccl}"
 
-if { [ "$MODE" = train ] || [ "$MODE" = all ]; } && [ "$KD_DDP_BACKEND" = nccl ]; then
+if { [ "$MODE" = train ] || [ "$MODE" = all ] || [ "$MODE" = probe ]; } && [ "$KD_DDP_BACKEND" = nccl ]; then
   # Container CUDA libraries can precede the PyTorch cu121 wheel on the loader path.
   # DDP must load the NCCL release paired with torch 2.2.0+cu121.
   NCCL_LIB="$(python3 - <<'PY'
@@ -42,11 +42,13 @@ print(library)
 PY
 )"
   export LD_PRELOAD="$NCCL_LIB${LD_PRELOAD:+:$LD_PRELOAD}"
+  export LD_LIBRARY_PATH="$(dirname "$NCCL_LIB")${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
 
 case "$MODE" in
   prepare) python3 -u "$ROOT/prepare.py" ;;
   cache) python3 -u "$ROOT/cache_teacher.py" "$@" ;;
+  probe) torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/scripts/probe_nccl.py" ;;
   train) torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/train.py" ;;
   test) python3 -u "$ROOT/evaluate.py" "$@" ;;
   all)
@@ -55,5 +57,5 @@ case "$MODE" in
     torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/train.py"
     python3 -u "$ROOT/evaluate.py"
     ;;
-  *) echo "Usage: bash semantic_kd_training/scripts/run.sh {prepare|cache|train|test|all}" >&2; exit 2 ;;
+  *) echo "Usage: bash semantic_kd_training/scripts/run.sh {prepare|cache|probe|train|test|all}" >&2; exit 2 ;;
 esac
