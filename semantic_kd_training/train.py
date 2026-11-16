@@ -3,15 +3,20 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import random
 import shutil
 from collections import defaultdict
+from contextlib import nullcontext
+from datetime import timedelta
 from pathlib import Path
 
 import numpy as np
 import torch
+import torch.distributed as dist
 import torch.nn.functional as F
 from torch.optim import AdamW
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 from config import CONFIG
 from model_io import (action_inputs, load_action_stats, load_student, qa_inputs,
@@ -20,7 +25,8 @@ from model_io import (action_inputs, load_action_stats, load_student, qa_inputs,
 
 def to_device(values: dict) -> dict:
     dtype = torch.bfloat16 if CONFIG.bf16 else torch.float16
-    return {k: v.to("cuda", dtype=dtype) if k == "pixel_values" else v.to("cuda")
+    device = torch.device("cuda", torch.cuda.current_device())
+    return {k: v.to(device, dtype=dtype) if k == "pixel_values" else v.to(device)
             for k, v in values.items()}
 
 
@@ -238,6 +244,20 @@ def save_adapter(model, step: int, name: str) -> None:
 def main() -> None:
     if not torch.cuda.is_available():
         raise RuntimeError("KD training requires a CUDA GPU")
+    if "LOCAL_RANK" not in os.environ:
+        raise RuntimeError("Launch distributed training with semantic_kd_training/scripts/run.sh train")
+    rank = int(os.environ["LOCAL_RANK"])
+    world_size = int(os.environ["WORLD_SIZE"])
+    if world_size != CONFIG.student_gpu_count or torch.cuda.device_count() != world_size:
+        raise RuntimeError(
+            f"Expected {CONFIG.student_gpu_count} visible GPUs and processes; "
+            f"got {torch.cuda.device_count()} GPUs and {world_size} processes"
+        )
+    if CONFIG.gradient_accumulation_steps % world_size:
+        raise ValueError("gradient_accumulation_steps must be divisible by the GPU count")
+    torch.cuda.set_device(rank)
+    dist.init_process_group(backend="nccl", timeout=timedelta(hours=12))
+    local_steps = CONFIG.gradient_accumulation_steps // world_size
     torch.manual_seed(CONFIG.seed)
     np.random.seed(CONFIG.seed)
     random.seed(CONFIG.seed)
@@ -252,16 +272,20 @@ def main() -> None:
                 if not teacher_result_path(sample).is_file():
                     raise FileNotFoundError(f"Teacher cache missing: {sample['sample_id']}")
     from prismatic.vla.action_tokenizer import ActionTokenizer
-    model, processor = load_student(training=True)
+    student, processor = load_student(training=True)
+    model = DDP(student, device_ids=[rank], output_device=rank,
+                broadcast_buffers=False, find_unused_parameters=False,
+                gradient_as_bucket_view=True)
     model.train()
     tokenizer = ActionTokenizer(processor.tokenizer)
     stats = load_action_stats()
     optimizer = AdamW((p for p in model.parameters() if p.requires_grad),
                       lr=CONFIG.learning_rate, weight_decay=CONFIG.weight_decay)
-    CONFIG.output_dir.mkdir(parents=True, exist_ok=True)
-    (CONFIG.output_dir / "run_config.json").write_text(
-        json.dumps({k: str(v) if isinstance(v, Path) else v for k, v in vars(CONFIG).items()},
-                   indent=2), encoding="utf-8")
+    if rank == 0:
+        CONFIG.output_dir.mkdir(parents=True, exist_ok=True)
+        (CONFIG.output_dir / "run_config.json").write_text(
+            json.dumps({k: str(v) if isinstance(v, Path) else v for k, v in vars(CONFIG).items()},
+                       indent=2), encoding="utf-8")
     action_pool, vqa_pool, grounding_pool = [], [], []
     best_val = float("inf")
     optimizer.zero_grad(set_to_none=True)
@@ -272,49 +296,77 @@ def main() -> None:
         aux_totals = {"vqa": 0.0, "grounding": 0.0}
         kd_totals = {"vqa": 0.0, "grounding": 0.0}
         aux_counts = {"vqa": 0, "grounding": 0}
-        for _ in range(CONFIG.gradient_accumulation_steps):
-            action = choose(action_rows, action_pool)
-            with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
-                ce_action = action_loss(model, processor, tokenizer, stats, action)
-            (ce_action / CONFIG.gradient_accumulation_steps).backward()
-            kind = "vqa" if random.random() < CONFIG.vqa_aux_probability else "grounding"
-            aux = choose(vqa_rows, vqa_pool) if kind == "vqa" else choose(grounding_rows, grounding_pool)
+        plan = None
+        if rank == 0:
+            plan = []
+            for _ in range(CONFIG.gradient_accumulation_steps):
+                action = choose(action_rows, action_pool)
+                kind = "vqa" if random.random() < CONFIG.vqa_aux_probability else "grounding"
+                aux = choose(vqa_rows, vqa_pool) if kind == "vqa" else choose(
+                    grounding_rows, grounding_pool
+                )
+                plan.append((action, kind, aux))
+        payload = [plan]
+        dist.broadcast_object_list(payload, src=0)
+        for local_index, (action, kind, aux) in enumerate(payload[0][rank::world_size]):
+            with model.no_sync():
+                with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
+                    ce_action = action_loss(model, processor, tokenizer, stats, action)
+                (ce_action / local_steps).backward()
             weight = CONFIG.vqa_weight if kind == "vqa" else CONFIG.grounding_weight
-            with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
-                ce_qa, kd, _ = qa_loss(model, processor, aux)
-                aux_total = weight * (ce_qa + CONFIG.kd_weight * kd)
-            (aux_total / CONFIG.gradient_accumulation_steps).backward()
+            sync = nullcontext() if local_index == local_steps - 1 else model.no_sync()
+            with sync:
+                with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
+                    ce_qa, kd, _ = qa_loss(model, processor, aux)
+                    aux_total = weight * (ce_qa + CONFIG.kd_weight * kd)
+                (aux_total / local_steps).backward()
             action_total += float(ce_action.item())
             aux_totals[kind] += float(ce_qa.item())
             kd_totals[kind] += float(kd.item())
             aux_counts[kind] += 1
         optimizer.step()
         optimizer.zero_grad(set_to_none=True)
+        totals = torch.tensor([
+            action_total, aux_totals["vqa"], aux_totals["grounding"],
+            kd_totals["vqa"], kd_totals["grounding"],
+            aux_counts["vqa"], aux_counts["grounding"],
+        ], device=torch.device("cuda", rank), dtype=torch.float64)
+        dist.all_reduce(totals, op=dist.ReduceOp.SUM)
+        if rank != 0:
+            continue
+        (action_total, vqa_total, grounding_total, vqa_kd_total,
+         grounding_kd_total, vqa_count, grounding_count) = totals.tolist()
+        aux_totals = {"vqa": vqa_total, "grounding": grounding_total}
+        kd_totals = {"vqa": vqa_kd_total, "grounding": grounding_kd_total}
+        aux_counts = {"vqa": int(vqa_count), "grounding": int(grounding_count)}
         record = {"step": update,
                   "train_action_loss": action_total / CONFIG.gradient_accumulation_steps}
         for kind in ("vqa", "grounding"):
-            record[f"train_{kind}_samples"] = aux_counts[kind]
+            record[f"train_{kind}_samples"] = int(aux_counts[kind])
             record[f"train_{kind}_loss"] = (aux_totals[kind] / aux_counts[kind]
                                                if aux_counts[kind] else None)
             record[f"train_{kind}_kd_loss"] = (kd_totals[kind] / aux_counts[kind]
                                                   if aux_counts[kind] else None)
         if (update % (CONFIG.validation_every_epochs * updates_per_epoch) == 0
                 or update == total_updates):
-            val = evaluate(model, processor, tokenizer, stats, "val")
+            val = evaluate(model.module, processor, tokenizer, stats, "val")
             record.update({f"val_{k}": v for k, v in val.items() if k != "split"})
             if all(val[f"{kind}_loss"] is not None for kind in ("action", "vqa", "grounding")):
                 score = selection_loss(val)
                 record["val_selection_loss"] = score
                 if score < best_val:
                     best_val = score
-                    save_adapter(model, update, "best_adapter")
+                    save_adapter(model.module, update, "best_adapter")
         if update % CONFIG.checkpoint_every == 0 or update == total_updates:
-            save_adapter(model, update, "latest_adapter")
+            save_adapter(model.module, update, "latest_adapter")
         with (CONFIG.output_dir / "metrics.jsonl").open("a", encoding="utf-8") as stream:
             stream.write(json.dumps(record) + "\n")
         print(json.dumps(record), flush=True)
     if best_val == float("inf"):
-        save_adapter(model, total_updates, "best_adapter")
+        if rank == 0:
+            save_adapter(model.module, total_updates, "best_adapter")
+    dist.barrier()
+    dist.destroy_process_group()
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ class Config:
     # Put scripted_action_collection/output contents here: episodes.jsonl + episodes/.
     action_data_root: Path = ROOT / "input" / "action_data"
     work_dir: Path = ROOT / "work"
-    output_dir: Path = ROOT / "output"
+    output_dir: Path = ROOT / "output_ddp_bf16"
 
     # 7B teacher features are cached before student training, never loaded together.
     teacher_model: str = "prism-dinosiglip-224px+7b"
@@ -37,14 +37,13 @@ class Config:
 
     # Each epoch traverses every successful scripted action frame once.
     train_epochs: int = 3
-    micro_batch_size: int = 1
-    gradient_accumulation_steps: int = 8
+    gradient_accumulation_steps: int = 8  # Global samples of each kind per update.
     learning_rate: float = 1e-4
     weight_decay: float = 0.0
     lora_rank: int = 16
     lora_alpha: int = 16
     lora_dropout: float = 0.0
-    # BF16 student model is split across two visible GPUs.
+    # One full BF16 student replica per GPU during DDP training.
     student_gpu_count: int = 2
     gradient_checkpointing: bool = True
     bf16: bool = True
