@@ -1,37 +1,136 @@
-# Semantic KD training
+# Semantic KD: 환경 구성부터 학습까지
 
-One OpenVLA LoRA adapter is trained with three signals: action cross-entropy on successful scripted demonstrations, gold-answer cross-entropy on **all five** VQA types, and gold-answer cross-entropy for choosing the correct tile in the robot camera image. A frozen Prismatic VLM also supplies a representation target for a QA sample when its generated answer matches the gold answer. Teacher errors never remove the sample from gold-answer training.
+이 문서는 **Linux GPU 서버의 저장소 루트**에서 실행하는 절차다. Baseline 평가는 포함하지 않는다. `KD_VQA_dataset/`의 10개 카테고리와 `scripted_action_collection/`에서 생성한 로봇 시연으로 OpenVLA LoRA를 학습한다. 경로와 학습 설정은 `semantic_kd_training/config/config.py`에서 지정한다.
 
-## Inputs
+## 1. 환경 구성
 
-Copy the contents of `KD_VQA_dataset/` to `input/dataset/`, and the contents of `scripted_action_collection/output/` to `input/action_data/`:
-
-```text
-input/dataset/<category>/vqa.jsonl
-input/dataset/<category>/images/...
-input/action_data/episodes.jsonl
-input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/actions.npy
-input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/frames/0000.jpg ...
-```
-
-`prepare` joins the files by category and pair ID. It creates a left/right composite image for each VQA pair and retains both focus rows and their five questions. Robot grounding uses the first pre-action camera frame of each successful episode and accounts for swapped layouts. Action training uses every frame of every successful episode. The split is by pair within each category (80/10/10 by default), so the two focus rows and all action layouts and seeds of a pair remain together. Images reused across different pairs may still occur in multiple splits.
-
-In the current VQA JSONL, object recognition, attribute recognition, and semantic reasoning answers are `A`/`B`; object and attribute options are stored in `choices`. Visual and counterfactual grounding answers are `Left`/`Right`. The teacher cache compares constrained answers and refreshes a sample when its question or answer changes.
-
-## Run on Linux
-
-Edit `config/config.py`, activate the OpenVLA environment, then run:
+### 공통: OpenVLA Python 환경
 
 ```bash
-bash semantic_kd_training/scripts/run.sh all
+cd ~/hj/YeahPick
+export CONDA_ROOT="$(conda info --base)"
+export CONDA_ENVS_DIR="$HOME/envs"
 ```
 
-Stages can be run separately with `prepare`, `cache`, `train`, and `test`. `cache --split train` and similar split options are supported. `work/` stores the three manifests per split, composite images, teacher answers and features, and action statistics. `output_ddp_bf16/` stores the new LoRA adapter and metrics, separate from an earlier single-process run in `output/`. Teacher features are computed once per VQA question and once per robot episode grounding question; action frames do not each require teacher inference.
+새 Conda 설치에서 Terms of Service 오류가 날 때만 다음을 실행한다.
 
-The default teacher is `prism-dinosiglip-224px+7b`; the default student is `gen-robot/openvla-7b-rlvla-sft_16k`. `NousResearch/Llama-2-7b-hf` supplies Llama 2 config/tokenizer metadata for the Prismatic teacher, while the teacher checkpoint supplies its weights. The student uses BF16 LoRA without 4-bit quantization. Training launches two DDP processes, each with a full model replica on one GPU. Set `KD_GPUS` to choose the two visible GPUs (default `0,1`). DDP uses NCCL and places the PyTorch-matched NCCL library first in both `LD_PRELOAD` and `LD_LIBRARY_PATH`. Each optimizer update still uses eight action samples and eight auxiliary samples: four of each per GPU, with synchronized LoRA gradients. Teacher caching runs before student training on GPU 0; standalone test evaluation also uses GPU 0. Each configured epoch visits all successful action frames; VQA and grounding are interleaved at the probabilities in `config/config.py`. Because each GPU now holds a full model, keep `gradient_checkpointing=True` unless memory usage confirms it can be disabled.
+```bash
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+```
 
-DDP training starts a new run from the base student checkpoint. Existing LoRA-only checkpoints do not include optimizer state and cannot resume the previous run exactly. The prepared manifests and teacher cache in `work/` can be reused.
+```bash
+bash scripts/setup/setup_openvla_env.sh
+source "$CONDA_ROOT/etc/profile.d/conda.sh"
+conda activate "$CONDA_ENVS_DIR/openvla_rl4vla"
+```
 
-Validation runs at the end of each epoch. It uses a fixed, balanced subset: two VQA questions per category and question type (100 total, one per answer label when available), up to two successful robot episodes per category for grounding, and five evenly spaced action frames from each selected episode. Test evaluation uses the full test split. Metrics include action, VQA, and robot-grounding losses plus **teacher-forced exact token accuracy** for the QA branches. This is not free-generation accuracy or robot rollout success. Final test evaluation requires the test teacher cache, which `all` creates.
+설치 스크립트가 Python 3.10, PyTorch 2.2.0+cu121, OpenVLA, ManiSkill, SimplerEnv 등을 설치한다. 모델 가중치는 저장소에 없으며 처음 사용할 때 다운로드된다. 교사는 `prism-dinosiglip-224px+7b`, 학생은 `gen-robot/openvla-7b-rlvla-sft_16k`다. 교사는 `NousResearch/Llama-2-7b-hf`의 설정과 토크나이저 메타데이터도 사용한다.
 
-This code has not been executed or tested in this workspace, per the request to leave validation to the user.
+### VESSL Workspace 전용: 그래픽과 시스템 라이브러리
+
+시연 수집은 SAPIEN이 GPU로 카메라 영상을 렌더링하므로, 화면이 없는 서버에서도 Vulkan을 사용한다. 기존 VESSL Workspace의 사용자 정의 이미지 `hetheiin/yeahpick-vulkan:1`은 `NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics`를 설정한다. 새 Workspace 생성 시 이 이미지를 선택하고, 코드와 데이터용 persistent volume은 별도로 연결한다.
+
+**다음 apt/EGL ICD 설정은 이 VESSL 컨테이너에서 필요했던 조치다.** 일반 Linux 서버에서 NVIDIA Vulkan이 이미 동작하면 적용하지 않아도 된다.
+
+```bash
+apt-get update
+apt-get install -y libgl1 libvulkan1 libcairo2 vulkan-tools
+sed 's/libGLX_nvidia.so.0/libEGL_nvidia.so.0/' \
+  /etc/vulkan/icd.d/nvidia_icd.json > /tmp/nvidia_egl_icd.json
+export VK_ICD_FILENAMES=/tmp/nvidia_egl_icd.json
+vulkaninfo --summary
+```
+
+`libgl1`은 OpenCV의 `libGL.so.1`, `libcairo2`는 공개 표지판 SVG를 변환하는 CairoSVG에 필요하다. `/tmp/nvidia_egl_icd.json`과 `VK_ICD_FILENAMES`는 새 컨테이너/터미널에서 다시 설정해야 한다. VESSL 이미지에 그래픽 드라이버가 노출되지 않으면 Python 패키지만 설치해서는 SAPIEN 렌더링이 되지 않는다.
+
+### VESSL Workspace 전용: NCCL 파일 버전
+
+이 Workspace에서는 `nvidia-nccl-cu12` 패키지 정보가 `2.19.3`인데 실제 `libnccl.so.2` 내용은 `2.30.7`이었던 적이 있다. 두 GPU 통신이 실패했으므로, **Python 환경 설치 후** 파일을 강제로 다시 설치한다.
+
+```bash
+python3 -m pip install --force-reinstall --no-deps --no-cache-dir \
+  --index-url https://pypi.org/simple nvidia-nccl-cu12==2.19.3
+```
+
+아래 명령의 마지막 값이 `21903`이어야 한다. 패키지 버전 정보만 확인하면 파일 내용이 잘못된 경우를 발견하지 못한다.
+
+```bash
+python3 - <<'PY'
+import ctypes
+from importlib.metadata import distribution
+p = distribution("nvidia-nccl-cu12").locate_file("nvidia/nccl/lib/libnccl.so.2")
+v = ctypes.c_int()
+ctypes.CDLL(str(p)).ncclGetVersion(ctypes.byref(v))
+print(p, v.value)
+PY
+```
+
+두 GPU의 NCCL 통신 확인은 `bash semantic_kd_training/scripts/run.sh probe`로 한다. 두 rank 모두 `all_reduce=3.0`이어야 한다. GPU 4개로 아래 설정을 바꾼 경우에는 네 rank 모두 `all_reduce=10.0`이어야 한다. 학습 스크립트는 NCCL 2.19.3 라이브러리를 우선 로드한다.
+
+## 2. Scripted action 데이터 생성
+
+`scripted_action_collection/input/`에는 10개 카테고리의 이미지·`vqa.jsonl`과 배경 이미지가 이미 들어 있다. 규칙 기반 컨트롤러로 큐브를 정답 타일에 놓는 시연을 수집한다. 위 VESSL EGL 설정이 필요한 서버라면 **수집 명령을 실행하는 터미널에서** `VK_ICD_FILENAMES`를 설정한다.
+
+```bash
+bash scripted_action_collection/scripts/collect.sh
+```
+
+기본값은 10개 카테고리 × 100쌍 × 원본/좌우 교환, 총 2,000개 시도다. 시간이 제한된 Workspace에서는 카테고리별로 순서대로 실행할 수 있다.
+
+```bash
+bash scripted_action_collection/scripts/collect.sh --category counting
+bash scripted_action_collection/scripts/collect.sh --category public_info
+```
+
+카테고리: `counting`, `symmetry`, `celebrity`, `living_world`, `traffic`, `state`, `attribute`, `emotion`, `public_info`, `time_clock`. 재실행하면 성공·실패를 포함해 이미 기록된 에피소드는 건너뛴다. 실패한 시도를 다시 수집하려면 `--retry-failed`를 붙인다. `--count 5`는 일부 pair만 실행한다. 여러 수집 프로세스가 하나의 `output/episodes.jsonl`에 동시에 쓰지 않도록 한다.
+
+성공 시연은 `scripted_action_collection/output/episodes/<category>/<pair_id>/<layout>/seed_<n>/`에 프레임(`frames/`), 행동(`actions.npy`), 로봇 자세(`robot_qpos.npy`)로 저장된다. `output/episodes.jsonl`에는 성공과 실패가 모두 기록되며, KD 준비 단계는 성공 기록만 사용한다. 프레임은 각 행동 **직전** 카메라 영상이다.
+
+## 3. VQA와 action 데이터를 KD 입력으로 복사
+
+수집이 끝난 뒤 저장소 루트에서 실행한다. `KD_VQA_dataset/`은 10개 카테고리별 100 image pair, pair당 좌우 focus 2행과 행당 VQA 5문항을 포함한다.
+
+```bash
+mkdir -p semantic_kd_training/input/dataset semantic_kd_training/input/action_data
+cp -a KD_VQA_dataset/. semantic_kd_training/input/dataset/
+cp -a scripted_action_collection/output/. semantic_kd_training/input/action_data/
+```
+
+필요한 구조:
+
+```text
+semantic_kd_training/input/dataset/<category>/vqa.jsonl
+semantic_kd_training/input/dataset/<category>/images/...
+semantic_kd_training/input/action_data/episodes.jsonl
+semantic_kd_training/input/action_data/episodes/<category>/<pair_id>/<layout>/seed_<n>/...
+```
+
+다른 위치를 쓰려면 `semantic_kd_training/config/config.py`의 `dataset_root`, `action_data_root`를 수정한다.
+
+## 4. KD 학습과 평가
+
+두 GPU가 보이는 서버에서 다음 순서로 실행한다. `run.sh`는 Conda 환경을 활성화한다. 기본 GPU는 `0,1`이며 바꾸려면 `KD_GPUS=2,3`처럼 지정한다.
+
+```bash
+bash semantic_kd_training/scripts/run.sh prepare
+bash semantic_kd_training/scripts/run.sh cache
+bash semantic_kd_training/scripts/run.sh train
+bash semantic_kd_training/scripts/run.sh test
+```
+
+네 단계를 연속 실행하려면 `bash semantic_kd_training/scripts/run.sh all`을 사용한다. `prepare`는 **pair 단위로 카테고리별 80/10/10 train/validation/test**를 나누고 합성 이미지, 세 종류의 manifest와 행동 정규화 통계를 `work/`에 만든다. 같은 pair의 좌우 focus·레이아웃·seed는 같은 분할에 남는다. `cache`는 VQA와 첫 로봇 화면 grounding 질문에 대해 교사 답과 feature를 한 번씩 계산해 저장한다. 중단 후 다시 실행하면 일치하는 캐시는 재사용한다.
+
+`train`은 OpenVLA의 기존 토큰 출력 경로를 공유하는 BF16 LoRA 학습이다. 별도 VQA/action head는 아직 없다. 매 업데이트에서 action 8개와 보조 질문 8개(VQA 평균 6개, 로봇 화면 grounding 평균 2개)를 사용한다. 두 GPU에 모델 복제본을 하나씩 두고 NCCL DDP로 기울기를 합친다. 기본 3 epoch, 학습률 `1e-4`; 손실 가중치 등은 `config/config.py`에 있다.
+
+### GPU 수 늘리기
+
+`student_gpu_count`만 바꿔서는 GPU 사용 수가 늘어나지 않는다. 예를 들어 GPU 4개를 쓰려면 다음 세 곳을 **같은 수로** 맞춘다.
+
+1. `semantic_kd_training/config/config.py`: `student_gpu_count: int = 4`.
+2. `semantic_kd_training/scripts/run.sh`: `probe`, `train`, `all`에 있는 `torchrun --nproc-per-node=2`를 각각 `--nproc-per-node=4`로 변경.
+3. 실행할 때 보이는 GPU 4개 지정: `KD_GPUS=0,1,2,3 bash semantic_kd_training/scripts/run.sh train`.
+
+`gradient_accumulation_steps`는 GPU 수로 나누어떨어져야 한다. 기본값 8은 GPU 4개에도 그대로 사용할 수 있으며, 이 경우 **전체 업데이트당 샘플 수는 그대로 8개**, GPU당 micro-step은 4개에서 2개로 줄어든다. GPU마다 OpenVLA 전체 모델 복제본이 필요하므로 각 GPU의 메모리도 충분해야 한다. GPU 수를 늘린다고 학습 시간이 반드시 비례해서 줄지는 않는다.
+
+결과는 `semantic_kd_training/output_ddp_bf16/`의 `metrics.jsonl`, `best_adapter/`, `latest_adapter/`에 저장된다. Validation은 매 epoch 끝에 균형 잡힌 일부 샘플로 계산하고, `test`는 전체 test split을 평가한다. QA 정확도는 **정답 토큰을 넣은 상태의 exact token accuracy**이며 자유 생성 정확도나 실제 로봇 rollout 성공률은 아니다. 현재 저장 파일에는 optimizer 상태가 없어 Workspace가 종료되면 해당 지점부터 학습을 정확히 재개할 수 없다. tmux는 터미널 연결이 끊기는 경우에만 학습을 유지한다.

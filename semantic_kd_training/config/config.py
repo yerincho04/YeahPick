@@ -45,7 +45,7 @@ class Config:
     lora_dropout: float = 0.0
     # One full BF16 student replica per GPU during DDP training.
     student_gpu_count: int = 2
-    gradient_checkpointing: bool = True
+    gradient_checkpointing: bool = False
     bf16: bool = True
     max_prompt_tokens: int = 256
     validation_every_epochs: int = 1
