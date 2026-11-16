@@ -41,7 +41,7 @@ def cached_teacher(sample: dict) -> tuple[bool, dict[int, torch.Tensor]]:
             feature = teacher_feature_path(sample, layer)
             if not feature.is_file():
                 raise FileNotFoundError(feature)
-            vectors[layer] = torch.from_numpy(np.load(feature).copy()).float().cuda()
+            vectors[layer] = torch.from_numpy(np.load(feature).copy()).float()
     return correct, vectors
 
 
@@ -73,13 +73,15 @@ def qa_loss(model, processor, sample: dict) -> tuple[torch.Tensor, torch.Tensor,
             student = output.hidden_states[layer][0, position].float()
             if student.shape != vector.shape:
                 raise ValueError(f"Teacher/student width mismatch at layer {layer}")
-            terms.append(1 - F.cosine_similarity(student[None], vector[None]).mean())
-        kd = torch.stack(terms).mean()
+            terms.append(1 - F.cosine_similarity(
+                student[None], vector.to(student.device)[None]
+            ).mean())
+        kd = torch.stack(terms).mean().to(ce.device)
     # The vision patches are inserted after BOS, so answer logits start later
     # than answer token IDs. Compare only the answer and EOS positions.
     image_tokens = output.logits.shape[1] - values["input_ids"].shape[1]
-    targets = values["labels"][0, prefix_len:]
     answer_logits = output.logits[0, prefix_len - 1 + image_tokens:-1]
+    targets = values["labels"][0, prefix_len:].to(answer_logits.device)
     exact = bool(torch.equal(answer_logits.argmax(dim=-1), targets))
     return ce, kd, exact
 

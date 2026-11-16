@@ -44,7 +44,8 @@ class Config:
     lora_rank: int = 16
     lora_alpha: int = 16
     lora_dropout: float = 0.0
-    use_4bit_student: bool = True
+    # BF16 student model is split across two visible GPUs.
+    student_gpu_count: int = 2
     gradient_checkpointing: bool = True
     bf16: bool = True
     max_prompt_tokens: int = 256

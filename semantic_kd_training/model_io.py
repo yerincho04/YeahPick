@@ -98,32 +98,41 @@ def register_openvla() -> None:
 
 
 def load_student(training: bool, adapter_path: Path | None = None):
-    from transformers import AutoModelForVision2Seq, AutoProcessor, BitsAndBytesConfig
-    from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
+    from transformers import AutoConfig, AutoModelForVision2Seq, AutoProcessor
+    from peft import LoraConfig, PeftModel, get_peft_model
 
     register_openvla()
-    processor = AutoProcessor.from_pretrained(CONFIG.student_model, trust_remote_code=True)
-    kwargs = {"torch_dtype": torch.bfloat16 if CONFIG.bf16 else torch.float16,
-              "low_cpu_mem_usage": True, "trust_remote_code": True}
-    if CONFIG.use_4bit_student:
-        kwargs["quantization_config"] = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_compute_dtype=kwargs["torch_dtype"],
-            bnb_4bit_quant_type="nf4",
+    if torch.cuda.device_count() != CONFIG.student_gpu_count:
+        raise RuntimeError(
+            f"Student needs {CONFIG.student_gpu_count} visible CUDA GPUs; "
+            f"found {torch.cuda.device_count()}. Set KD_GPUS=0,1."
         )
-        kwargs["device_map"] = {"": 0}
+    processor = AutoProcessor.from_pretrained(CONFIG.student_model, trust_remote_code=True)
+    model_config = AutoConfig.from_pretrained(CONFIG.student_model, trust_remote_code=True)
+    layer_count = model_config.text_config.num_hidden_layers
+    split = layer_count // 2
+    device_map = {
+        "vision_backbone": 0,
+        "projector": 0,
+        "language_model.model.embed_tokens": 0,
+        "language_model.model.norm": 1,
+        "language_model.lm_head": 1,
+    }
+    device_map.update({f"language_model.model.layers.{index}": 0 if index < split else 1
+                       for index in range(layer_count)})
+    kwargs = {"torch_dtype": torch.bfloat16 if CONFIG.bf16 else torch.float16,
+              "low_cpu_mem_usage": True, "trust_remote_code": True,
+              "device_map": device_map}
     model = AutoModelForVision2Seq.from_pretrained(CONFIG.student_model, **kwargs)
-    if not CONFIG.use_4bit_student:
-        model = model.cuda()
+    if not ({0, 1} <= set(model.hf_device_map.values())):
+        raise RuntimeError(f"Student was not placed on both GPUs: {model.hf_device_map}")
     statistics = json.loads((CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"))
     model.norm_stats.update(statistics)
-    if training and CONFIG.use_4bit_student:
-        model = prepare_model_for_kbit_training(
-            model, use_gradient_checkpointing=CONFIG.gradient_checkpointing
-        )
     if training and CONFIG.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
+        # Frozen embeddings must still produce an autograd input for checkpointed LoRA layers.
+        model.enable_input_require_grads()
     if adapter_path is None:
         lora = LoraConfig(
             r=CONFIG.lora_rank, lora_alpha=CONFIG.lora_alpha,

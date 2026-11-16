@@ -13,7 +13,7 @@ if [ -z "${CONDA_PREFIX:-}" ] && command -v conda >/dev/null 2>&1; then
 fi
 
 export PYTHONPATH="$ROOT:$REPO/openvla:${PYTHONPATH:-}"
-export CUDA_VISIBLE_DEVICES="${EVAL_GPU:-0}"
+export CUDA_VISIBLE_DEVICES="${KD_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
 
 case "$MODE" in
