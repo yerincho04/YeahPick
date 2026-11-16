@@ -48,9 +48,11 @@ class Config:
     gradient_checkpointing: bool = True
     bf16: bool = True
     max_prompt_tokens: int = 256
-    validation_every: int = 200
+    validation_every_epochs: int = 1
     checkpoint_every: int = 200
-    validation_samples: int = 32
+    validation_vqa_per_category_type: int = 2
+    validation_episodes_per_category: int = 2
+    validation_steps_per_episode: int = 5
     seed: int = 0
     num_workers: int = 0
 

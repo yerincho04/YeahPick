@@ -129,6 +129,7 @@ def main() -> None:
                     "kind": "vqa", "category": category, "pair_id": pair_id,
                     "focus_tile": focus_row["focus_tile"], "question_type": item["type"],
                     "question": item["question"], "answer": str(item["expected_answer"]),
+                    "choices": item.get("choices"),
                     "image": str(image.resolve()),
                 })
     train_actions = []

@@ -19,12 +19,39 @@ def normalized(value: str) -> str:
 
 
 def answer_is_correct(sample: dict, generated: str) -> bool:
+    if sample["kind"] == "vqa" and sample["answer"].strip().upper() in {"A", "B"}:
+        gold_choice = sample["answer"].strip().upper()
+        text = generated.strip()
+        choice = re.match(r"^(?:(?:the\s+)?answer\s*(?:is|:)\s*|(?:option|choice)\s*)?([AB])(?=\s*$|[.):])",
+                          text, flags=re.IGNORECASE)
+        if choice:
+            return choice.group(1).upper() == gold_choice
+        if sample["question_type"] == "Semantic reasoning":
+            side_words = set(re.findall(r"\b(?:left|right)\b", text.casefold()))
+            return side_words == {"left" if gold_choice == "A" else "right"}
+        choices = sample.get("choices") or {}
+        if choices:
+            return normalized(text) == normalized(choices[gold_choice])
+        return False
     gold, got = normalized(sample["answer"]), normalized(generated)
     if not gold or not got:
         return False
     if sample["kind"] == "grounding" or gold in {"left", "right"}:
         return set(re.findall(r"\b(?:left|right)\b", got)) == {gold}
     return got == gold or got.startswith(gold + " ") or got.endswith(" " + gold)
+
+
+def cache_matches(sample: dict) -> bool:
+    path = teacher_result_path(sample)
+    if not path.is_file() or any(not teacher_feature_path(sample, l).is_file()
+                                 for l in CONFIG.kd_layers):
+        return False
+    try:
+        result = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    return all(result.get(key) == sample[key]
+               for key in ("sample_id", "question", "answer", "image"))
 
 
 def transformed(image, teacher):
@@ -54,8 +81,7 @@ def main() -> None:
             raise ValueError("Teacher cache settings changed; use a fresh work_dir")
     else:
         signature_path.write_text(json.dumps(signature, indent=2), encoding="utf-8")
-    pending = [s for s in samples if not teacher_result_path(s).is_file() or
-               any(not teacher_feature_path(s, l).is_file() for l in CONFIG.kd_layers)]
+    pending = [s for s in samples if not cache_matches(s)]
     if not pending:
         print("TEACHER_CACHE_READY", flush=True)
         return
@@ -102,8 +128,10 @@ def main() -> None:
                 path = teacher_feature_path(sample, layer)
                 path.parent.mkdir(parents=True, exist_ok=True)
                 np.save(path, vector.astype(np.float16))
-            teacher_result_path(sample).write_text(json.dumps(result, ensure_ascii=False),
-                                                   encoding="utf-8")
+            result_path = teacher_result_path(sample)
+            temporary_path = result_path.with_suffix(".json.tmp")
+            temporary_path.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+            temporary_path.replace(result_path)
             if index % 100 == 0 or index == len(pending):
                 print(f"TEACHER_CACHED {index}/{len(pending)}", flush=True)
 

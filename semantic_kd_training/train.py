@@ -5,6 +5,7 @@ import json
 import math
 import random
 import shutil
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -74,11 +75,12 @@ def qa_loss(model, processor, sample: dict) -> tuple[torch.Tensor, torch.Tensor,
                 raise ValueError(f"Teacher/student width mismatch at layer {layer}")
             terms.append(1 - F.cosine_similarity(student[None], vector[None]).mean())
         kd = torch.stack(terms).mean()
-    # Teacher-forced exact answer tokens, for monitoring only.
-    labels = values["labels"][0, 1:]
-    predictions = output.logits[0, :-1].argmax(dim=-1)
-    valid = labels != -100
-    exact = bool(torch.equal(predictions[valid], labels[valid]))
+    # The vision patches are inserted after BOS, so answer logits start later
+    # than answer token IDs. Compare only the answer and EOS positions.
+    image_tokens = output.logits.shape[1] - values["input_ids"].shape[1]
+    targets = values["labels"][0, prefix_len:]
+    answer_logits = output.logits[0, prefix_len - 1 + image_tokens:-1]
+    exact = bool(torch.equal(answer_logits.argmax(dim=-1), targets))
     return ce, kd, exact
 
 
@@ -89,16 +91,116 @@ def choose(rows: list[dict], pool: list[dict]) -> dict:
     return pool.pop()
 
 
+def selection_loss(metrics: dict) -> float:
+    """Match checkpoint selection to the expected joint training objective."""
+    score = metrics["action_loss"]
+    for kind, probability, weight in (
+        ("vqa", CONFIG.vqa_aux_probability, CONFIG.vqa_weight),
+        ("grounding", 1 - CONFIG.vqa_aux_probability, CONFIG.grounding_weight),
+    ):
+        count = metrics[f"{kind}_samples"]
+        kd_mean = metrics[f"{kind}_kd_loss"] or 0.0
+        kd_all = kd_mean * metrics[f"{kind}_teacher_correct"] / count
+        score += probability * weight * (metrics[f"{kind}_loss"] + CONFIG.kd_weight * kd_all)
+    return score
+
+
+def validation_vqa_rows(rows: list[dict], rng: random.Random) -> list[dict]:
+    """Select both answer labels within every category and question type."""
+    if CONFIG.validation_vqa_per_category_type != 2:
+        raise ValueError("Balanced validation currently requires two VQA rows per category/type")
+    strata = defaultdict(list)
+    for row in rows:
+        strata[row["category"], row["question_type"]].append(row)
+    selected = []
+    pair_usage = defaultdict(int)
+    for key, candidates in sorted(strata.items()):
+        by_answer = defaultdict(list)
+        for row in candidates:
+            by_answer[str(row["answer"]).strip().casefold()].append(row)
+        labels = sorted(by_answer)
+        if len(labels) == 2:
+            first_group, second_group = by_answer[labels[0]].copy(), by_answer[labels[1]].copy()
+        else:
+            # A validation split can contain only one label for a particular
+            # counterfactual stratum. Preserve focus-side balance in that case.
+            first_group = [row for row in candidates if row["focus_tile"].lower() == "left"]
+            second_group = [row for row in candidates if row["focus_tile"].lower() == "right"]
+            if not first_group or not second_group:
+                raise ValueError(f"Validation stratum lacks both focus sides: {key}")
+        left, right = first_group, second_group
+        rng.shuffle(left)
+        rng.shuffle(right)
+        first, second = min(
+            ((a, b) for a in left for b in right),
+            key=lambda pair: (
+                pair[0]["focus_tile"] == pair[1]["focus_tile"],
+                pair[0]["pair_id"] == pair[1]["pair_id"],
+                pair_usage[key[0], pair[0]["pair_id"]] +
+                pair_usage[key[0], pair[1]["pair_id"]],
+            ),
+        )
+        selected.extend((first, second))
+        pair_usage[key[0], first["pair_id"]] += 1
+        pair_usage[key[0], second["pair_id"]] += 1
+    return selected
+
+
+def validation_episode_rows(grounding: list[dict], actions: list[dict],
+                            rng: random.Random) -> tuple[list[dict], list[dict]]:
+    """Sample diverse episodes, then evenly spaced frames from each episode."""
+    by_category = defaultdict(list)
+    for row in grounding:
+        by_category[row["category"]].append(row)
+    selected_grounding = []
+    for _, episodes in sorted(by_category.items()):
+        episodes = episodes.copy()
+        rng.shuffle(episodes)
+        if not episodes:
+            continue
+        chosen = [episodes.pop()]
+        while episodes and len(chosen) < CONFIG.validation_episodes_per_category:
+            next_episode = min(
+                episodes,
+                key=lambda row: (
+                    row["answer"] == chosen[0]["answer"],
+                    row["pair_id"] == chosen[0]["pair_id"],
+                ),
+            )
+            chosen.append(next_episode)
+            episodes.remove(next_episode)
+        selected_grounding.extend(chosen)
+    actions_by_episode = defaultdict(list)
+    for row in actions:
+        actions_by_episode[row["episode_id"]].append(row)
+    selected_actions = []
+    for episode in selected_grounding:
+        frames = sorted(actions_by_episode[episode["episode_id"]], key=lambda row: row["step"])
+        if not frames:
+            raise ValueError(f"No validation actions for {episode['episode_id']}")
+        count = min(CONFIG.validation_steps_per_episode, len(frames))
+        indices = ([0] if count == 1 else
+                   [round(i * (len(frames) - 1) / (count - 1)) for i in range(count)])
+        selected_actions.extend(frames[index] for index in indices)
+    return selected_grounding, selected_actions
+
+
 @torch.no_grad()
 def evaluate(model, processor, tokenizer, stats: dict, split: str) -> dict:
     rng = random.Random(CONFIG.seed)
     was_training = model.training
     model.eval()
     result = {"split": split}
-    for kind, suffix in (("action", ""), ("vqa", "_vqa"), ("grounding", "_grounding")):
-        rows = read_manifest(split, suffix)
-        if split == "val" and len(rows) > CONFIG.validation_samples:
-            rows = rng.sample(rows, CONFIG.validation_samples)
+    action_rows = read_manifest(split)
+    vqa_rows = read_manifest(split, "_vqa")
+    grounding_rows = read_manifest(split, "_grounding")
+    if split == "val":
+        vqa_rows = validation_vqa_rows(vqa_rows, rng)
+        grounding_rows, action_rows = validation_episode_rows(
+            grounding_rows, action_rows, rng
+        )
+    for kind, rows in (("action", action_rows), ("vqa", vqa_rows),
+                       ("grounding", grounding_rows)):
         total = kd_total = exact = teacher_count = 0.0
         for sample in rows:
             with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
@@ -161,10 +263,13 @@ def main() -> None:
     action_pool, vqa_pool, grounding_pool = [], [], []
     best_val = float("inf")
     optimizer.zero_grad(set_to_none=True)
-    total_updates = math.ceil(CONFIG.train_epochs * len(action_rows) /
-                              CONFIG.gradient_accumulation_steps)
+    updates_per_epoch = math.ceil(len(action_rows) / CONFIG.gradient_accumulation_steps)
+    total_updates = CONFIG.train_epochs * updates_per_epoch
     for update in range(1, total_updates + 1):
-        last = {}
+        action_total = 0.0
+        aux_totals = {"vqa": 0.0, "grounding": 0.0}
+        kd_totals = {"vqa": 0.0, "grounding": 0.0}
+        aux_counts = {"vqa": 0, "grounding": 0}
         for _ in range(CONFIG.gradient_accumulation_steps):
             action = choose(action_rows, action_pool)
             with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
@@ -177,18 +282,27 @@ def main() -> None:
                 ce_qa, kd, _ = qa_loss(model, processor, aux)
                 aux_total = weight * (ce_qa + CONFIG.kd_weight * kd)
             (aux_total / CONFIG.gradient_accumulation_steps).backward()
-            last = {"train_action_loss": float(ce_action.item()),
-                    "train_aux_kind": kind, "train_aux_loss": float(ce_qa.item()),
-                    "train_aux_kd_loss": float(kd.item())}
+            action_total += float(ce_action.item())
+            aux_totals[kind] += float(ce_qa.item())
+            kd_totals[kind] += float(kd.item())
+            aux_counts[kind] += 1
         optimizer.step()
         optimizer.zero_grad(set_to_none=True)
-        record = {"step": update, **last}
-        if update % CONFIG.validation_every == 0 or update == total_updates:
+        record = {"step": update,
+                  "train_action_loss": action_total / CONFIG.gradient_accumulation_steps}
+        for kind in ("vqa", "grounding"):
+            record[f"train_{kind}_samples"] = aux_counts[kind]
+            record[f"train_{kind}_loss"] = (aux_totals[kind] / aux_counts[kind]
+                                               if aux_counts[kind] else None)
+            record[f"train_{kind}_kd_loss"] = (kd_totals[kind] / aux_counts[kind]
+                                                  if aux_counts[kind] else None)
+        if (update % (CONFIG.validation_every_epochs * updates_per_epoch) == 0
+                or update == total_updates):
             val = evaluate(model, processor, tokenizer, stats, "val")
             record.update({f"val_{k}": v for k, v in val.items() if k != "split"})
             if all(val[f"{kind}_loss"] is not None for kind in ("action", "vqa", "grounding")):
-                score = (val["action_loss"] + CONFIG.vqa_weight * val["vqa_loss"] +
-                         CONFIG.grounding_weight * val["grounding_loss"])
+                score = selection_loss(val)
+                record["val_selection_loss"] = score
                 if score < best_val:
                     best_val = score
                     save_adapter(model, update, "best_adapter")
