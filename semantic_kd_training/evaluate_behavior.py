@@ -95,6 +95,42 @@ def evaluate_vqa(model, processor, output_dir: Path) -> dict:
             "by_question_type": {k: accuracy(v, "correct") for k, v in sorted(by_type.items())}}
 
 
+def evaluate_grounding(model, processor, output_dir: Path) -> dict:
+    """Free-generation tile choice from the scripted episode's first robot frame."""
+    rows = read_manifest("test", "_grounding")
+    predictions = []
+    path = output_dir / "test_grounding_predictions.jsonl"
+    path.unlink(missing_ok=True)
+    for index, sample in enumerate(rows, 1):
+        with Image.open(sample["image"]) as raw:
+            tokens = generate_tokens(model, processor, raw.convert("RGB"),
+                                     prompt_for_question(sample["question"]),
+                                     CONFIG.student_max_answer_tokens)
+        answer = processor.tokenizer.decode(tokens, skip_special_tokens=True).strip()
+        episode_parts = sample["episode_id"].split("/")
+        if len(episode_parts) != 4:
+            raise ValueError(f"Unexpected grounding episode ID: {sample['episode_id']}")
+        result = {"sample_id": sample["sample_id"],
+                  "episode_id": sample["episode_id"],
+                  "category": sample["category"], "pair_id": sample["pair_id"],
+                  "swapped": bool(int(episode_parts[2])), "seed": int(episode_parts[3]),
+                  "expected": sample["answer"], "predicted": answer,
+                  "correct": answer_is_correct(sample, answer)}
+        predictions.append(result)
+        append_jsonl(path, result)
+        if index % 50 == 0 or index == len(rows):
+            print(f"GROUNDING {index}/{len(rows)} "
+                  f"correct={sum(r['correct'] for r in predictions)}", flush=True)
+    by_category = defaultdict(list)
+    by_layout = defaultdict(list)
+    for row in predictions:
+        by_category[row["category"]].append(row)
+        by_layout["swapped" if row["swapped"] else "original"].append(row)
+    return {"overall": accuracy(predictions, "correct"),
+            "by_category": {k: accuracy(v, "correct") for k, v in sorted(by_category.items())},
+            "by_layout": {k: accuracy(v, "correct") for k, v in sorted(by_layout.items())}}
+
+
 def decode_action(tokens: list[int], tokenizer, stats: dict) -> np.ndarray:
     if len(tokens) != 7:
         raise ValueError(f"Expected seven action tokens, got {len(tokens)}")
@@ -232,13 +268,15 @@ def evaluate_rollout(model, processor, stats: dict, output_dir: Path,
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Free-generation VQA and closed-loop robot test")
+    parser = argparse.ArgumentParser(description="Free-generation VQA, robot grounding, and closed-loop robot test")
     parser.add_argument("--model", choices=("kd", "base"), default="kd",
                         help="KD adapter or the original, unmodified OpenVLA checkpoint")
     parser.add_argument("--adapter", type=Path, default=None)
     parser.add_argument("--rollout-batch-size", type=int, default=5)
     parser.add_argument("--episode-len", type=int, default=80)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--grounding-only", action="store_true",
+                        help="Evaluate first-frame robot grounding without rerunning VQA or rollouts")
     args = parser.parse_args()
     if args.rollout_batch_size < 1 or args.episode_len < 1:
         parser.error("--rollout-batch-size and --episode-len must be positive")
@@ -262,11 +300,16 @@ def main() -> None:
     torch.cuda.set_device(0)
     output_dir = CONFIG.output_dir / "base_test" if args.model == "base" else CONFIG.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "test_metrics.json").unlink(missing_ok=True)
     result = {"split": "test", "model": args.model,
               "adapter": str(adapter.resolve()) if adapter is not None else None,
-              "action_unnorm_key": action_key,
-              "vqa": evaluate_vqa(model, processor, output_dir)}
+              "action_unnorm_key": action_key}
+    result["grounding"] = evaluate_grounding(model, processor, output_dir)
+    write_json(output_dir / "test_grounding_metrics.json", result)
+    if args.grounding_only:
+        print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
+        return
+    (output_dir / "test_metrics.json").unlink(missing_ok=True)
+    result["vqa"] = evaluate_vqa(model, processor, output_dir)
     write_json(output_dir / "test_vqa_metrics.json", result)
     result["rollout"] = evaluate_rollout(model, processor, stats, output_dir,
                                           args.rollout_batch_size, args.episode_len,

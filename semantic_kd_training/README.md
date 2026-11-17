@@ -148,3 +148,16 @@ bash semantic_kd_training/scripts/run.sh test --rollout-batch-size 1
 ```bash
 bash semantic_kd_training/scripts/run.sh test --model base
 ```
+
+### 로봇 화면 grounding 테스트
+
+학습 때 사용한 것과 같은 방식으로, 성공한 scripted episode의 **첫 로봇 카메라 프레임**과 Knowledge 지시를 주고 정답 타일을 `Left` 또는 `Right`로 직접 생성하게 한다. 기존 `evaluate.py`의 `grounding_teacher_forced_exact`는 정답 토큰을 입력한 상태의 지표이므로 자유 생성 정답률과 다르다.
+
+기존 VQA·rollout 결과를 다시 계산하지 않고 grounding만 평가하려면:
+
+```bash
+bash semantic_kd_training/scripts/run.sh test --grounding-only
+bash semantic_kd_training/scripts/run.sh test --model base --grounding-only
+```
+
+결과는 KD 모델의 경우 `output_ddp_bf16/test_grounding_metrics.json`과 `test_grounding_predictions.jsonl`에, base 모델의 경우 `output_ddp_bf16/base_test/` 아래 같은 파일명으로 저장된다. 요약에는 전체·카테고리별·원본/좌우 교환별 정답률이, 개별 기록에는 pair ID와 예상/생성 답이 들어간다. 일반 `test` 실행에도 이 평가가 포함된다.
