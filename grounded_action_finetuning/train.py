@@ -171,10 +171,18 @@ def main() -> None:
     if CONFIG.gradient_accumulation_steps % world_size:
         raise ValueError("gradient_accumulation_steps must be divisible by GPU count")
     torch.cuda.set_device(rank)
-    dist.init_process_group(
-        backend=os.environ.get("KD_DDP_BACKEND", "nccl"),
-        timeout=timedelta(hours=12),
-    )
+    backend = os.environ.get("KD_DDP_BACKEND", "nccl")
+    if dist.is_initialized():
+        if (dist.get_rank() != rank or dist.get_world_size() != world_size
+                or dist.get_backend() != backend):
+            raise RuntimeError(
+                "An existing process group has different rank, world size, or backend: "
+                f"rank={dist.get_rank()} world_size={dist.get_world_size()} "
+                f"backend={dist.get_backend()}"
+            )
+        print(f"Reusing initialized {backend} process group on rank {rank}", flush=True)
+    else:
+        dist.init_process_group(backend=backend, timeout=timedelta(hours=12))
     torch.manual_seed(CONFIG.seed)
     np.random.seed(CONFIG.seed)
     random.seed(CONFIG.seed)
