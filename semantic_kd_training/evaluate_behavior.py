@@ -12,8 +12,11 @@ import torch
 from PIL import Image
 
 from cache_teacher import answer_is_correct
-from config import CONFIG, ROOT
+from config import CONFIG
 from model_io import load_action_stats, load_student, prompt_for_question, read_manifest
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -110,7 +113,7 @@ def decode_action(tokens: list[int], tokenizer, stats: dict) -> np.ndarray:
 def episode_groups() -> list[tuple[str, Path, list[dict]]]:
     import sys
 
-    sys.path.insert(0, str(ROOT / "scripted_action_collection"))
+    sys.path.insert(0, str(REPO_ROOT / "scripted_action_collection"))
     import build_assets
     from prepare import vqa_pairs
 
@@ -160,7 +163,7 @@ def make_env(asset_dir: Path, ids: list[int], swapped: bool, seed: int,
     args.instruction_condition = "knowledge"
     args.capture_attention = False
     args.rgb_overlay_paths = {
-        "3rd_view_camera": str(ROOT / "scripted_action_collection" / "input" / "bridge_real_eval_1.png")
+        "3rd_view_camera": str(REPO_ROOT / "scripted_action_collection" / "input" / "bridge_real_eval_1.png")
     }
     return SimplerWrapper(args)
 
