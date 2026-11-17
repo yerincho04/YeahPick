@@ -168,9 +168,8 @@ def make_env(asset_dir: Path, ids: list[int], swapped: bool, seed: int,
     return SimplerWrapper(args)
 
 
-def evaluate_rollout(model, processor, output_dir: Path, batch_size: int,
-                     episode_len: int, seed: int) -> dict:
-    stats = load_action_stats()
+def evaluate_rollout(model, processor, stats: dict, output_dir: Path,
+                     batch_size: int, episode_len: int, seed: int) -> dict:
     rows = []
     path = output_dir / "test_rollout_episodes.jsonl"
     path.unlink(missing_ok=True)
@@ -234,28 +233,42 @@ def evaluate_rollout(model, processor, output_dir: Path, batch_size: int,
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Free-generation VQA and closed-loop robot test")
-    parser.add_argument("--adapter", type=Path, default=CONFIG.output_dir / "best_adapter")
+    parser.add_argument("--model", choices=("kd", "base"), default="kd",
+                        help="KD adapter or the original, unmodified OpenVLA checkpoint")
+    parser.add_argument("--adapter", type=Path, default=None)
     parser.add_argument("--rollout-batch-size", type=int, default=5)
     parser.add_argument("--episode-len", type=int, default=80)
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
     if args.rollout_batch_size < 1 or args.episode_len < 1:
         parser.error("--rollout-batch-size and --episode-len must be positive")
+    if args.model == "base" and args.adapter is not None:
+        parser.error("--adapter is only valid with --model kd")
     if not torch.cuda.is_available():
         raise RuntimeError("Test requires a CUDA GPU")
     # Same device split as SimplerEnv: GPU 0 renders, GPU 1 holds OpenVLA.
     torch.cuda.set_device(1 if torch.cuda.device_count() > 1 else 0)
-    model, processor = load_student(training=False, adapter_path=args.adapter)
+    adapter = (args.adapter or CONFIG.output_dir / "best_adapter") if args.model == "kd" else None
+    model, processor = load_student(training=False, adapter_path=adapter,
+                                    base_model=args.model == "base")
     model.eval()
+    if args.model == "base":
+        action_key = "sft"
+        stats = model.get_action_stats(action_key)
+    else:
+        action_key = CONFIG.action_unnorm_key
+        stats = load_action_stats()
     # ManiSkill uses the default CUDA device for simulation and rendering.
     torch.cuda.set_device(0)
-    output_dir = CONFIG.output_dir
+    output_dir = CONFIG.output_dir / "base_test" if args.model == "base" else CONFIG.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "test_metrics.json").unlink(missing_ok=True)
-    result = {"split": "test", "adapter": str(args.adapter.resolve()),
+    result = {"split": "test", "model": args.model,
+              "adapter": str(adapter.resolve()) if adapter is not None else None,
+              "action_unnorm_key": action_key,
               "vqa": evaluate_vqa(model, processor, output_dir)}
     write_json(output_dir / "test_vqa_metrics.json", result)
-    result["rollout"] = evaluate_rollout(model, processor, output_dir,
+    result["rollout"] = evaluate_rollout(model, processor, stats, output_dir,
                                           args.rollout_batch_size, args.episode_len,
                                           args.seed)
     write_json(output_dir / "test_metrics.json", result)

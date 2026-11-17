@@ -99,11 +99,14 @@ def register_openvla() -> None:
             pass
 
 
-def load_student(training: bool, adapter_path: Path | None = None):
+def load_student(training: bool, adapter_path: Path | None = None,
+                 base_model: bool = False):
     from transformers import AutoModelForVision2Seq, AutoProcessor
     from peft import LoraConfig, PeftModel, get_peft_model
 
     register_openvla()
+    if base_model and (training or adapter_path is not None):
+        raise ValueError("base_model requires inference without an adapter")
     if not torch.cuda.is_available():
         raise RuntimeError("Student requires a CUDA GPU")
     device_index = torch.cuda.current_device()
@@ -120,13 +123,16 @@ def load_student(training: bool, adapter_path: Path | None = None):
         rotary = getattr(layer.self_attn, "rotary_emb", None)
         if rotary is not None:
             rotary.to(device)
-    statistics = json.loads((CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"))
-    model.norm_stats.update(statistics)
+    if not base_model:
+        statistics = json.loads((CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"))
+        model.norm_stats.update(statistics)
     if training and CONFIG.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
         # Frozen embeddings must still produce an autograd input for checkpointed LoRA layers.
         model.enable_input_require_grads()
+    if base_model:
+        return model, processor
     if adapter_path is None:
         lora = LoraConfig(
             r=CONFIG.lora_rank, lora_alpha=CONFIG.lora_alpha,

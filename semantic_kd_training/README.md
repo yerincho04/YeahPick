@@ -142,3 +142,9 @@ bash semantic_kd_training/scripts/run.sh test
 # 한 번에 생성하는 시뮬레이터 수를 줄여야 할 때:
 bash semantic_kd_training/scripts/run.sh test --rollout-batch-size 1
 ```
+
+학습 전 모델을 같은 test pair와 질문으로 비교하려면 아래 명령을 실행한다. 기존 KD 결과는 덮어쓰지 않고 `output_ddp_bf16/base_test/`에 저장한다. 기본 모델에는 LoRA를 붙이지 않으며, 로봇 행동 토큰은 원래 체크포인트의 `sft` 정규화 통계로 변환한다. KD 모델은 학습 데이터에서 계산한 `kd_act2answer` 통계를 사용한다.
+
+```bash
+bash semantic_kd_training/scripts/run.sh test --model base
+```
