@@ -15,7 +15,7 @@ if command -v conda >/dev/null 2>&1; then
   fi
 fi
 
-export PYTHONPATH="$ROOT:$REPO/openvla:${PYTHONPATH:-}"
+export PYTHONPATH="$ROOT:$REPO/openvla:$REPO/SimplerEnv:$REPO/ManiSkill:${PYTHONPATH:-}"
 export CUDA_VISIBLE_DEVICES="${KD_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
 export KD_DDP_BACKEND="${KD_DDP_BACKEND:-nccl}"
@@ -50,12 +50,12 @@ case "$MODE" in
   cache) python3 -u "$ROOT/cache_teacher.py" "$@" ;;
   probe) torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/scripts/probe_nccl.py" ;;
   train) torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/train.py" ;;
-  test) python3 -u "$ROOT/evaluate.py" "$@" ;;
+  test) python3 -u "$ROOT/evaluate_behavior.py" "$@" ;;
   all)
     python3 -u "$ROOT/prepare.py"
     python3 -u "$ROOT/cache_teacher.py"
     torchrun --standalone --nnodes=1 --nproc-per-node=2 "$ROOT/train.py"
-    python3 -u "$ROOT/evaluate.py"
+    python3 -u "$ROOT/evaluate_behavior.py"
     ;;
   *) echo "Usage: bash semantic_kd_training/scripts/run.sh {prepare|cache|probe|train|test|all}" >&2; exit 2 ;;
 esac

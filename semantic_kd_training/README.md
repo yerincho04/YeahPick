@@ -133,4 +133,12 @@ bash semantic_kd_training/scripts/run.sh test
 
 `gradient_accumulation_steps`는 GPU 수로 나누어떨어져야 한다. 기본값 8은 GPU 4개에도 그대로 사용할 수 있으며, 이 경우 **전체 업데이트당 샘플 수는 그대로 8개**, GPU당 micro-step은 4개에서 2개로 줄어든다. GPU마다 OpenVLA 전체 모델 복제본이 필요하므로 각 GPU의 메모리도 충분해야 한다. GPU 수를 늘린다고 학습 시간이 반드시 비례해서 줄지는 않는다.
 
-결과는 `semantic_kd_training/output_ddp_bf16/`의 `metrics.jsonl`, `best_adapter/`, `latest_adapter/`에 저장된다. Validation은 매 epoch 끝에 균형 잡힌 일부 샘플로 계산하고, `test`는 전체 test split을 평가한다. QA 정확도는 **정답 토큰을 넣은 상태의 exact token accuracy**이며 자유 생성 정확도나 실제 로봇 rollout 성공률은 아니다. 현재 저장 파일에는 optimizer 상태가 없어 Workspace가 종료되면 해당 지점부터 학습을 정확히 재개할 수 없다. tmux는 터미널 연결이 끊기는 경우에만 학습을 유지한다.
+결과는 `semantic_kd_training/output_ddp_bf16/`의 `metrics.jsonl`, `best_adapter/`, `latest_adapter/`에 저장된다. Validation은 매 epoch 끝에 균형 잡힌 일부 샘플에 대한 손실로 `best_adapter`를 고른다. 현재 저장 파일에는 optimizer 상태가 없어 Workspace가 종료되면 해당 지점부터 학습을 정확히 재개할 수 없다. tmux는 터미널 연결이 끊기는 경우에만 학습을 유지한다.
+
+`test`는 기본적으로 `best_adapter`를 읽어 **전체 test VQA를 자유 생성으로 채점**하고, test pair의 원본·좌우 교환 장면에서 **실제 로봇 rollout**을 수행한다. 10개 카테고리의 100개 test pair라면 VQA 1,000문항, 로봇 200에피소드다. `test_metrics.json`에 전체·카테고리별 VQA 정답률, 질문 유형별 정답률, 로봇 성공률과 정답 타일로 먼저 접근한 비율을 기록한다. VQA 완료 결과는 `test_vqa_metrics.json`, 개별 결과는 `test_vqa_predictions.jsonl`, `test_rollout_episodes.jsonl`에 기록한다. 로봇 평가용 타일은 학습 입력 `input/dataset/`에서 `work/test_assets/`에 생성한다. GPU 두 개면 0번은 시뮬레이션, 1번은 OpenVLA에 쓴다. VESSL에서는 앞서 설정한 NVIDIA Vulkan/EGL 드라이버가 필요하다.
+
+```bash
+bash semantic_kd_training/scripts/run.sh test
+# 한 번에 생성하는 시뮬레이터 수를 줄여야 할 때:
+bash semantic_kd_training/scripts/run.sh test --rollout-batch-size 1
+```
