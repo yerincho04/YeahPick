@@ -26,6 +26,7 @@ class Config:
     student_gpu_count: int = 2
     gradient_accumulation_steps: int = 8
     train_epochs: int = 2
+    checkpoint_every_updates: int = 1000
     learning_rate: float = 2e-5
     weight_decay: float = 0.0
     bf16: bool = True

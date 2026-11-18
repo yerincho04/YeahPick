@@ -23,6 +23,7 @@ from config import CONFIG
 from model_io import (load_action_stats, load_student, normalized_action,
                       qa_inputs, read_manifest)
 from prompts import action_prompt
+from side_choice import predict_side
 
 
 def device_inputs(values: dict) -> dict:
@@ -70,18 +71,6 @@ def choose(rows: list[dict], pool: list[dict]) -> dict:
     return pool.pop()
 
 
-def side_token_ids(processor) -> tuple[int, int]:
-    ids = []
-    for side in ("Left", "Right"):
-        tokens = processor.tokenizer(
-            " " + side, add_special_tokens=False
-        )["input_ids"]
-        if len(tokens) != 1:
-            raise ValueError(f"{side} must be one token for binary side scoring: {tokens}")
-        ids.append(tokens[0])
-    return ids[0], ids[1]
-
-
 def selected_vqa_rows(rows: list[dict]) -> list[dict]:
     """Two questions per category/type, preferring opposite answer labels."""
     strata = defaultdict(list)
@@ -105,7 +94,6 @@ def validate(model, processor, tokenizer, stats: dict) -> dict:
     grounding = read_manifest("val", "_grounding")
     vqa = selected_vqa_rows(read_manifest("val", "_vqa"))
     actions = read_manifest("val")
-    side_ids = side_token_ids(processor)
     by_category = defaultdict(list)
     for sample in grounding:
         by_category[sample["category"]].append(sample)
@@ -137,11 +125,11 @@ def validate(model, processor, tokenizer, stats: dict) -> dict:
                 action_total += float(action_loss(model, processor, tokenizer, stats, sample))
         for sample in grounding:
             with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
-                loss, output, prefix_len, input_len = qa_loss(model, processor, sample)
+                loss, _, _, _ = qa_loss(model, processor, sample)
             grounding_total += float(loss)
-            image_tokens = output.logits.shape[1] - input_len
-            scores = output.logits[0, prefix_len - 1 + image_tokens, list(side_ids)]
-            prediction = "Left" if scores[0] > scores[1] else "Right"
+            with Image.open(sample["image"]) as raw:
+                prediction = predict_side(model, processor, raw.convert("RGB"),
+                                          sample["question"])
             correct += prediction == sample["answer"]
         for sample in vqa:
             with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
@@ -201,10 +189,28 @@ def main() -> None:
     stats = load_action_stats()
     optimizer = AdamW((p for p in model.parameters() if p.requires_grad),
                       lr=CONFIG.learning_rate, weight_decay=CONFIG.weight_decay)
+
+    def save_checkpoint(name: str, epoch: int, step: int) -> Path:
+        checkpoint = run_dir / "checkpoints" / name
+        checkpoint.mkdir(parents=True, exist_ok=False)
+        model.module.save_pretrained(checkpoint)
+        (checkpoint / "dataset_statistics.json").write_text(
+            (CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"),
+            encoding="utf-8")
+        (run_dir / "latest.json").write_text(
+            json.dumps({"epoch": epoch, "step": step,
+                        "adapter": str(checkpoint.resolve())}, indent=2),
+            encoding="utf-8")
+        return checkpoint
+
     if rank == 0:
         (run_dir / "run_config.json").write_text(
             json.dumps({k: str(v) if isinstance(v, Path) else v
                         for k, v in asdict(CONFIG).items()}, indent=2), encoding="utf-8")
+        print("PREFLIGHT_VALIDATION_START", flush=True)
+        preflight = validate(model.module, processor, tokenizer, stats)
+        print(json.dumps({"preflight_validation": preflight}), flush=True)
+    dist.barrier()
     model.train()
     action_pool, grounding_pool, vqa_pool = [], [], []
     local_steps = CONFIG.gradient_accumulation_steps // world_size
@@ -244,8 +250,12 @@ def main() -> None:
                 sums[index + 2] += 1
             optimizer.step()
             dist.all_reduce(sums, op=dist.ReduceOp.SUM)
+            step = (epoch - 1) * steps_per_epoch + update_in_epoch
+            if (rank == 0 and CONFIG.checkpoint_every_updates > 0
+                    and step % CONFIG.checkpoint_every_updates == 0):
+                save_checkpoint(f"step_{step:06d}", epoch, step)
             if rank == 0 and (update_in_epoch % 100 == 0 or update_in_epoch == steps_per_epoch):
-                record = {"epoch": epoch, "step": (epoch - 1) * steps_per_epoch + update_in_epoch,
+                record = {"epoch": epoch, "step": step,
                           "train_action_loss": sums[0].item() / CONFIG.gradient_accumulation_steps,
                           "train_grounding_samples": int(sums[3].item()),
                           "train_grounding_loss": (sums[1].item() / sums[3].item()
@@ -257,13 +267,9 @@ def main() -> None:
                     stream.write(json.dumps(record) + "\n")
                 print(json.dumps(record), flush=True)
         if rank == 0:
+            checkpoint = save_checkpoint(f"epoch_{epoch:02d}", epoch,
+                                         epoch * steps_per_epoch)
             metrics = validate(model.module, processor, tokenizer, stats)
-            checkpoint = run_dir / "checkpoints" / f"epoch_{epoch:02d}"
-            checkpoint.mkdir(parents=True, exist_ok=False)
-            model.module.save_pretrained(checkpoint)
-            (checkpoint / "dataset_statistics.json").write_text(
-                (CONFIG.work_dir / "dataset_statistics.json").read_text(encoding="utf-8"),
-                encoding="utf-8")
             score = (metrics["val_grounding_accuracy"], metrics["val_action_loss"])
             if score[0] > best[0] or (score[0] == best[0] and score[1] < best[1]):
                 best = score

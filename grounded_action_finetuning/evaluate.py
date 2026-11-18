@@ -16,7 +16,7 @@ from config import CONFIG, ROOT
 from model_io import load_action_stats, load_student, prompt_for_question
 from prepare import grounding_question, vqa_pairs
 from prompts import action_prompt
-from train import side_token_ids
+from side_choice import predict_side as score_side
 
 
 def append_jsonl(path: Path, row: dict) -> None:
@@ -39,11 +39,7 @@ def forward_prompt(model, processor, image: Image.Image, prompt: str):
 
 @torch.inference_mode()
 def predict_side(model, processor, image: Image.Image, instruction: str) -> str:
-    output = forward_prompt(model, processor, image,
-                            prompt_for_question(grounding_question(instruction)))
-    left_id, right_id = side_token_ids(processor)
-    logits = output.logits[0, -1]
-    return "Left" if logits[left_id] > logits[right_id] else "Right"
+    return score_side(model, processor, image, grounding_question(instruction))
 
 
 @torch.inference_mode()
@@ -204,7 +200,10 @@ def main() -> None:
     args = parser.parse_args()
     if args.batch_size < 1 or args.episode_len < 1:
         parser.error("--batch-size and --episode-len must be positive")
-    best = json.loads((args.run_dir / "best.json").read_text(encoding="utf-8"))
+    checkpoint_file = args.run_dir / "best.json"
+    if not checkpoint_file.is_file():
+        checkpoint_file = args.run_dir / "latest.json"
+    best = json.loads(checkpoint_file.read_text(encoding="utf-8"))
     if not torch.cuda.is_available():
         raise RuntimeError("Evaluation requires CUDA")
     torch.cuda.set_device(1 if torch.cuda.device_count() > 1 else 0)

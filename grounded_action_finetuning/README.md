@@ -25,9 +25,9 @@ cp -a semantic_kd_training/output_ddp_bf16/best_adapter/. grounded_action_finetu
 bash grounded_action_finetuning/scripts/run.sh train
 ```
 
-이 명령은 `prepare.py`로 기존과 동일한 pair 단위 80/10/10 분할과 action 정규화 통계를 만든 후 학습한다. **실행마다** `runs/YYYYMMDD_HHMMSS_ffffff_UTC/`를 새로 만든다. 이 폴더에 `metrics.jsonl`, `run_config.json`, epoch별 `checkpoints/epoch_XX/`, 가장 좋은 checkpoint를 가리키는 `best.json`이 남는다. 이전 run은 덮어쓰지 않는다. 중간에 종료한 run은 그대로 남고 다음 실행은 새 timestamp 폴더에서 시작한다.
+이 명령은 `prepare.py`로 기존과 동일한 pair 단위 80/10/10 분할과 action 정규화 통계를 만든 후 학습한다. **실행마다** `runs/YYYYMMDD_HHMMSS_ffffff_UTC/`를 새로 만든다. 이 폴더에 `metrics.jsonl`, `run_config.json`, 1,000 step마다의 checkpoint, epoch별 `checkpoints/epoch_XX/`, 가장 좋은 checkpoint를 가리키는 `best.json`, 가장 최근 checkpoint를 가리키는 `latest.json`이 남는다. Epoch checkpoint는 validation **전에** 저장한다. 이전 run은 덮어쓰지 않는다. 중간에 종료한 run은 그대로 남고 다음 실행은 새 timestamp 폴더에서 시작한다. Optimizer 상태는 저장하지 않으므로 checkpoint에서 재시작하더라도 정확히 같은 학습 상태를 복원하는 것은 아니다.
 
-학습에서는 로봇 화면 grounding 정답 `Left`/`Right`를 직접 지도하고, 같은 방향을 action 프롬프트에 넣는다. Action은 매 micro-step 학습한다. 보조 질문은 robot grounding 75%, 기존 VQA 25%로 뽑아 VQA 능력도 유지한다. 이 단계에서는 정답률이 낮았던 교사의 robot grounding feature를 KD loss로 사용하지 않는다. Validation은 모든 validation grounding 문항과 카테고리·질문 유형별 VQA 일부 문항을 평가한다. Grounding 정답률을 우선으로 checkpoint를 고르고, 같은 정답률이면 action loss가 낮은 쪽을 고른다.
+학습에서는 로봇 화면 grounding 정답 `Left`/`Right`를 직접 지도하고, 같은 방향을 action 프롬프트에 넣는다. Action은 매 micro-step 학습한다. 보조 질문은 robot grounding 75%, 기존 VQA 25%로 뽑아 VQA 능력도 유지한다. 이 단계에서는 정답률이 낮았던 교사의 robot grounding feature를 KD loss로 사용하지 않는다. Validation은 모든 validation grounding 문항과 카테고리·질문 유형별 VQA 일부 문항을 평가한다. `Left`와 `Right`가 여러 토큰이어도 각 답의 전체 토큰 확률을 비교한다. Grounding 정답률을 우선으로 checkpoint를 고르고, 같은 정답률이면 action loss가 낮은 쪽을 고른다.
 
 학습이 끝나면 출력된 `RUN_DIR`로 평가한다.
 

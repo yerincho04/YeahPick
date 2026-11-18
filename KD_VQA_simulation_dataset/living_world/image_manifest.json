@@ -1,0 +1,602 @@
+[
+  {
+    "image_id": "living_world_01",
+    "slug": "arctic_fox",
+    "label": "Arctic fox",
+    "scientific_name": "Vulpes lagopus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult Arctic fox in its pure white winter coat sitting on clean snow, small rounded ears and fluffy bushy tail visible, soft snowy tundra background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color is the fur of the animal on the {side} tile?",
+    "attribute_answer": "White.",
+    "semantic_clue": "is a member of the dog family native to Arctic tundra",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Vulpes_lagopus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_01.png",
+    "sha256": "753b3fc01ba678f16878dc9d0a944fbffe45c9845e0e237e66afba34af7a5607",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_02",
+    "slug": "african_elephant",
+    "label": "African bush elephant",
+    "scientific_name": "Loxodonta africana",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult African bush elephant standing in a dry savanna, full body in three-quarter side view, large fan-shaped ears, gray wrinkled skin, two ivory tusks and its long trunk clearly visible.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What elongated body part hangs from the face of the animal on the {side} tile?",
+    "attribute_answer": "A long trunk.",
+    "semantic_clue": "is the largest living land mammal",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Loxodonta_africana/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_02.png",
+    "sha256": "1f5029306cc7da6e5305b036c42b5f3f8fe64fa77e4133ad42992e16dda0f9f0",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_03",
+    "slug": "giraffe",
+    "label": "Giraffe",
+    "scientific_name": "Giraffa camelopardalis",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult giraffe standing in a savanna, entire body including hooves and head fully visible, very long neck, brown patches on tan coat, small ossicones.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What body part is unusually long in the animal on the {side} tile?",
+    "attribute_answer": "The neck.",
+    "semantic_clue": "is the tallest living land mammal",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Giraffa_camelopardalis/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_03.png",
+    "sha256": "765e8e35d82bcecdd07046e76f17a43964fedf99c8a0b40452542f1e17d6fff0",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_04",
+    "slug": "grevys_zebra",
+    "label": "Grevy's zebra",
+    "scientific_name": "Equus grevyi",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult Grevy's zebra in full-body side view on a savanna, narrow black and white stripes, large rounded ears, erect short mane, white belly, no other animals.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What pattern covers the coat of the animal on the {side} tile?",
+    "attribute_answer": "Narrow black and white stripes.",
+    "semantic_clue": "is an African member of the horse family with a black-and-white striped coat",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Equus_grevyi/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_04.png",
+    "sha256": "1183c0e253abe8288c3cfd97f234b572ae224ca58518b8c6c1d8afd12b5783f9",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_05",
+    "slug": "lion",
+    "label": "Lion",
+    "scientific_name": "Panthera leo",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult male lion sitting upright on dry grass, tawny body and thick dark golden mane fully visible around head and neck, clear face, natural savanna background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What surrounds the head and neck of the animal on the {side} tile?",
+    "attribute_answer": "A thick mane.",
+    "semantic_clue": "is a big cat whose adult males typically grow a mane",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Panthera_leo/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_05.png",
+    "sha256": "675624598d00d9b402c9e699fd76a4f158ded1e952b46ca62bc1c7e6c20ce59b",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_06",
+    "slug": "tiger",
+    "label": "Tiger",
+    "scientific_name": "Panthera tigris",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult tiger standing in full-body three-quarter view in green woodland, orange coat with bold black vertical stripes, white cheeks and underside, clear face.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What pattern is visible on the orange coat of the animal on the {side} tile?",
+    "attribute_answer": "Black stripes.",
+    "semantic_clue": "is an Asian big cat with a striped coat and belongs to the genus Panthera",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Panthera_tigris/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_06.png",
+    "sha256": "a0b430ba9429e5d9e62aa90c0c113a69ba8016b147c147b44a874c415ce1ac53",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_07",
+    "slug": "cheetah",
+    "label": "Cheetah",
+    "scientific_name": "Acinonyx jubatus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult cheetah standing alert on short savanna grass, slim body, golden coat with many solid black spots, small head and black tear lines clearly visible, entire body in frame.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What pattern covers the golden coat of the animal on the {side} tile?",
+    "attribute_answer": "Solid black spots.",
+    "semantic_clue": "is a spotted cat specially adapted for extremely fast short-distance running",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Acinonyx_jubatus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_07.png",
+    "sha256": "db00151be4e406e0f876b83febd66a893cb9439370ba3fb49db60ff274a3763f",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_08",
+    "slug": "giant_panda",
+    "label": "Giant panda",
+    "scientific_name": "Ailuropoda melanoleuca",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult giant panda sitting alone beside a bamboo stand, rounded white face with clearly visible black eye patches, black ears and limbs, natural forest background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color are the patches around the eyes of the animal on the {side} tile?",
+    "attribute_answer": "Black.",
+    "semantic_clue": "is a bear whose diet consists mainly of bamboo",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Ailuropoda_melanoleuca/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_08.png",
+    "sha256": "974dc5f0463e1dff5951f2714e806d993f4418d92c8e094c51dba8de54f7614c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_09",
+    "slug": "red_panda",
+    "label": "Red panda",
+    "scientific_name": "Ailurus fulgens",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult red panda standing on a thick tree branch, reddish-brown fur, white facial markings, dark legs, entire long bushy tail clearly visible with alternating reddish and pale rings, green forest background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What pattern is visible on the tail of the animal on the {side} tile?",
+    "attribute_answer": "Alternating reddish and pale rings.",
+    "semantic_clue": "is a Himalayan mammal classified in the family Ailuridae",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Ailurus_fulgens/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_09.png",
+    "sha256": "64f5c7dd897b081dfbb3ba6c8ca030da1e219f881e8cdc928f15f45242b554fe",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_10",
+    "slug": "koala",
+    "label": "Koala",
+    "scientific_name": "Phascolarctos cinereus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult koala gripping a eucalyptus tree trunk, soft gray fur, rounded fluffy ears, very prominent oval black nose facing camera, eucalyptus foliage softly blurred behind.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color is the large nose of the animal on the {side} tile?",
+    "attribute_answer": "Black.",
+    "semantic_clue": "is a tree-dwelling Australian marsupial that feeds mainly on eucalyptus leaves",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Phascolarctos_cinereus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_10.png",
+    "sha256": "812866cf784881f1af223bebcc8c96b8a2fec10dffdee27540a56a651d4f21d5",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_11",
+    "slug": "red_kangaroo",
+    "label": "Red kangaroo",
+    "scientific_name": "Macropus rufus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult male red kangaroo standing upright on dry Australian grassland, reddish fur, large strong hind legs, much smaller forearms, long thick tail on ground, entire animal visible.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "How do the hind legs compare with the forearms of the animal on the {side} tile?",
+    "attribute_answer": "The hind legs are much larger.",
+    "semantic_clue": "is a large Australian marsupial that travels by hopping on powerful hind legs",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Macropus_rufus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_11.png",
+    "sha256": "93bb48712d0b95d4d5d3ee4d06a7d76f1ec50b3468248ab36c5b66804de97c18",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_12",
+    "slug": "bactrian_camel",
+    "label": "Bactrian camel",
+    "scientific_name": "Camelus bactrianus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult Bactrian camel in clear full-body side view on open desert sand, brown shaggy coat, exactly two distinct upright humps fully visible, long neck, no saddle or equipment.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "How many humps are visible on the back of the animal on the {side} tile?",
+    "attribute_answer": "Two.",
+    "semantic_clue": "stores energy as fat in two humps on its back",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Camelus_bactrianus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_12.png",
+    "sha256": "d2a9ca5677f3c814596a1a74ace615a1bdc0659f006feb4b014b2c3f84368041",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_13",
+    "slug": "ring_tailed_lemur",
+    "label": "Ring-tailed lemur",
+    "scientific_name": "Lemur catta",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult ring-tailed lemur sitting on a rock in dry woodland, gray body, white face and dark eye patches, long tail held upright with distinct alternating black and white rings, whole animal visible.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What pattern is visible on the long tail of the animal on the {side} tile?",
+    "attribute_answer": "Alternating black and white rings.",
+    "semantic_clue": "is a primate native to Madagascar and has a ringed tail",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Lemur_catta/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_13.png",
+    "sha256": "706cf8bbea56d6b2e3e4227f80aec3bf21485ce2284e06442ba9a6c61b157c8d",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_14",
+    "slug": "hippopotamus",
+    "label": "Hippopotamus",
+    "scientific_name": "Hippopotamus amphibius",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult hippopotamus standing on a muddy riverbank in full-body three-quarter view, huge barrel-shaped body, smooth nearly hairless gray skin, short legs and broad muzzle, closed mouth.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color is the nearly hairless skin of the animal on the {side} tile?",
+    "attribute_answer": "Gray.",
+    "semantic_clue": "is a large semi-aquatic African mammal that spends much of the daytime in water",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Hippopotamus_amphibius/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_14.png",
+    "sha256": "905e3ca5672f8d93a4f8257fe75e0d9f9842a6c8ad553f80597f2238886c30db",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_15",
+    "slug": "white_rhinoceros",
+    "label": "White rhinoceros",
+    "scientific_name": "Ceratotherium simum",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult white rhinoceros in full-body side view on short dry grass, thick gray skin, broad square mouth, exactly two horns on its snout with longer front horn, no other animals.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "How many horns are visible on the snout of the animal on the {side} tile?",
+    "attribute_answer": "Two.",
+    "semantic_clue": "is an African grazing rhinoceros with a broad square-shaped mouth",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Ceratotherium_simum/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_15.png",
+    "sha256": "c5390644002bbaeddaa852f0a660f7f47c52e6b370c365edfcc27abe43ee1c6f",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_16",
+    "slug": "emperor_penguin",
+    "label": "Emperor penguin",
+    "scientific_name": "Aptenodytes forsteri",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult emperor penguin standing upright on clean Antarctic ice, full body, black head and back, white belly, small yellow-orange ear patches, black flippers, no other animals.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color is the belly of the bird on the {side} tile?",
+    "attribute_answer": "White.",
+    "semantic_clue": "is a penguin native to the Antarctic continent",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Aptenodytes_forsteri/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_16.png",
+    "sha256": "0c9c6a75259ec6d9b128e13111763d0ff80cc640840e0a6d83bc862f3a353488",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_17",
+    "slug": "american_flamingo",
+    "label": "American flamingo",
+    "scientific_name": "Phoenicopterus ruber",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult American flamingo standing on both long legs in shallow water, full body visible, bright pink plumage and long curved neck, pale pink bill with black tip, smooth blue water background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What is the main color of the feathers of the bird on the {side} tile?",
+    "attribute_answer": "Pink.",
+    "semantic_clue": "is a long-legged wading bird whose pink plumage comes from dietary carotenoids",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Phoenicopterus_ruber/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_17.png",
+    "sha256": "09a45750eca1ff433cd139f79c85eb23b6f84925143cc674df7139fe928af06a",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_18",
+    "slug": "bald_eagle",
+    "label": "Bald eagle",
+    "scientific_name": "Haliaeetus leucocephalus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult bald eagle perched alone on a bare branch, clearly visible white head and neck contrasting with dark brown body and folded wings, hooked yellow beak, soft blue sky background.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color is the head of the bird on the {side} tile?",
+    "attribute_answer": "White.",
+    "semantic_clue": "is a North American bird of prey that often catches fish with its talons",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Haliaeetus_leucocephalus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_18.png",
+    "sha256": "7987be03aa18aa9eb0b2c42293cba3bd368a1e2b0565ebbf8db00a180aa92b78",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_19",
+    "slug": "indian_peafowl",
+    "label": "Indian peafowl",
+    "scientific_name": "Pavo cristatus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult male Indian peafowl facing camera in a garden, brilliant blue neck, full large green iridescent train spread in a fan with clearly visible blue-green eye-shaped spots, entire fan inside frame.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "How are the long ornamental feathers displayed by the bird on the {side} tile?",
+    "attribute_answer": "They are spread in a large fan.",
+    "semantic_clue": "is a South Asian pheasant whose male displays an ornamental train during courtship",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Pavo_cristatus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_19.png",
+    "sha256": "236eb357fca438778d5c5077e5166ca5374d52a42b8b66bc0feffc8cedffe4ca",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_20",
+    "slug": "ostrich",
+    "label": "Ostrich",
+    "scientific_name": "Struthio camelus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult male ostrich standing alone on open savanna, full body including long bare legs, black body feathers and white wing feathers, very long mostly bare neck and small head, feet visible.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What is unusually long between the head and body of the bird on the {side} tile?",
+    "attribute_answer": "A long mostly bare neck.",
+    "semantic_clue": "is the largest living bird and is adapted for running rather than flying",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Struthio_camelus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_20.png",
+    "sha256": "bb82bd9d4f2fe9940850d5efba8c90fda5255e8740e993f36cac5a5c06abdae1",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_21",
+    "slug": "green_sea_turtle",
+    "label": "Green sea turtle",
+    "scientific_name": "Chelonia mydas",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult green sea turtle swimming alone through clear blue ocean water, three-quarter overhead view, oval brown patterned hard shell and broad front flippers fully visible, no other animals.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What covers the back of the animal on the {side} tile?",
+    "attribute_answer": "A hard oval shell.",
+    "semantic_clue": "is a marine reptile that propels itself with flippers and has a protective shell",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Chelonia_mydas/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_21.png",
+    "sha256": "31d9bf201f3485d7ff7cafb6aa402a75a970ed3312b5f11def24b08c9a52f7e6",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_22",
+    "slug": "red_eyed_tree_frog",
+    "label": "Red-eyed tree frog",
+    "scientific_name": "Agalychnis callidryas",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult red-eyed tree frog perched alone on a green leaf, green body, very conspicuous bright red eyes, orange toes, blue-and-yellow flanks, macro wildlife photograph.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color are the eyes of the animal on the {side} tile?",
+    "attribute_answer": "Red.",
+    "semantic_clue": "is a Central American tree-dwelling amphibian associated with humid rainforests",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Agalychnis_callidryas/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_22.png",
+    "sha256": "67594ff9824c4269e7097df02c3f7881e17de699deeb854f5e88764ed487b97d",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_23",
+    "slug": "king_cobra",
+    "label": "King cobra",
+    "scientific_name": "Ophiophagus hannah",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult king cobra coiled alone on forest floor, front third of body raised upright, clearly expanded hood behind head, olive-brown scales, closed mouth, safe wildlife telephoto view.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What structure is expanded behind the head of the animal on the {side} tile?",
+    "attribute_answer": "A hood.",
+    "semantic_clue": "is a venomous snake that feeds mainly on other snakes",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Ophiophagus_hannah/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_23.png",
+    "sha256": "d05dea88031771af8c5d962eca6d6c95e301a2a77741d75b4107225838223213",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_24",
+    "slug": "saltwater_crocodile",
+    "label": "Saltwater crocodile",
+    "scientific_name": "Crocodylus porosus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult saltwater crocodile lying alone on a sandy riverbank, full body in three-quarter side view, long armored tail, rough gray-green scaly back, broad tooth-lined snout and mouth slightly open showing teeth.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What is visible along the open mouth of the animal on the {side} tile?",
+    "attribute_answer": "Rows of pointed teeth.",
+    "semantic_clue": "is a large crocodilian found along coasts and river mouths from South Asia to northern Australia",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Crocodylus_porosus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_24.png",
+    "sha256": "ef7212fe9c20353c3e0388093c9b9b785b0692f3cb12c9e533d6aaaa0c447bc8",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_25",
+    "slug": "common_clownfish",
+    "label": "Common clownfish",
+    "scientific_name": "Amphiprion ocellaris",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One common clownfish alone in full side view in clear seawater, bright orange body with exactly three broad white vertical bands edged in black, fins visible, softly blurred sea anemone behind.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What color are the broad bands across the orange fish on the {side} tile?",
+    "attribute_answer": "White.",
+    "semantic_clue": "is a coral-reef fish that forms a symbiotic relationship with sea anemones",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Amphiprion_ocellaris/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_25.png",
+    "sha256": "af063ec6a7f8ee27332a8b4b68f58b3313a293f6c2c59279c174d95aa46483a7",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_26",
+    "slug": "great_white_shark",
+    "label": "Great white shark",
+    "scientific_name": "Carcharodon carcharias",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult great white shark swimming alone in clear blue ocean, full side view, dark gray back and white underside, pointed snout, prominent triangular dorsal fin and crescent tail, mouth closed.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What shape is the large fin on the back of the animal on the {side} tile?",
+    "attribute_answer": "Triangular.",
+    "semantic_clue": "is a large predatory fish whose skeleton is made of cartilage",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Carcharodon_carcharias/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_26.png",
+    "sha256": "5e95136c3a3ec502f45a91739f3d255df140cad69d869bff48fa2e489f642ac7",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_27",
+    "slug": "common_octopus",
+    "label": "Common octopus",
+    "scientific_name": "Octopus vulgaris",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One common octopus resting alone on pale seabed, reddish-brown mantle and exactly eight natural arms arranged without crowding, curved arms clearly show rows of pale round suction cups, clear underwater view.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What round structures are visible on the undersides of the arms of the animal on the {side} tile?",
+    "attribute_answer": "Suction cups.",
+    "semantic_clue": "is a soft-bodied cephalopod with eight arms",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Octopus_vulgaris/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_27.png",
+    "sha256": "51fef778d51dfcbef404a74e34512da5ff3551e07d792b75a54d953b7276be1c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_28",
+    "slug": "moon_jellyfish",
+    "label": "Moon jellyfish",
+    "scientific_name": "Aurelia aurita",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One moon jellyfish floating alone in dark blue seawater, translucent saucer-shaped bell clearly visible with four subtle horseshoe-shaped internal structures, delicate short fringe tentacles and soft oral arms, natural underwater photography.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "Is the bell of the animal on the {side} tile opaque or translucent?",
+    "attribute_answer": "Translucent.",
+    "semantic_clue": "is a cnidarian that catches small prey using stinging cells",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Aurelia_aurita/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_28.png",
+    "sha256": "276b6c6d1651dbd3db32ff52c910ea9a4c3fc829e71117adbcd328725b72db32",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_29",
+    "slug": "monarch_butterfly",
+    "label": "Monarch butterfly",
+    "scientific_name": "Danaus plexippus",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult monarch butterfly resting alone on a green leaf with both wings spread flat, crisp orange wings with black veins and broad black borders dotted with small white spots, macro nature photography.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "What is the main color of the wings inside the black borders on the {side} tile?",
+    "attribute_answer": "Orange.",
+    "semantic_clue": "is a butterfly whose caterpillars feed on milkweed",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Danaus_plexippus/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_29.png",
+    "sha256": "3eba75ee8f74e44f7b0ffc4f8dbb2acbf078067b14503eb9e81b2837b68b5170",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  },
+  {
+    "image_id": "living_world_30",
+    "slug": "western_honey_bee",
+    "label": "Western honey bee",
+    "scientific_name": "Apis mellifera",
+    "prompt": "Use case: photorealistic-natural\nAsset type: one square Living world VQA dataset image.\nPrimary request: One adult western honey bee perched alone on a single purple flower, fuzzy golden-brown thorax, banded golden and dark brown abdomen, translucent wings and six legs, detailed macro wildlife photography.\nStyle: realistic natural wildlife photography, one clearly recognizable real animal, accurate anatomy and species features. Center the animal in a square canvas, complete key body parts visible, narrow even white outer border. Soft natural light and realistic textures. No text, no labels, no watermark, no collage, no additional animals. This is a synthetic wildlife depiction.",
+    "attribute_question": "Are the wings of the insect on the {side} tile translucent or opaque?",
+    "attribute_answer": "Translucent.",
+    "semantic_clue": "is a social insect that uses a waggle dance to communicate the location of food",
+    "source_urls": [
+      "https://animaldiversity.org/accounts/Apis_mellifera/"
+    ],
+    "image_origin": "ai_generated",
+    "fact_checked_date": "2026-11-09",
+    "path": "living_world/images/living_world_30.png",
+    "sha256": "60d883d26cb275cfc3cfcd5128fe2363a975889506ba32938cace00b5dfb725c",
+    "synthetic": true,
+    "generation_method": "built_in_image_generation",
+    "identity_provenance": "generation_prompt_and_visual_review"
+  }
+]
