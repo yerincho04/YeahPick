@@ -13,7 +13,7 @@ from PIL import Image
 from build_assets import ASSETS, CATEGORIES, ROOT, TILE_WIDTH, build_category
 
 
-OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v3"
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v4"
 TILE_XY_LEFT = (-0.22, -0.155)
 TILE_XY_RIGHT = (-0.22, 0.13)
 
@@ -102,9 +102,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     board_top = board_p[2] + float(task.model_bbox_sizes[board_name][2].item()) / 2
     start_cube = position(cube)
     cube_tcp_offset = start_cube - position(task.agent.tcp)
-    # Aim 3 cm toward the robot base while keeping the cube on the tile.
-    robot_xy = position(task.agent.robot)[:2]
-    place_xy = board_p[:2] + np.clip(robot_xy - board_p[:2], -0.03, 0.03)
+    place_xy = board_p[:2].copy()
     # The pregrasp cube starts well above the boards. Extra lifting needlessly
     # pushes the farther, left-side target toward the arm's reach limit.
     lift_z = max(float(start_cube[2]), float(board_top) + 0.08)
