@@ -6,13 +6,17 @@ import argparse
 import json
 import os
 import shutil
+import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "output"
+sys.path.insert(0, str(ROOT))
+from build_assets import TILE_WIDTH
+
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm"
 CATEGORIES = (
     "counting", "symmetry", "celebrity", "living_world", "traffic",
     "state", "attribute", "emotion", "public_info", "time_clock",

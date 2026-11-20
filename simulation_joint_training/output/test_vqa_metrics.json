@@ -1,0 +1,167 @@
+{
+  "split": "test",
+  "checkpoint": {
+    "epoch": 1,
+    "adapter": "/root/hj/YeahPick/simulation_joint_training/runs/20261118_071727_415654_UTC/checkpoints/epoch_01",
+    "val_selection_loss": 0.23808642586157647,
+    "val_grounding_accuracy": 0.4
+  },
+  "action_unnorm_key": "kd_act2answer",
+  "grounding": {
+    "overall": {
+      "correct": 92,
+      "total": 200,
+      "accuracy": 0.46
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "celebrity": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "counting": {
+        "correct": 6,
+        "total": 20,
+        "accuracy": 0.3
+      },
+      "emotion": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "living_world": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "public_info": {
+        "correct": 2,
+        "total": 20,
+        "accuracy": 0.1
+      },
+      "state": {
+        "correct": 1,
+        "total": 20,
+        "accuracy": 0.05
+      },
+      "symmetry": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "time_clock": {
+        "correct": 10,
+        "total": 20,
+        "accuracy": 0.5
+      },
+      "traffic": {
+        "correct": 12,
+        "total": 20,
+        "accuracy": 0.6
+      }
+    },
+    "by_layout": {
+      "original": {
+        "correct": 49,
+        "total": 100,
+        "accuracy": 0.49
+      },
+      "swapped": {
+        "correct": 43,
+        "total": 100,
+        "accuracy": 0.43
+      }
+    }
+  },
+  "vqa": {
+    "overall": {
+      "correct": 543,
+      "total": 1000,
+      "accuracy": 0.543
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 50,
+        "total": 100,
+        "accuracy": 0.5
+      },
+      "celebrity": {
+        "correct": 59,
+        "total": 100,
+        "accuracy": 0.59
+      },
+      "counting": {
+        "correct": 57,
+        "total": 100,
+        "accuracy": 0.57
+      },
+      "emotion": {
+        "correct": 64,
+        "total": 100,
+        "accuracy": 0.64
+      },
+      "living_world": {
+        "correct": 56,
+        "total": 100,
+        "accuracy": 0.56
+      },
+      "public_info": {
+        "correct": 53,
+        "total": 100,
+        "accuracy": 0.53
+      },
+      "state": {
+        "correct": 54,
+        "total": 100,
+        "accuracy": 0.54
+      },
+      "symmetry": {
+        "correct": 43,
+        "total": 100,
+        "accuracy": 0.43
+      },
+      "time_clock": {
+        "correct": 53,
+        "total": 100,
+        "accuracy": 0.53
+      },
+      "traffic": {
+        "correct": 54,
+        "total": 100,
+        "accuracy": 0.54
+      }
+    },
+    "by_question_type": {
+      "Attribute recognition": {
+        "correct": 109,
+        "total": 200,
+        "accuracy": 0.545
+      },
+      "Counterfactual grounding": {
+        "correct": 106,
+        "total": 200,
+        "accuracy": 0.53
+      },
+      "Object recognition": {
+        "correct": 123,
+        "total": 200,
+        "accuracy": 0.615
+      },
+      "Semantic reasoning": {
+        "correct": 93,
+        "total": 200,
+        "accuracy": 0.465
+      },
+      "Visual grounding": {
+        "correct": 112,
+        "total": 200,
+        "accuracy": 0.56
+      }
+    }
+  }
+}

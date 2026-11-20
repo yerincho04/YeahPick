@@ -19,7 +19,7 @@ CATEGORIES = (
     "counting", "symmetry", "celebrity", "living_world", "traffic",
     "state", "attribute", "emotion", "public_info", "time_clock",
 )
-TILE_WIDTH = 0.11
+TILE_WIDTH = 0.22
 TILE_THICKNESS = 0.006
 PUBLIC_INFO_ASSET_VERSION = "white_svg_background_unrotated_v2"
 
@@ -102,9 +102,12 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
     output = ASSETS / category
     output.mkdir(parents=True, exist_ok=True)
     version_path = output / ".asset_version"
-    rebuild_public_info = category == "public_info" and (
+    asset_version = f"tile_width_{TILE_WIDTH:.2f}m"
+    if category == "public_info":
+        asset_version += f"_{PUBLIC_INFO_ASSET_VERSION}"
+    rebuild_assets = (
         not version_path.is_file()
-        or version_path.read_text(encoding="utf-8").strip() != PUBLIC_INFO_ASSET_VERSION
+        or version_path.read_text(encoding="utf-8").strip() != asset_version
     )
     images = OrderedDict()
     for pair in pairs:
@@ -125,12 +128,12 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
             raise FileNotFoundError(image_path)
         glb_path = shape_dir / "textured.glb"
         collision_path = shape_dir / "collision.obj"
-        if rebuild_public_info or not glb_path.is_file():
+        if rebuild_assets or not glb_path.is_file():
             image = load_image(image_path)
             temporary_path = glb_path.with_suffix(".glb.tmp")
             temporary_path.write_bytes(make_tile(image))
             temporary_path.replace(glb_path)
-        if not collision_path.is_file():
+        if rebuild_assets or not collision_path.is_file():
             collision_path.write_text(
                 trimesh.creation.box(
                     extents=(TILE_WIDTH, TILE_WIDTH, TILE_THICKNESS)
@@ -146,8 +149,7 @@ def build_category(category: str) -> tuple[Path, list[dict]]:
             "scales": [1.0], "density": 6368,
         }
 
-    if rebuild_public_info:
-        version_path.write_text(PUBLIC_INFO_ASSET_VERSION, encoding="utf-8")
+    version_path.write_text(asset_version, encoding="utf-8")
 
     env_pairs = []
     for index, pair in enumerate(pairs):

@@ -10,10 +10,10 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from build_assets import ASSETS, CATEGORIES, ROOT, build_category
+from build_assets import ASSETS, CATEGORIES, ROOT, TILE_WIDTH, build_category
 
 
-OUTPUT = ROOT / "output"
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm"
 
 
 def arguments() -> argparse.Namespace:
@@ -99,8 +99,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     board_top = board_p[2] + float(task.model_bbox_sizes[board_name][2].item()) / 2
     start_cube = position(cube)
     cube_tcp_offset = start_cube - position(task.agent.tcp)
-    # The left board is farther from the robot base. Aim 3 cm toward the base
-    # on each axis; the 11 cm tile still has room for the 3 cm cube.
+    # Aim 3 cm toward the robot base while keeping the cube on the tile.
     robot_xy = position(task.agent.robot)[:2]
     place_xy = board_p[:2] + np.clip(robot_xy - board_p[:2], -0.03, 0.03)
     # The pregrasp cube starts well above the boards. Extra lifting needlessly

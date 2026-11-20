@@ -1,0 +1,81 @@
+{
+  "split": "test",
+  "checkpoint": {
+    "epoch": 1,
+    "adapter": "/root/hj/YeahPick/simulation_joint_training/runs/20261118_071727_415654_UTC/checkpoints/epoch_01",
+    "val_selection_loss": 0.23808642586157647,
+    "val_grounding_accuracy": 0.4
+  },
+  "action_unnorm_key": "kd_act2answer",
+  "grounding": {
+    "overall": {
+      "correct": 92,
+      "total": 200,
+      "accuracy": 0.46
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "celebrity": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "counting": {
+        "correct": 6,
+        "total": 20,
+        "accuracy": 0.3
+      },
+      "emotion": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "living_world": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "public_info": {
+        "correct": 2,
+        "total": 20,
+        "accuracy": 0.1
+      },
+      "state": {
+        "correct": 1,
+        "total": 20,
+        "accuracy": 0.05
+      },
+      "symmetry": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "time_clock": {
+        "correct": 10,
+        "total": 20,
+        "accuracy": 0.5
+      },
+      "traffic": {
+        "correct": 12,
+        "total": 20,
+        "accuracy": 0.6
+      }
+    },
+    "by_layout": {
+      "original": {
+        "correct": 49,
+        "total": 100,
+        "accuracy": 0.49
+      },
+      "swapped": {
+        "correct": 43,
+        "total": 100,
+        "accuracy": 0.43
+      }
+    }
+  }
+}
