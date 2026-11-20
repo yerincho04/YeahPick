@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from build_assets import TILE_WIDTH
 
-OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm"
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v2"
 CATEGORIES = (
     "counting", "symmetry", "celebrity", "living_world", "traffic",
     "state", "attribute", "emotion", "public_info", "time_clock",

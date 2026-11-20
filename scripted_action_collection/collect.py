@@ -13,7 +13,9 @@ from PIL import Image
 from build_assets import ASSETS, CATEGORIES, ROOT, TILE_WIDTH, build_category
 
 
-OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm"
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v2"
+TILE_XY_LEFT = (-0.22, -0.155)
+TILE_XY_RIGHT = (-0.22, 0.13)
 
 
 def arguments() -> argparse.Namespace:
@@ -169,6 +171,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
     metadata = {
         "category": pair["category"], "pair_id": pair["pair_id"],
         "pair_index": pair["index"], "swapped": swapped, "seed": seed,
+        "tile_xy_left": TILE_XY_LEFT, "tile_xy_right": TILE_XY_RIGHT,
         "answer_side": answer, "instruction": instruction,
         "control_mode": "arm_pd_ee_target_delta_pose_align2_gripper_pd_joint_pos",
         "pregrasp_steps": 10, "steps": len(actions),
@@ -267,6 +270,7 @@ def main() -> None:
             max_episode_steps=args.max_steps, sensor_configs={"shader_pack": "default"},
             assets=str(asset_dir.resolve()), ids=None, do_swap=False,
             instruction_condition="knowledge",
+            tile_xy_left=TILE_XY_LEFT, tile_xy_right=TILE_XY_RIGHT,
             rgb_overlay_paths={"3rd_view_camera": str(overlay)},
             cube_pose=(-0.131, 0.0411, 0.88 + 0.015 + 0.118),
             initial_qpos=np.array([

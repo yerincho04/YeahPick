@@ -372,6 +372,8 @@ class Act2AnswerV4(_PickCubeBase):
         cube_pose: Optional[Sequence[float]] = None,
         initial_qpos: Optional[Sequence[float]] = None,
         instruction_condition: str = "knowledge",
+        tile_xy_left: Optional[Sequence[float]] = None,
+        tile_xy_right: Optional[Sequence[float]] = None,
         # --- NEW knobs for visual matching ---
         model_json: Optional[str] = None,
         rgb_overlay_paths: Optional[Dict[str, str]] = None,
@@ -399,6 +401,10 @@ class Act2AnswerV4(_PickCubeBase):
         self._pair_ids_config: Optional[List[int]] = None
 
         self.cube_pose = cube_pose
+        self.tile_xy_left = tuple(tile_xy_left) if tile_xy_left is not None else (-0.25, -0.155)
+        self.tile_xy_right = tuple(tile_xy_right) if tile_xy_right is not None else (-0.25, 0.155)
+        if len(self.tile_xy_left) != 2 or len(self.tile_xy_right) != 2:
+            raise ValueError("tile_xy_left and tile_xy_right must each contain x and y")
 
         # ------------------------
         # NEW: choose model db json (texture matching entry point)
@@ -854,8 +860,8 @@ class Act2AnswerV4(_PickCubeBase):
             )
             return p
 
-        p_left = board_pose_tensor(left_sel, x=-0.25, y=-0.155)
-        p_right = board_pose_tensor(right_sel, x=-0.25, y=+0.155)
+        p_left = board_pose_tensor(left_sel, x=self.tile_xy_left[0], y=self.tile_xy_left[1])
+        p_right = board_pose_tensor(right_sel, x=self.tile_xy_right[0], y=self.tile_xy_right[1])
 
         q_reset = torch.tensor(euler2quat(0.0, 0.0, 1.5707963267948966), device=self.device, dtype=torch.float32).reshape(1, 4).repeat(b, 1)
 
