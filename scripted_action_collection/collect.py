@@ -13,7 +13,7 @@ from PIL import Image
 from build_assets import ASSETS, CATEGORIES, ROOT, TILE_WIDTH, build_category
 
 
-OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v2"
+OUTPUT = ROOT / f"output_tile_{round(TILE_WIDTH * 100):02d}cm_v3"
 TILE_XY_LEFT = (-0.22, -0.155)
 TILE_XY_RIGHT = (-0.22, 0.13)
 
@@ -82,6 +82,7 @@ def controller_action(env, desired_cube: np.ndarray, cube_tcp_offset: np.ndarray
 def collect_episode(env, pair: dict, swapped: bool, seed: int,
                     max_steps: int) -> tuple[dict, list, np.ndarray, np.ndarray]:
     import torch
+    from mani_skill.envs.tasks.digital_twins.bridge_dataset_eval.put_on_in_scene_multi_v4 import CUBE_HALF_SIZE
 
     task = env.unwrapped
     task.do_swap = swapped
@@ -165,7 +166,15 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
             break
 
     released = not scalar(task.agent.is_grasping(cube))
-    success = scalar(info["success"]) and released and release_steps >= 5
+    final_cube_p = position(cube)
+    board_half_xy = task.model_bbox_sizes[board_name][:2].cpu().numpy() / 2
+    # Require the whole cube to be on the actual target tile. The simulator's
+    # 8 cm success margin overlaps between the enlarged tiles.
+    on_target_tile = bool(
+        np.all(np.abs(final_cube_p[:2] - board_p[:2]) <= board_half_xy - CUBE_HALF_SIZE + 0.005)
+        and abs(float(final_cube_p[2]) - (board_top + CUBE_HALF_SIZE)) <= 0.025
+    )
+    success = scalar(info["success"]) and released and release_steps >= 5 and on_target_tile
     if failure_reason is None and not success:
         failure_reason = "not_released_on_correct_tile"
     metadata = {
@@ -177,7 +186,8 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         "pregrasp_steps": 10, "steps": len(actions),
         "action_format": "[dx, dy, dz, droll, dpitch, dyaw, gripper]",
         "success": bool(success), "failure_reason": None if success else failure_reason,
-        "final_cube_position": position(cube).tolist(),
+        "on_target_tile": on_target_tile,
+        "final_cube_position": final_cube_p.tolist(),
         "target_board_position": board_p.tolist(),
         "place_xy_target": place_xy.tolist(),
         "final_tcp_position": position(task.agent.tcp).tolist(),

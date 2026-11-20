@@ -8,9 +8,9 @@ From the repository root on the Linux workspace, with the existing `openvla_rl4v
 bash scripted_action_collection/scripts/collect.sh
 ```
 
-The command creates 22 cm GLB tiles (twice the previous width) from `input/<category>/images/`, reads `input/<category>/vqa.jsonl`, and runs each of the 100 Knowledge instructions in both original and swapped layouts (2,000 episodes total by default). Existing GLB and collision shapes are rebuilt when the tile size changes. The robot starts in the same pregrasp state as the current OpenVLA evaluation. The controller uses feedback from cube and robot poses to lift, move, lower, and release the cube over the answer tile. It saves episodes only when the final cube is over the correct tile **and the gripper has released it**. This is stricter than the simulator's `success` flag alone.
+The command creates 22 cm GLB tiles (twice the previous width) from `input/<category>/images/`, reads `input/<category>/vqa.jsonl`, and runs each of the 100 Knowledge instructions in both original and swapped layouts (2,000 episodes total by default). Existing GLB and collision shapes are rebuilt when the tile size changes. The robot starts in the same pregrasp state as the current OpenVLA evaluation. The controller uses feedback from cube and robot poses to lift, move, lower, and release the cube over the answer tile. It saves episodes only when the entire cube rests on the correct tile **and the gripper has released it**. This avoids the simulator's broad success margin, which overlaps between enlarged tiles.
 
-The enlarged tiles are now placed at left `(x=-0.22, y=-0.155)` and right `(x=-0.22, y=0.13)` for this collection. The new placement moves the tiles forward on the table and brings the right tile into the camera view. The collection is saved under `output_tile_22cm_v2/`, separate from earlier runs. VQA dataset images are unchanged; they can be replaced with frames from the new collection after it finishes.
+The enlarged tiles are now placed at left `(x=-0.22, y=-0.155)` and right `(x=-0.22, y=0.13)` for this collection. The new placement moves the tiles forward on the table and brings the right tile into the camera view. The collection is saved under `output_tile_22cm_v3/`, separate from earlier runs and their less strict success records. VQA dataset images are unchanged; they can be replaced with frames from the new collection after it finishes.
 
 Useful smaller run:
 
@@ -27,7 +27,7 @@ python3 scripted_action_collection/scripts/reset_category.py public_info
 bash scripted_action_collection/scripts/collect.sh --category public_info
 ```
 
-The old records and episode folders are preserved under `output_tile_22cm_v2/archive/`. Do not run the reset while another collector is writing the shared `episodes.jsonl`.
+The old records and episode folders are preserved under `output_tile_22cm_v3/archive/`. Do not run the reset while another collector is writing the shared `episodes.jsonl`.
 
 Outputs:
 
@@ -35,14 +35,14 @@ Outputs:
 generated_assets/<category>/pairs.json
 generated_assets/<category>/model_db.json
 generated_assets/<category>/shapes/<tile>/textured.glb
-output_tile_22cm_v2/episodes.jsonl
-output_tile_22cm_v2/episodes/<category>/<pair_id>/<layout>/seed_<n>/
+output_tile_22cm_v3/episodes.jsonl
+output_tile_22cm_v3/episodes/<category>/<pair_id>/<layout>/seed_<n>/
     metadata.json
     actions.npy
     robot_qpos.npy
     frames/0000.jpg ...
 ```
 
-`frames/t.jpg`, `actions.npy[t]`, and `robot_qpos.npy[t]` describe the **pre-action** observation and executed 7D action at policy step `t`. The 10 pregrasp steps occur before recording, matching the existing VLA evaluation setup. `output_tile_22cm_v2/episodes.jsonl` also records failed attempts and reasons. These files are a demonstration collection, not an RLDS dataset; conversion for OpenVLA fine-tuning is a separate step. Extra seeds repeat the same fixed geometry, so they do not themselves create pose variation.
+`frames/t.jpg`, `actions.npy[t]`, and `robot_qpos.npy[t]` describe the **pre-action** observation and executed 7D action at policy step `t`. The 10 pregrasp steps occur before recording, matching the existing VLA evaluation setup. `output_tile_22cm_v3/episodes.jsonl` also records failed attempts and reasons. These files are a demonstration collection, not an RLDS dataset; conversion for OpenVLA fine-tuning is a separate step. Extra seeds repeat the same fixed geometry, so they do not themselves create pose variation.
 
 The controller and end-to-end collection have not been run on this local Windows workspace. Actual success rate must be checked on the Linux GPU workspace before using the demonstrations for training.
