@@ -8,13 +8,13 @@ From the repository root on the Linux workspace, with the existing `openvla_rl4v
 bash scripted_action_collection/scripts/collect.sh
 ```
 
-To collect multiple categories concurrently, edit the `CATEGORIES=(...)` list and `MAX_PARALLEL` in `scripts/collect_parallel.sh`, then run:
+To collect multiple categories concurrently, edit the `CATEGORIES=(...)` and `GPUS=(...)` lists plus `MAX_PARALLEL` in `scripts/collect_parallel.sh`, then run:
 
 ```bash
 bash scripted_action_collection/scripts/collect_parallel.sh --retry-failed
 ```
 
-The wrapper launches the existing `collect.sh` once per selected category, with at most `MAX_PARALLEL` active processes. It writes separate logs under `output_tile_22cm_v4/parallel_logs/`. Ctrl-C terminates all active process groups. The shared episode manifest is locked during reads and writes so parallel collectors cannot interleave JSONL records.
+The wrapper launches the existing `collect.sh` once per selected category, with at most `MAX_PARALLEL` active processes. By default, two categories run concurrently on GPUs 0 and 1. Set `GPUS=(1)` and `MAX_PARALLEL=1` to use only GPU 1. It writes separate logs under `output_tile_22cm_v4/parallel_logs/`. Ctrl-C terminates all active process groups. The shared episode manifest is locked during reads and writes so parallel collectors cannot interleave JSONL records.
 
 The command creates 22 cm GLB tiles (twice the previous width) from `input/<category>/images/`, reads `input/<category>/vqa.jsonl`, and runs each of the 100 Knowledge instructions in both original and swapped layouts (2,000 episodes total by default). Existing GLB and collision shapes are rebuilt when the tile size changes. The robot starts in the same pregrasp state as the current OpenVLA evaluation. The controller uses feedback from cube and robot poses to lift, move, lower, and release the cube over the answer tile. It saves episodes only when the entire cube rests on the correct tile **and the gripper has released it**. This avoids the simulator's broad success margin, which overlaps between enlarged tiles.
 

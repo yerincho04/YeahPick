@@ -18,6 +18,8 @@ CATEGORIES=(
   public_info
   time_clock
 )
+# One GPU per concurrent slot. Set GPUS=(1) and MAX_PARALLEL=1 to use only GPU 1.
+GPUS=(0 1)
 MAX_PARALLEL=2
 
 if ! [[ "$MAX_PARALLEL" =~ ^[1-9][0-9]*$ ]]; then
@@ -28,6 +30,16 @@ if ((${#CATEGORIES[@]} == 0)); then
   echo "CATEGORIES is empty" >&2
   exit 2
 fi
+if ((${#GPUS[@]} < MAX_PARALLEL)); then
+  echo "GPUS must have at least MAX_PARALLEL entries" >&2
+  exit 2
+fi
+for gpu in "${GPUS[@]}"; do
+  if ! [[ "$gpu" =~ ^[0-9]+$ ]]; then
+    echo "Invalid GPU number: $gpu" >&2
+    exit 2
+  fi
+done
 
 declare -A running=()
 declare -A seen=()
@@ -80,15 +92,16 @@ for category in "${CATEGORIES[@]}"; do
     exit 2
   fi
   seen[$category]=1
+  gpu="${GPUS[${#active_pids[@]}]}"
   # The child becomes its own process group. collect.sh then execs Python,
   # allowing Ctrl-C to terminate the entire group, including descendants.
-  python3 -c 'import os, sys; os.setsid(); os.execv("/bin/bash", ["bash", *sys.argv[1:]])' \
+  EVAL_GPU="$gpu" python3 -c 'import os, sys; os.setsid(); os.execv("/bin/bash", ["bash", *sys.argv[1:]])' \
     "$COLLECT" --category "$category" "$@" >"$LOG_DIR/$category.log" 2>&1 &
   pid=$!
   running[$pid]="$category"
   active_pids+=("$pid")
   active_categories+=("$category")
-  echo "START $category pid=$pid log=$LOG_DIR/$category.log"
+  echo "START $category gpu=$gpu pid=$pid log=$LOG_DIR/$category.log"
   if ((${#active_pids[@]} >= MAX_PARALLEL)); then
     wait_batch
   fi
