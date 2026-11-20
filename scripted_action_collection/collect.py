@@ -220,9 +220,12 @@ def save_success(metadata: dict, frames: list, actions: np.ndarray,
 
 
 def completed_keys(path: Path, retry_failed: bool) -> set[str]:
+    import fcntl
+
     done = set()
     if path.exists():
         with path.open(encoding="utf-8") as stream:
+            fcntl.flock(stream.fileno(), fcntl.LOCK_SH)
             for line in stream:
                 row = json.loads(line)
                 if row["success"] or not retry_failed:
@@ -308,8 +311,12 @@ def main() -> None:
                         OUTPUT / "episodes" / category / pair["pair_id"] /
                         ("swapped" if swap else "original") / f"seed_{seed}",
                     )
+                import fcntl
+
                 with manifest.open("a", encoding="utf-8") as stream:
+                    fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
                     stream.write(json.dumps(metadata, ensure_ascii=False) + "\n")
+                    stream.flush()
                 print(f"EPISODE {episode_id} success={metadata['success']} "
                       f"reason={metadata.get('failure_reason')}", flush=True)
         finally:
