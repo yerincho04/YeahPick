@@ -74,8 +74,19 @@ PY
     shift
     exec python3 -u "$TRAIN_ROOT/evaluate.py" --run-dir "$RUN_DIR" "$@"
     ;;
+  test-prismatic)
+    export CUDA_VISIBLE_DEVICES="${PRISMATIC_GPU:-0}"
+    if [ "$#" -gt 0 ] && [[ "$1" != --* ]]; then
+      RUN_DIR="$1"
+      shift
+      exec python3 -u "$TRAIN_ROOT/evaluate_prismatic.py" --run-dir "$RUN_DIR" "$@"
+    fi
+    bash "$TRAIN_ROOT/scripts/link_inputs.sh"
+    python3 -u "$TRAIN_ROOT/prepare.py"
+    exec python3 -u "$TRAIN_ROOT/evaluate_prismatic.py" "$@"
+    ;;
   *)
-    echo "Usage: bash semantic_grounding_stage1/scripts/run.sh {prepare|train|resume|test}" >&2
+    echo "Usage: bash semantic_grounding_stage1/scripts/run.sh {prepare|train|resume|test|test-prismatic}" >&2
     exit 2
     ;;
 esac

@@ -68,6 +68,22 @@ under a new `evaluations/` directory. It also checks that the policy produces
 a side followed by seven constrained action tokens; their values are not
 scored in stage 1.
 
+To test the pretrained Prismatic VLM without training or an OpenVLA adapter:
+
+```bash
+PRISMATIC_GPU=0 bash semantic_grounding_stage1/scripts/run.sh test-prismatic
+```
+
+This uses `prism-dinosiglip-224px+7b` and the same questions and binary-choice
+scoring as the OpenVLA test. It writes separate `prismatic_...` evaluation
+results. Prismatic has no robot action output in this test, so only VQA and
+grounding are scored. The model may need to download its checkpoint on first use.
+To use the exact saved split from an existing stage-1 run, pass its directory:
+
+```bash
+PRISMATIC_GPU=0 bash semantic_grounding_stage1/scripts/run.sh test-prismatic semantic_grounding_stage1/runs/<RUN_DIR>
+```
+
 The Windows workstation has no compatible GPU training environment. Python
 syntax and dataset contracts can be checked locally, while the training
 preflight checks model/tokenizer/device compatibility on the GPU server before
