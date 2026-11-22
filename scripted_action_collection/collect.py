@@ -80,7 +80,7 @@ def controller_action(env, desired_cube: np.ndarray, cube_tcp_offset: np.ndarray
 
 
 def collect_episode(env, pair: dict, swapped: bool, seed: int,
-                    max_steps: int) -> tuple[dict, list, np.ndarray, np.ndarray]:
+                    max_steps: int, target_side: str | None = None) -> tuple[dict, list, np.ndarray, np.ndarray]:
     import torch
     from mani_skill.envs.tasks.digital_twins.bridge_dataset_eval.put_on_in_scene_multi_v4 import CUBE_HALF_SIZE
 
@@ -96,7 +96,10 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
 
     cube = task.cubes[task._white_key]
     answer = task._answers[0]
-    board_name = (task._current_left_names if answer == "left" else task._current_right_names)[0]
+    condition_side = answer if target_side is None else target_side
+    if condition_side not in ("left", "right"):
+        raise ValueError(f"Invalid target side: {condition_side}")
+    board_name = (task._current_left_names if condition_side == "left" else task._current_right_names)[0]
     board = task.objs_board[board_name]
     board_p = position(board)
     board_top = board_p[2] + float(task.model_bbox_sizes[board_name][2].item()) / 2
@@ -172,7 +175,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         np.all(np.abs(final_cube_p[:2] - board_p[:2]) <= board_half_xy - CUBE_HALF_SIZE + 0.005)
         and abs(float(final_cube_p[2]) - (board_top + CUBE_HALF_SIZE)) <= 0.025
     )
-    success = scalar(info["success"]) and released and release_steps >= 5 and on_target_tile
+    success = (target_side is not None or scalar(info["success"])) and released and release_steps >= 5 and on_target_tile
     if failure_reason is None and not success:
         failure_reason = "not_released_on_correct_tile"
     metadata = {
@@ -180,6 +183,7 @@ def collect_episode(env, pair: dict, swapped: bool, seed: int,
         "pair_index": pair["index"], "swapped": swapped, "seed": seed,
         "tile_xy_left": TILE_XY_LEFT, "tile_xy_right": TILE_XY_RIGHT,
         "answer_side": answer, "instruction": instruction,
+        "condition_side": condition_side,
         "control_mode": "arm_pd_ee_target_delta_pose_align2_gripper_pd_joint_pos",
         "pregrasp_steps": 10, "steps": len(actions),
         "action_format": "[dx, dy, dz, droll, dpitch, dyaw, gripper]",
