@@ -20,6 +20,11 @@ from model_io import load_action_stats, load_student, prompt_for_question, read_
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
+def policy_image(frame: torch.Tensor) -> Image.Image:
+    """SAPIEN can return RGB as int32; PIL requires uint8 for three channels."""
+    return Image.fromarray(frame.clamp(0, 255).to(torch.uint8).cpu().numpy())
+
+
 def write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -247,7 +252,7 @@ def evaluate_rollout(model, processor, stats: dict, output_dir: Path,
                             if swapped:
                                 side = "Right" if side == "Left" else "Left"
                             targets.append(side)
-                            image = Image.fromarray(frames[i].cpu().numpy())
+                            image = policy_image(frames[i])
                             decisions.append(score_side(model, processor, image, instructions[i]))
                         if mode == "oracle":
                             fixed_sides = targets
@@ -259,7 +264,7 @@ def evaluate_rollout(model, processor, stats: dict, output_dir: Path,
                         for step in range(episode_len):
                             actions = []
                             for i, instruction in enumerate(instructions):
-                                image = Image.fromarray(frames[i].cpu().numpy())
+                                image = policy_image(frames[i])
                                 tokens = generate_action_tokens(model, processor, image,
                                                                 instruction, fixed_sides[i])
                                 actions.append(decode_action(tokens, processor.tokenizer, stats))
