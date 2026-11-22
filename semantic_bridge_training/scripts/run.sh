@@ -23,6 +23,19 @@ export CUDA_VISIBLE_DEVICES="${TRAIN_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
 export BRIDGE_DDP_BACKEND="${BRIDGE_DDP_BACKEND:-nccl}"
 
+MODEL_CACHE_ROOT="${MODEL_CACHE_ROOT:-/opt/yeahpick-cache}"
+case "$MODEL_CACHE_ROOT" in
+  /*) ;;
+  *) echo "MODEL_CACHE_ROOT must be an absolute path" >&2; exit 2 ;;
+esac
+export HF_HOME="$MODEL_CACHE_ROOT/huggingface"
+export HF_HUB_CACHE="$HF_HOME/hub"
+export HF_XET_CACHE="$HF_HOME/xet"
+export TORCH_HOME="$MODEL_CACHE_ROOT/torch"
+export TMPDIR="$MODEL_CACHE_ROOT/tmp"
+mkdir -p "$HF_HUB_CACHE" "$HF_XET_CACHE" "$TORCH_HOME" "$TMPDIR"
+echo "MODEL_CACHE_ROOT=$MODEL_CACHE_ROOT"
+
 new_timestamp_dir() {
   python3 - "$1" <<'PY'
 from datetime import datetime, timezone

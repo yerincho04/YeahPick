@@ -51,9 +51,14 @@ Use the `openvla_rl4vla` environment with its CUDA, NCCL and SAPIEN/Vulkan setup
 From the repository root:
 
 ```bash
+export MODEL_CACHE_ROOT=/opt/yeahpick-cache
 bash semantic_bridge_training/scripts/run.sh prepare
 bash semantic_bridge_training/scripts/run.sh train
 ```
+
+The script defaults to `/opt/yeahpick-cache` for Hugging Face models, remote
+model code, Torch downloads, and temporary files. Set `MODEL_CACHE_ROOT` to
+another absolute path if needed; all run modes use the same cache location.
 
 The train command runs preparation again, checks both policy sample formats and
 VQA with the loaded model before the first update, and prints `RUN_DIR`. It saves
