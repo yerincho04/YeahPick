@@ -84,8 +84,7 @@ def token_span_loss(logits: torch.Tensor, input_ids: torch.Tensor,
     return F.cross_entropy(predicted.reshape(-1, predicted.shape[-1]), target.reshape(-1))
 
 
-def image_tensors(processor, image: Image.Image) -> torch.Tensor:
-    device = torch.device("cuda", torch.cuda.current_device())
+def image_tensors(processor, image: Image.Image, device: torch.device) -> torch.Tensor:
     dtype = torch.bfloat16 if CONFIG.bf16 else torch.float16
     return processor.image_processor(images=image, return_tensors="pt")["pixel_values"].to(device, dtype=dtype)
 
@@ -96,7 +95,7 @@ def score_side(model, processor, image: Image.Image, instruction: str) -> str:
     device = next(model.parameters()).device
     prompt = tokenizer(bridge_prompt(instruction), add_special_tokens=True,
                        return_tensors="pt")["input_ids"].to(device)
-    pixel = image_tensors(processor, image)
+    pixel = image_tensors(processor, image, device)
     scores = {}
     for name in ("Left", "Right"):
         candidate = side_ids(tokenizer, name).to(device)
@@ -120,7 +119,7 @@ def generate_action_tokens(model, processor, image: Image.Image,
     prompt = tokenizer(bridge_prompt(instruction), add_special_tokens=True,
                        return_tensors="pt")["input_ids"]
     ids = torch.cat((prompt, side_ids(tokenizer, side), marker_ids(tokenizer)), dim=1).to(device)
-    pixel = image_tensors(processor, image)
+    pixel = image_tensors(processor, image, device)
     result = []
     with torch.autocast("cuda", dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16):
         output = model(input_ids=ids, pixel_values=pixel, use_cache=True, return_dict=True)

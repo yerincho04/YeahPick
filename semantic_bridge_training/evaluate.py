@@ -353,6 +353,14 @@ def main() -> None:
     torch.cuda.set_device(0)
     output_dir = args.eval_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=False)
+    if not args.grounding_only and not args.qa_only:
+        first_action = read_manifest("test", "", snapshot)[0]
+        with Image.open(first_action["image"]) as raw:
+            tokens = generate_action_tokens(model, processor, raw.convert("RGB"),
+                                            first_action["instruction"],
+                                            first_action["answer_side"])
+        decode_action(tokens, processor.tokenizer, stats)
+        print("EVAL_ACTION_PREFLIGHT_OK", flush=True)
     result = {"split": "test", "checkpoint": checkpoint,
               "action_unnorm_key": CONFIG.action_unnorm_key}
     result["grounding"] = evaluate_grounding(model, processor, output_dir, snapshot)
