@@ -1,4 +1,4 @@
-"""Pair-balanced stage-1 training on VQA and two robot layouts."""
+"""Pair-balanced stage-1 training on two robot layouts with optional VQA."""
 
 from __future__ import annotations
 
@@ -44,9 +44,10 @@ def pixels_for_pair(processor, pair: dict, device: torch.device) -> dict[str, to
 def examples_for_pair(pair: dict, epoch: int, pair_index: int) -> list[tuple[dict, str, float]]:
     examples = [(pair["grounding"][layout], layout, CONFIG.grounding_weight / 2)
                 for layout in ("original", "swapped")]
-    focus = ("left", "right")[(pair_index + epoch - 1) % 2]
-    for kind in QUESTION_TYPES:
-        examples.append((pair["vqa"][focus][kind], "original", CONFIG.vqa_weight / 5))
+    if CONFIG.train_vqa:
+        focus = ("left", "right")[(pair_index + epoch - 1) % 2]
+        for kind in QUESTION_TYPES:
+            examples.append((pair["vqa"][focus][kind], "original", CONFIG.vqa_weight / 5))
     return examples
 
 
@@ -122,10 +123,11 @@ def summarize(grounding: list[dict], vqa: list[dict]) -> dict:
     v_acc = fraction(vqa)["accuracy"]
     both_acc = both / len(by_pair)
     ready = (g_acc >= CONFIG.stage2_grounding_accuracy and
-             both_acc >= CONFIG.stage2_both_layout_accuracy and
-             v_acc >= CONFIG.stage2_vqa_accuracy and
-             vqa_by_type["Semantic reasoning"]["accuracy"] >= CONFIG.stage2_semantic_accuracy and
-             vqa_by_type["Visual grounding"]["accuracy"] >= CONFIG.stage2_visual_grounding_accuracy)
+             both_acc >= CONFIG.stage2_both_layout_accuracy)
+    if CONFIG.train_vqa:
+        ready = (ready and v_acc >= CONFIG.stage2_vqa_accuracy and
+                 vqa_by_type["Semantic reasoning"]["accuracy"] >= CONFIG.stage2_semantic_accuracy and
+                 vqa_by_type["Visual grounding"]["accuracy"] >= CONFIG.stage2_visual_grounding_accuracy)
     both_by_category = {}
     for category in sorted({key[0] for key in by_pair}):
         rows = [items for key, items in by_pair.items() if key[0] == category]
@@ -153,7 +155,8 @@ def summarize(grounding: list[dict], vqa: list[dict]) -> dict:
                 kind: dict(Counter(r["predicted"] for r in vqa if r["question_type"] == kind))
                 for kind in QUESTION_TYPES},
             "vqa_predicted_answers": dict(Counter(r["predicted"] for r in vqa)),
-            "selection_score": 0.4 * g_acc + 0.4 * v_acc + 0.2 * both_acc,
+            "selection_score": (0.4 * g_acc + 0.4 * v_acc + 0.2 * both_acc
+                                if CONFIG.train_vqa else (2 * g_acc + both_acc) / 3),
             "ready_for_stage2": ready}
 
 
@@ -341,7 +344,8 @@ def main() -> None:
                 stagnant += 1
             record = {"epoch": epoch, "updates": epoch * len(order) // world_size,
                       "train_grounding_loss": totals[0].item() / len(order),
-                      "train_vqa_loss": totals[1].item() / len(order), **metrics}
+                      "train_vqa_loss": totals[1].item() / len(order) if CONFIG.train_vqa else None,
+                      **metrics}
             with (run_dir / "metrics.jsonl").open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(record, ensure_ascii=False) + "\n")
             optimizer_path = run_dir / f"optimizer_epoch{epoch:02d}.pt"

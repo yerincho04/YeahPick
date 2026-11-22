@@ -1,6 +1,6 @@
 # Stage 1: semantic grounding
 
-Train OpenVLA SFT to answer VQA and select the target tile in a robot scene.
+Train OpenVLA SFT to select the target tile in a robot scene, with optional VQA training.
 This stage does **not** train action values. The policy still uses the same
 `Left/Right -> Action: -> seven action tokens` output layout as stage 2;
 the marker and action-token count are enforced during decoding.
@@ -23,24 +23,31 @@ Counterfactual grounding retain `Left/Right`.
 
 ## Training
 
+Set `train_vqa` in `config.py`: `False` (default) trains on robot grounding only;
+`True` also trains on all five VQA question types. Start a new run after changing
+this setting; resuming a run requires its original configuration.
+
 ```bash
 bash semantic_grounding_stage1/scripts/run.sh prepare
 bash semantic_grounding_stage1/scripts/run.sh train
 ```
 
 Each update uses two pairs, one per GPU. Each GPU sees the original and swapped
-robot frame plus one VQA question of every type. Focus alternates each epoch;
-two epochs cover all 8,000 training VQA questions once. One epoch is 400
-updates. The default is at least four and at most eight epochs, with patience
-two after epoch four. Loss is `grounding CE + VQA CE`, each averaged within its
-task. CE compares the two informative answer tokens directly. The OpenVLA
-language layers and multimodal projector use LoRA; the image encoder is frozen.
+robot frame. With `train_vqa=True`, it also sees one question of every VQA type;
+focus alternates each epoch, so two epochs cover all 8,000 training VQA questions
+once. One epoch is 400 updates. The default is at least four and at most eight
+epochs, with patience two after epoch four. Loss is grounding CE plus VQA CE
+when enabled, each averaged within its task. CE compares the two informative
+answer tokens directly. The OpenVLA language layers and multimodal projector
+use LoRA; the image encoder is frozen.
 
 Validation evaluates all 100 held-out pairs, including 200 robot layouts and
-1,000 VQA questions, after each epoch. The best checkpoint combines grounding
-accuracy (40%), VQA accuracy (40%), and pairs correct under both layouts (20%).
-It is marked ready for stage 2 only if these reach 75%, 65%, and 60%,
-respectively, and Semantic reasoning and Visual grounding each reach 65%.
+1,000 VQA questions, after each epoch, even when VQA training is off. With VQA
+training, checkpoint selection uses grounding accuracy (40%), VQA accuracy (40%),
+and pairs correct under both layouts (20%). Without it, selection uses grounding
+accuracy (2/3) and both-layout accuracy (1/3). The stage-2 readiness gate uses
+grounding and both-layout accuracy in both modes; VQA thresholds apply only when
+VQA training is enabled.
 A run that misses this gate stops without starting action training.
 Runs, adapters, input snapshots, per-question validation predictions, and
 metrics are saved in unique `runs/` folders.

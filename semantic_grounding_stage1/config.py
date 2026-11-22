@@ -36,6 +36,7 @@ class Config:
     lora_dropout: float = 0.05
     grounding_weight: float = 1.0
     vqa_weight: float = 1.0
+    train_vqa: bool = False  # True: include all five VQA types; False: grounding only.
 
     stage2_grounding_accuracy: float = 0.75
     stage2_both_layout_accuracy: float = 0.60
