@@ -82,7 +82,8 @@ def main() -> None:
     os.environ["PRISMATIC_LLAMA2_7B_METADATA_REPO"] = args.llama_metadata_repo
     from prismatic.models.load import load
 
-    model = load(args.model).to(device=device, dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16).eval()
+    model = load(args.model, cache_dir=os.environ.get("HF_HUB_CACHE")).to(
+        device=device, dtype=torch.bfloat16 if CONFIG.bf16 else torch.float16).eval()
     tokenizer = model.llm_backbone.tokenizer
     for kind in ("side", "choice"):
         choice_tokens(tokenizer, kind)

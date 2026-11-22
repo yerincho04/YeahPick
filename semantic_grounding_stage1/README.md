@@ -78,6 +78,11 @@ This uses `prism-dinosiglip-224px+7b` and the same questions and binary-choice
 scoring as the OpenVLA test. It writes separate `prismatic_...` evaluation
 results. Prismatic has no robot action output in this test, so only VQA and
 grounding are scored. The model may need to download its checkpoint on first use.
+The script stores Hugging Face, Xet, Torch, and temporary download files under
+`/opt/yeahpick-cache` by default, outside the separate `/root` filesystem.
+Set `PRISMATIC_CACHE_ROOT=/some/absolute/path` to use another location; the
+script prints its filesystem before downloading. An interrupted download in
+`/root/.cache/huggingface` is not moved automatically.
 To use the exact saved split from an existing stage-1 run, pass its directory:
 
 ```bash
