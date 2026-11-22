@@ -23,6 +23,20 @@ export CUDA_VISIBLE_DEVICES="${TRAIN_GPUS:-0,1}"
 export TOKENIZERS_PARALLELISM=false
 export STAGE1_DDP_BACKEND="${STAGE1_DDP_BACKEND:-nccl}"
 
+MODEL_CACHE_ROOT="${MODEL_CACHE_ROOT:-${PRISMATIC_CACHE_ROOT:-/opt/yeahpick-cache}}"
+case "$MODEL_CACHE_ROOT" in
+  /*) ;;
+  *) echo "MODEL_CACHE_ROOT must be an absolute path" >&2; exit 2 ;;
+esac
+export HF_HOME="$MODEL_CACHE_ROOT/huggingface"
+export HF_HUB_CACHE="$HF_HOME/hub"
+export HF_XET_CACHE="$HF_HOME/xet"
+export TORCH_HOME="$MODEL_CACHE_ROOT/torch"
+export TMPDIR="$MODEL_CACHE_ROOT/tmp"
+mkdir -p "$HF_HUB_CACHE" "$HF_XET_CACHE" "$TORCH_HOME" "$TMPDIR"
+echo "MODEL_CACHE_ROOT=$MODEL_CACHE_ROOT"
+df -h "$MODEL_CACHE_ROOT"
+
 case "$MODE" in
   prepare)
     bash "$TRAIN_ROOT/scripts/link_inputs.sh"
@@ -76,19 +90,6 @@ PY
     ;;
   test-prismatic)
     export CUDA_VISIBLE_DEVICES="${PRISMATIC_GPU:-0}"
-    PRISMATIC_CACHE_ROOT="${PRISMATIC_CACHE_ROOT:-/opt/yeahpick-cache}"
-    case "$PRISMATIC_CACHE_ROOT" in
-      /*) ;;
-      *) echo "PRISMATIC_CACHE_ROOT must be an absolute path" >&2; exit 2 ;;
-    esac
-    export HF_HOME="$PRISMATIC_CACHE_ROOT/huggingface"
-    export HF_HUB_CACHE="$HF_HOME/hub"
-    export HF_XET_CACHE="$HF_HOME/xet"
-    export TORCH_HOME="$PRISMATIC_CACHE_ROOT/torch"
-    export TMPDIR="$PRISMATIC_CACHE_ROOT/tmp"
-    mkdir -p "$HF_HUB_CACHE" "$HF_XET_CACHE" "$TORCH_HOME" "$TMPDIR"
-    echo "PRISMATIC_CACHE_ROOT=$PRISMATIC_CACHE_ROOT"
-    df -h "$PRISMATIC_CACHE_ROOT"
     if [ "$#" -gt 0 ] && [[ "$1" != --* ]]; then
       RUN_DIR="$1"
       shift

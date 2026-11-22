@@ -78,11 +78,31 @@ This uses `prism-dinosiglip-224px+7b` and the same questions and binary-choice
 scoring as the OpenVLA test. It writes separate `prismatic_...` evaluation
 results. Prismatic has no robot action output in this test, so only VQA and
 grounding are scored. The model may need to download its checkpoint on first use.
-The script stores Hugging Face, Xet, Torch, and temporary download files under
+All run modes store Hugging Face, Xet, Torch, and temporary download files under
 `/opt/yeahpick-cache` by default, outside the separate `/root` filesystem.
-Set `PRISMATIC_CACHE_ROOT=/some/absolute/path` to use another location; the
-script prints its filesystem before downloading. An interrupted download in
-`/root/.cache/huggingface` is not moved automatically.
+Set `MODEL_CACHE_ROOT=/some/absolute/path` to use another location; the script
+prints its filesystem before downloading. Existing models under
+`/root/.cache/huggingface` are not moved automatically.
+
+To relocate the existing OpenVLA checkpoint on a VESSL workspace after stopping
+model processes, move its complete Hub cache directory once:
+
+```bash
+src=/root/.cache/huggingface/hub/models--gen-robot--openvla-7b-rlvla-sft_16k
+dst=/opt/yeahpick-cache/huggingface/hub
+mkdir -p "$dst"
+if [ -d "$src" ] && [ ! -e "$dst/$(basename "$src")" ]; then
+  mv -- "$src" "$dst/"
+else
+  echo "Source missing or destination already exists; inspect both paths first"
+fi
+df -h /root /opt
+```
+
+The other training scripts need the same `HF_HOME`, `HF_HUB_CACHE`,
+`HF_XET_CACHE`, and `TORCH_HOME` environment variables when reusing the moved
+cache. If a destination directory already exists, inspect it before changing
+either copy.
 To use the exact saved split from an existing stage-1 run, pass its directory:
 
 ```bash
