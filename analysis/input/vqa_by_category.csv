@@ -1,0 +1,34 @@
+group,model,correct,total,accuracy_percent,source
+attribute,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+attribute,semantic_kd_training,70,100,70.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+attribute,semantic_bridge_training,52,100,52.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+celebrity,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+celebrity,semantic_kd_training,83,100,83.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+celebrity,semantic_bridge_training,58,100,58.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+counting,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+counting,semantic_kd_training,61,100,61.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+counting,semantic_bridge_training,55,100,55.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+emotion,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+emotion,semantic_kd_training,62,100,62.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+emotion,semantic_bridge_training,63,100,63.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+living_world,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+living_world,semantic_kd_training,85,100,85.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+living_world,semantic_bridge_training,63,100,63.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+public_info,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+public_info,semantic_kd_training,51,100,51.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+public_info,semantic_bridge_training,53,100,53.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+state,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+state,semantic_kd_training,68,100,68.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+state,semantic_bridge_training,52,100,52.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+symmetry,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+symmetry,semantic_kd_training,55,100,55.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+symmetry,semantic_bridge_training,50,100,50.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+time_clock,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+time_clock,semantic_kd_training,100,100,100.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+time_clock,semantic_bridge_training,55,100,55.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+traffic,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+traffic,semantic_kd_training,71,100,71.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+traffic,semantic_bridge_training,58,100,58.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Overall,openvla_sft,0,1000,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Overall,semantic_kd_training,706,1000,70.6000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Overall,semantic_bridge_training,559,1000,55.9000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl

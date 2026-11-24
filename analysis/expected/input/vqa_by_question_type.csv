@@ -1,0 +1,19 @@
+group,model,correct,total,accuracy_percent,source
+Object recognition,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Object recognition,semantic_kd_training,130,200,65.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Object recognition,semantic_bridge_training,132,200,66.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Attribute recognition,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Attribute recognition,semantic_kd_training,126,200,63.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Attribute recognition,semantic_bridge_training,122,200,61.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Semantic reasoning,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Semantic reasoning,semantic_kd_training,102,200,51.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Semantic reasoning,semantic_bridge_training,106,200,53.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Visual grounding,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Visual grounding,semantic_kd_training,134,200,67.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Visual grounding,semantic_bridge_training,132,200,66.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Counterfactual grounding,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Counterfactual grounding,semantic_kd_training,108,200,54.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Counterfactual grounding,semantic_bridge_training,118,200,59.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Overall,openvla_sft,0,1000,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Overall,semantic_kd_training,600,1000,60.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Overall,semantic_bridge_training,610,1000,61.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages

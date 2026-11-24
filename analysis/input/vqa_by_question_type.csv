@@ -1,0 +1,19 @@
+group,model,correct,total,accuracy_percent,source
+Object recognition,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Object recognition,semantic_kd_training,172,200,86.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Object recognition,semantic_bridge_training,134,200,67.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Attribute recognition,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Attribute recognition,semantic_kd_training,146,200,73.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Attribute recognition,semantic_bridge_training,109,200,54.5000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Semantic reasoning,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Semantic reasoning,semantic_kd_training,124,200,62.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Semantic reasoning,semantic_bridge_training,103,200,51.5000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Visual grounding,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Visual grounding,semantic_kd_training,134,200,67.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Visual grounding,semantic_bridge_training,114,200,57.0000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Counterfactual grounding,openvla_sft,0,200,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Counterfactual grounding,semantic_kd_training,130,200,65.0000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Counterfactual grounding,semantic_bridge_training,99,200,49.5000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl
+Overall,openvla_sft,0,1000,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Overall,semantic_kd_training,706,1000,70.6000,semantic_kd_training/output/test_vqa_predictions.jsonl
+Overall,semantic_bridge_training,559,1000,55.9000,semantic_bridge_training/eval_result/test_vqa_predictions.jsonl

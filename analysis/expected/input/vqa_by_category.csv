@@ -1,0 +1,34 @@
+group,model,correct,total,accuracy_percent,source
+attribute,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+attribute,semantic_kd_training,60,100,60.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+attribute,semantic_bridge_training,62,100,62.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+celebrity,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+celebrity,semantic_kd_training,57,100,57.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+celebrity,semantic_bridge_training,56,100,56.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+counting,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+counting,semantic_kd_training,63,100,63.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+counting,semantic_bridge_training,65,100,65.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+emotion,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+emotion,semantic_kd_training,62,100,62.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+emotion,semantic_bridge_training,60,100,60.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+living_world,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+living_world,semantic_kd_training,70,100,70.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+living_world,semantic_bridge_training,72,100,72.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+public_info,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+public_info,semantic_kd_training,52,100,52.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+public_info,semantic_bridge_training,51,100,51.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+state,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+state,semantic_kd_training,60,100,60.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+state,semantic_bridge_training,62,100,62.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+symmetry,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+symmetry,semantic_kd_training,49,100,49.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+symmetry,semantic_bridge_training,48,100,48.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+time_clock,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+time_clock,semantic_kd_training,64,100,64.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+time_clock,semantic_bridge_training,66,100,66.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+traffic,openvla_sft,0,100,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+traffic,semantic_kd_training,63,100,63.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+traffic,semantic_bridge_training,68,100,68.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Overall,openvla_sft,0,1000,0.0000,semantic_kd_training/output/test_vqa_predictions (1).jsonl
+Overall,semantic_kd_training,600,1000,60.0000,EXPECTED ASSUMPTION: Semantic KD with simulation images
+Overall,semantic_bridge_training,610,1000,61.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages

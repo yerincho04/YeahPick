@@ -101,8 +101,20 @@ PY
     echo "EVAL_DIR=$EVAL_DIR"
     exec python3 -u "$TRAIN_ROOT/evaluate.py" --run-dir "$RUN_DIR" --eval-dir "$EVAL_DIR" "$@"
     ;;
+  demo)
+    if [ "$#" -lt 1 ]; then
+      echo "Usage: bash semantic_bridge_training/scripts/run.sh demo RUN_DIR [options]" >&2
+      exit 2
+    fi
+    RUN_DIR="$1"
+    shift
+    DEMO_DIR="$(new_timestamp_dir "$RUN_DIR/demos")"
+    rmdir "$DEMO_DIR"
+    echo "DEMO_DIR=$DEMO_DIR"
+    exec python3 -u "$TRAIN_ROOT/record_success_demo.py" --run-dir "$RUN_DIR" --demo-dir "$DEMO_DIR" "$@"
+    ;;
   *)
-    echo "Usage: bash semantic_bridge_training/scripts/run.sh {prepare|train|test}" >&2
+    echo "Usage: bash semantic_bridge_training/scripts/run.sh {prepare|train|test|demo}" >&2
     exit 2
     ;;
 esac

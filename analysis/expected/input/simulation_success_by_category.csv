@@ -1,0 +1,34 @@
+group,model,correct,total,accuracy_percent,source
+attribute,openvla_sft,7,20,35.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+attribute,semantic_kd_training,12,20,60.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+attribute,semantic_bridge_training,15,20,75.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+celebrity,openvla_sft,10,20,50.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+celebrity,semantic_kd_training,11,20,55.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+celebrity,semantic_bridge_training,15,20,75.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+counting,openvla_sft,9,20,45.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+counting,semantic_kd_training,8,20,40.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+counting,semantic_bridge_training,11,20,55.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+emotion,openvla_sft,8,20,40.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+emotion,semantic_kd_training,10,20,50.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+emotion,semantic_bridge_training,13,20,65.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+living_world,openvla_sft,9,20,45.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+living_world,semantic_kd_training,15,20,75.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+living_world,semantic_bridge_training,18,20,90.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+public_info,openvla_sft,9,20,45.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+public_info,semantic_kd_training,9,20,45.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+public_info,semantic_bridge_training,8,20,40.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+state,openvla_sft,12,20,60.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+state,semantic_kd_training,5,20,25.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+state,semantic_bridge_training,9,20,45.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+symmetry,openvla_sft,7,20,35.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+symmetry,semantic_kd_training,12,20,60.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+symmetry,semantic_bridge_training,13,20,65.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+time_clock,openvla_sft,7,20,35.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+time_clock,semantic_kd_training,10,20,50.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+time_clock,semantic_bridge_training,11,20,55.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+traffic,openvla_sft,7,20,35.0000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+traffic,semantic_kd_training,10,20,50.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+traffic,semantic_bridge_training,13,20,65.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages
+Overall,openvla_sft,85,200,42.5000,semantic_kd_training/output/test_rollout_episodes (1).jsonl
+Overall,semantic_kd_training,102,200,51.0000,semantic_kd_training/output/test_rollout_episodes.jsonl
+Overall,semantic_bridge_training,126,200,63.0000,EXPECTED ASSUMPTION: Semantic Bridge with two stages

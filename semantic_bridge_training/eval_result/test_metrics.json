@@ -1,0 +1,657 @@
+{
+  "split": "test",
+  "checkpoint": {
+    "stage": "joint",
+    "epoch": 3,
+    "step": 4000,
+    "adapter": "/root/hj/YeahPick/semantic_bridge_training/runs/20261121_092802_870556_UTC/checkpoints/joint_epoch_03",
+    "val_side_accuracy": 0.59,
+    "val_action_loss": 0.021321983737550454
+  },
+  "action_unnorm_key": "kd_act2answer",
+  "grounding": {
+    "overall": {
+      "correct": 112,
+      "total": 200,
+      "accuracy": 0.56
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 15,
+        "total": 20,
+        "accuracy": 0.75
+      },
+      "celebrity": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "counting": {
+        "correct": 10,
+        "total": 20,
+        "accuracy": 0.5
+      },
+      "emotion": {
+        "correct": 13,
+        "total": 20,
+        "accuracy": 0.65
+      },
+      "living_world": {
+        "correct": 18,
+        "total": 20,
+        "accuracy": 0.9
+      },
+      "public_info": {
+        "correct": 5,
+        "total": 20,
+        "accuracy": 0.25
+      },
+      "state": {
+        "correct": 6,
+        "total": 20,
+        "accuracy": 0.3
+      },
+      "symmetry": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "time_clock": {
+        "correct": 8,
+        "total": 20,
+        "accuracy": 0.4
+      },
+      "traffic": {
+        "correct": 12,
+        "total": 20,
+        "accuracy": 0.6
+      }
+    },
+    "by_layout": {
+      "original": {
+        "correct": 57,
+        "total": 100,
+        "accuracy": 0.57
+      },
+      "swapped": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      }
+    }
+  },
+  "vqa": {
+    "overall": {
+      "correct": 559,
+      "total": 1000,
+      "accuracy": 0.559
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 52,
+        "total": 100,
+        "accuracy": 0.52
+      },
+      "celebrity": {
+        "correct": 58,
+        "total": 100,
+        "accuracy": 0.58
+      },
+      "counting": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      },
+      "emotion": {
+        "correct": 63,
+        "total": 100,
+        "accuracy": 0.63
+      },
+      "living_world": {
+        "correct": 63,
+        "total": 100,
+        "accuracy": 0.63
+      },
+      "public_info": {
+        "correct": 53,
+        "total": 100,
+        "accuracy": 0.53
+      },
+      "state": {
+        "correct": 52,
+        "total": 100,
+        "accuracy": 0.52
+      },
+      "symmetry": {
+        "correct": 50,
+        "total": 100,
+        "accuracy": 0.5
+      },
+      "time_clock": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      },
+      "traffic": {
+        "correct": 58,
+        "total": 100,
+        "accuracy": 0.58
+      }
+    },
+    "by_question_type": {
+      "Attribute recognition": {
+        "correct": 109,
+        "total": 200,
+        "accuracy": 0.545
+      },
+      "Counterfactual grounding": {
+        "correct": 99,
+        "total": 200,
+        "accuracy": 0.495
+      },
+      "Object recognition": {
+        "correct": 134,
+        "total": 200,
+        "accuracy": 0.67
+      },
+      "Semantic reasoning": {
+        "correct": 103,
+        "total": 200,
+        "accuracy": 0.515
+      },
+      "Visual grounding": {
+        "correct": 114,
+        "total": 200,
+        "accuracy": 0.57
+      }
+    }
+  },
+  "rollout": {
+    "overall": {
+      "success": {
+        "correct": 309,
+        "total": 400,
+        "accuracy": 0.7725
+      },
+      "strict_success": {
+        "correct": 308,
+        "total": 400,
+        "accuracy": 0.77
+      },
+      "condition_tile_success": {
+        "correct": 389,
+        "total": 400,
+        "accuracy": 0.9725
+      },
+      "grounding_correct": {
+        "correct": 226,
+        "total": 400,
+        "accuracy": 0.565
+      },
+      "answered": {
+        "correct": 391,
+        "total": 400,
+        "accuracy": 0.9775
+      },
+      "first_choice_correct": {
+        "correct": 0,
+        "total": 400,
+        "accuracy": 0.0
+      }
+    },
+    "by_mode": {
+      "oracle": {
+        "success": {
+          "correct": 196,
+          "total": 200,
+          "accuracy": 0.98
+        },
+        "strict_success": {
+          "correct": 195,
+          "total": 200,
+          "accuracy": 0.975
+        },
+        "condition_tile_success": {
+          "correct": 195,
+          "total": 200,
+          "accuracy": 0.975
+        },
+        "grounding_correct": {
+          "correct": 113,
+          "total": 200,
+          "accuracy": 0.565
+        },
+        "answered": {
+          "correct": 196,
+          "total": 200,
+          "accuracy": 0.98
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 200,
+          "accuracy": 0.0
+        }
+      },
+      "predicted": {
+        "success": {
+          "correct": 113,
+          "total": 200,
+          "accuracy": 0.565
+        },
+        "strict_success": {
+          "correct": 113,
+          "total": 200,
+          "accuracy": 0.565
+        },
+        "condition_tile_success": {
+          "correct": 194,
+          "total": 200,
+          "accuracy": 0.97
+        },
+        "grounding_correct": {
+          "correct": 113,
+          "total": 200,
+          "accuracy": 0.565
+        },
+        "answered": {
+          "correct": 195,
+          "total": 200,
+          "accuracy": 0.975
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 200,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "by_category": {
+      "attribute": {
+        "success": {
+          "correct": 33,
+          "total": 40,
+          "accuracy": 0.825
+        },
+        "strict_success": {
+          "correct": 33,
+          "total": 40,
+          "accuracy": 0.825
+        },
+        "condition_tile_success": {
+          "correct": 38,
+          "total": 40,
+          "accuracy": 0.95
+        },
+        "grounding_correct": {
+          "correct": 30,
+          "total": 40,
+          "accuracy": 0.75
+        },
+        "answered": {
+          "correct": 38,
+          "total": 40,
+          "accuracy": 0.95
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "celebrity": {
+        "success": {
+          "correct": 34,
+          "total": 40,
+          "accuracy": 0.85
+        },
+        "strict_success": {
+          "correct": 34,
+          "total": 40,
+          "accuracy": 0.85
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 28,
+          "total": 40,
+          "accuracy": 0.7
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "counting": {
+        "success": {
+          "correct": 30,
+          "total": 40,
+          "accuracy": 0.75
+        },
+        "strict_success": {
+          "correct": 30,
+          "total": 40,
+          "accuracy": 0.75
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 20,
+          "total": 40,
+          "accuracy": 0.5
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "emotion": {
+        "success": {
+          "correct": 32,
+          "total": 40,
+          "accuracy": 0.8
+        },
+        "strict_success": {
+          "correct": 32,
+          "total": 40,
+          "accuracy": 0.8
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 24,
+          "total": 40,
+          "accuracy": 0.6
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "living_world": {
+        "success": {
+          "correct": 38,
+          "total": 40,
+          "accuracy": 0.95
+        },
+        "strict_success": {
+          "correct": 38,
+          "total": 40,
+          "accuracy": 0.95
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 36,
+          "total": 40,
+          "accuracy": 0.9
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "public_info": {
+        "success": {
+          "correct": 26,
+          "total": 40,
+          "accuracy": 0.65
+        },
+        "strict_success": {
+          "correct": 26,
+          "total": 40,
+          "accuracy": 0.65
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 12,
+          "total": 40,
+          "accuracy": 0.3
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "state": {
+        "success": {
+          "correct": 24,
+          "total": 40,
+          "accuracy": 0.6
+        },
+        "strict_success": {
+          "correct": 23,
+          "total": 40,
+          "accuracy": 0.575
+        },
+        "condition_tile_success": {
+          "correct": 32,
+          "total": 40,
+          "accuracy": 0.8
+        },
+        "grounding_correct": {
+          "correct": 14,
+          "total": 40,
+          "accuracy": 0.35
+        },
+        "answered": {
+          "correct": 33,
+          "total": 40,
+          "accuracy": 0.825
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "symmetry": {
+        "success": {
+          "correct": 31,
+          "total": 40,
+          "accuracy": 0.775
+        },
+        "strict_success": {
+          "correct": 31,
+          "total": 40,
+          "accuracy": 0.775
+        },
+        "condition_tile_success": {
+          "correct": 39,
+          "total": 40,
+          "accuracy": 0.975
+        },
+        "grounding_correct": {
+          "correct": 20,
+          "total": 40,
+          "accuracy": 0.5
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "time_clock": {
+        "success": {
+          "correct": 29,
+          "total": 40,
+          "accuracy": 0.725
+        },
+        "strict_success": {
+          "correct": 29,
+          "total": 40,
+          "accuracy": 0.725
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 18,
+          "total": 40,
+          "accuracy": 0.45
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      },
+      "traffic": {
+        "success": {
+          "correct": 32,
+          "total": 40,
+          "accuracy": 0.8
+        },
+        "strict_success": {
+          "correct": 32,
+          "total": 40,
+          "accuracy": 0.8
+        },
+        "condition_tile_success": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "grounding_correct": {
+          "correct": 24,
+          "total": 40,
+          "accuracy": 0.6
+        },
+        "answered": {
+          "correct": 40,
+          "total": 40,
+          "accuracy": 1.0
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 40,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "by_layout": {
+      "original": {
+        "success": {
+          "correct": 153,
+          "total": 200,
+          "accuracy": 0.765
+        },
+        "strict_success": {
+          "correct": 153,
+          "total": 200,
+          "accuracy": 0.765
+        },
+        "condition_tile_success": {
+          "correct": 195,
+          "total": 200,
+          "accuracy": 0.975
+        },
+        "grounding_correct": {
+          "correct": 114,
+          "total": 200,
+          "accuracy": 0.57
+        },
+        "answered": {
+          "correct": 195,
+          "total": 200,
+          "accuracy": 0.975
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 200,
+          "accuracy": 0.0
+        }
+      },
+      "swapped": {
+        "success": {
+          "correct": 156,
+          "total": 200,
+          "accuracy": 0.78
+        },
+        "strict_success": {
+          "correct": 155,
+          "total": 200,
+          "accuracy": 0.775
+        },
+        "condition_tile_success": {
+          "correct": 194,
+          "total": 200,
+          "accuracy": 0.97
+        },
+        "grounding_correct": {
+          "correct": 112,
+          "total": 200,
+          "accuracy": 0.56
+        },
+        "answered": {
+          "correct": 196,
+          "total": 200,
+          "accuracy": 0.98
+        },
+        "first_choice_correct": {
+          "correct": 0,
+          "total": 200,
+          "accuracy": 0.0
+        }
+      }
+    }
+  }
+}

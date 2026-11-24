@@ -87,6 +87,24 @@ geometry and ten-step initial grasp. `condition_tile_success` measures whether
 the cube lands on the side actually supplied to the policy; in opposite mode this
 is the wrong answer tile and tests causal use of the bridge.
 
+## Presentation demo
+
+Record one successful **predicted-side** test rollout with the chosen checkpoint:
+
+```bash
+bash semantic_bridge_training/scripts/run.sh demo semantic_bridge_training/runs/<RUN_DIR>
+```
+
+The command tries test pairs in category order, first in their original layout
+and then swapped. It stops when the model's own side choice leads to a released
+cube on the correct tile. It saves `semantic_bridge_success.mp4` and `demo.json`
+under a new timestamped `<RUN_DIR>/demos/` directory. The video is 5 fps, starts
+at the first policy frame after the standard ten-step initial grasp, and holds
+the final frame for one second. Failures are reported in the terminal and are
+not saved as videos. `--category public_info` restricts the category;
+`--max-attempts 200` and `--episode-len 80` can be changed if needed. The
+command exits with an error if no test rollout meets the strict success rule.
+
 No GPU training or Vulkan rollout was run on this Windows workstation. The data
 contracts and Python syntax were checked locally; the GPU preflight in `train`
 must complete on the server before a long run.

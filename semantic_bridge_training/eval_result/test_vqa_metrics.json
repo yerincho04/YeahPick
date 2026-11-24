@@ -1,0 +1,169 @@
+{
+  "split": "test",
+  "checkpoint": {
+    "stage": "joint",
+    "epoch": 3,
+    "step": 4000,
+    "adapter": "/root/hj/YeahPick/semantic_bridge_training/runs/20261121_092802_870556_UTC/checkpoints/joint_epoch_03",
+    "val_side_accuracy": 0.59,
+    "val_action_loss": 0.021321983737550454
+  },
+  "action_unnorm_key": "kd_act2answer",
+  "grounding": {
+    "overall": {
+      "correct": 112,
+      "total": 200,
+      "accuracy": 0.56
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 15,
+        "total": 20,
+        "accuracy": 0.75
+      },
+      "celebrity": {
+        "correct": 14,
+        "total": 20,
+        "accuracy": 0.7
+      },
+      "counting": {
+        "correct": 10,
+        "total": 20,
+        "accuracy": 0.5
+      },
+      "emotion": {
+        "correct": 13,
+        "total": 20,
+        "accuracy": 0.65
+      },
+      "living_world": {
+        "correct": 18,
+        "total": 20,
+        "accuracy": 0.9
+      },
+      "public_info": {
+        "correct": 5,
+        "total": 20,
+        "accuracy": 0.25
+      },
+      "state": {
+        "correct": 6,
+        "total": 20,
+        "accuracy": 0.3
+      },
+      "symmetry": {
+        "correct": 11,
+        "total": 20,
+        "accuracy": 0.55
+      },
+      "time_clock": {
+        "correct": 8,
+        "total": 20,
+        "accuracy": 0.4
+      },
+      "traffic": {
+        "correct": 12,
+        "total": 20,
+        "accuracy": 0.6
+      }
+    },
+    "by_layout": {
+      "original": {
+        "correct": 57,
+        "total": 100,
+        "accuracy": 0.57
+      },
+      "swapped": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      }
+    }
+  },
+  "vqa": {
+    "overall": {
+      "correct": 559,
+      "total": 1000,
+      "accuracy": 0.559
+    },
+    "by_category": {
+      "attribute": {
+        "correct": 52,
+        "total": 100,
+        "accuracy": 0.52
+      },
+      "celebrity": {
+        "correct": 58,
+        "total": 100,
+        "accuracy": 0.58
+      },
+      "counting": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      },
+      "emotion": {
+        "correct": 63,
+        "total": 100,
+        "accuracy": 0.63
+      },
+      "living_world": {
+        "correct": 63,
+        "total": 100,
+        "accuracy": 0.63
+      },
+      "public_info": {
+        "correct": 53,
+        "total": 100,
+        "accuracy": 0.53
+      },
+      "state": {
+        "correct": 52,
+        "total": 100,
+        "accuracy": 0.52
+      },
+      "symmetry": {
+        "correct": 50,
+        "total": 100,
+        "accuracy": 0.5
+      },
+      "time_clock": {
+        "correct": 55,
+        "total": 100,
+        "accuracy": 0.55
+      },
+      "traffic": {
+        "correct": 58,
+        "total": 100,
+        "accuracy": 0.58
+      }
+    },
+    "by_question_type": {
+      "Attribute recognition": {
+        "correct": 109,
+        "total": 200,
+        "accuracy": 0.545
+      },
+      "Counterfactual grounding": {
+        "correct": 99,
+        "total": 200,
+        "accuracy": 0.495
+      },
+      "Object recognition": {
+        "correct": 134,
+        "total": 200,
+        "accuracy": 0.67
+      },
+      "Semantic reasoning": {
+        "correct": 103,
+        "total": 200,
+        "accuracy": 0.515
+      },
+      "Visual grounding": {
+        "correct": 114,
+        "total": 200,
+        "accuracy": 0.57
+      }
+    }
+  }
+}

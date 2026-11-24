@@ -142,7 +142,7 @@ def decode_action(tokens: list[int], tokenizer, stats: dict) -> np.ndarray:
     return raw.astype(np.float32)
 
 
-def episode_groups(snapshot: Path, output_dir: Path) -> list[tuple[str, Path, list[dict]]]:
+def episode_groups(snapshot: Path, output_dir: Path, category_filter: str | None = None):
     import sys
 
     sys.path.insert(0, str(REPO_ROOT / "scripted_action_collection"))
@@ -159,8 +159,9 @@ def episode_groups(snapshot: Path, output_dir: Path) -> list[tuple[str, Path, li
             selected[row["category"]].add(row["pair_id"])
     if not selected:
         raise ValueError("No test pairs in pair_splits.json")
-    result = []
     for category, pair_ids in sorted(selected.items()):
+        if category_filter is not None and category != category_filter:
+            continue
         asset_dir, _ = build_assets.build_category(category)
         all_pairs = json.loads((asset_dir / "pairs.json").read_text(encoding="utf-8"))
         pairs = [p for p in all_pairs if p["pair_id"] in pair_ids]
@@ -175,8 +176,7 @@ def episode_groups(snapshot: Path, output_dir: Path) -> list[tuple[str, Path, li
                 image_id = source["images"][side]["image_id"]
                 if pair[side] != f"tile_{image_id}":
                     raise ValueError(f"Test tile differs from training: {category}/{pair['pair_id']}/{side}")
-        result.append((category, asset_dir.resolve(), pairs))
-    return result
+        yield category, asset_dir.resolve(), pairs
 
 
 def make_env(asset_dir: Path, ids: list[int], swapped: bool, seed: int,
